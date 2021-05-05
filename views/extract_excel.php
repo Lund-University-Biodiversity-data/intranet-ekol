@@ -13,7 +13,8 @@
       <select class="form-control" id="inputProtocol" name="protocol" placeholder="protocol">
       	<option value="std" <?= ($protocol=="sft" ? "selected" : "") ?>>Standardrutterna</option>
       	<option value="natt" <?= ($protocol=="natt" ? "selected" : "") ?>>Nattrutterna</option>
-      	<option value="kust" <?= ($protocol=="kust" ? "selected" : "") ?>>Kustfågelrutterna</option>
+        <option value="kust" <?= ($protocol=="kust" ? "selected" : "") ?>>Kustfågelrutterna</option>
+        <option value="kust" <?= ($protocol=="vinter" ? "selected" : "") ?>>Vinterrutterna</option>
       </select>	
     </div>
   </div>
