@@ -29,7 +29,7 @@ if (isset($_POST["execFormExtract"]) && $_POST["execFormExtract"]=="OK") {
 			$file_download=$lineExpl[count($lineExpl)-1];
 
 			if (file_exists($file_download)) {
-				$file_download='<a href="'.str_replace(PATH_CONVERT_DATA, URL_WEBSITE, $file_download).'">DOWNLOADABLE FILE</a>';
+				$file_download='<a href="'.str_replace(PATH_CONVERT_DATA."extract/", URL_WEBSITE, $file_download).'">DOWNLOADABLE FILE</a>';
 			}
 			else {
 
