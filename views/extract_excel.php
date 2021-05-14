@@ -15,7 +15,7 @@
       	<option value="natt" <?= ($protocol=="natt" ? "selected" : "") ?>>Nattrutterna</option>
         <option value="kust" <?= ($protocol=="kust" ? "selected" : "") ?>>Kustfågelrutterna</option>
         <option value="vinter" <?= ($protocol=="vinter" ? "selected" : "") ?>>Vinterrutterna</option>
-        <option value="vinter" <?= ($protocol=="sommar" ? "selected" : "") ?>>Sommarrutterna</option>
+        <option value="sommar" <?= ($protocol=="sommar" ? "selected" : "") ?>>Sommarrutterna</option>
       </select>	
     </div>
   </div>
