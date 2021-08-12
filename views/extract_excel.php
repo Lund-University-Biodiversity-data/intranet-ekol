@@ -1,8 +1,8 @@
 <h2>Excel generator</h2>
 
-<div class="row">
+<p class="lead">
 	Extracting data from the Mongo database for one specific scheme
-</div>
+</p>
 
 <form role="form" method="post">
 	<input type="hidden" value="OK" id="execFormExtract" name="execFormExtract"/>
