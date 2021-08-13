@@ -88,7 +88,7 @@ foreach($filesSurveys as $file) {
 }
 
 
-$consoleTxt.=consoleMessage("info", count($listFiles)." files OK to be processed");
+$consoleTxt.=consoleMessage("info", count($listFiles)." files found.");
 
 // END 2** FILENAME CHECK
 

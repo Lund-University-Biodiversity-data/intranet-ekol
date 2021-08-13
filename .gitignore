@@ -1,3 +1,7 @@
 
 lib/config.php
 json/
+excel-surveys/
+vendor/
+old/
+composer.lock

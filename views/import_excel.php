@@ -57,7 +57,7 @@
         <tbody>
           <?php foreach ($listFiles as $idF => $file) { ?>
             <tr>
-              <th scope="row"><?= $idF ?></th>
+              <th scope="row"><?= ($idF+1) ?></th>
               <td><?= $file["filename"] ?></td>
               <td><?= $file["internalSiteId"] ?></td>
               <td><?= $file["period"] ?></td>
