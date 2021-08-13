@@ -261,7 +261,7 @@ foreach($listFilesOk as $file) {
 			$query = new MongoDB\Driver\Query($filter, $options); 
 			//db.site.find({"projects":"dab767a5-929e-4733-b8eb-c9113194201f"}, {"projects":1, "name":1}).pretty()
 			// 
-		    $mng = new MongoDB\Driver\Manager(); // Driver Object created
+		    $mng = new MongoDB\Driver\Manager($mongoConnection[$server]); // Driver Object created
 
 			$rows = $mng->executeQuery("ecodata.person", $query);
 
