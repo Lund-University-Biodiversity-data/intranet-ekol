@@ -21,6 +21,19 @@
         </select>	
       </div>
     </div>
+
+
+    <div class="form-group row">
+      <label for="inputServer" class="col-sm-2 col-form-label">MongoDb Server</label>
+      <div class="col-sm-10">
+        <select class="form-control" id="inputServer" name="inputServer" placeholder="server">
+          <option value="DEV" <?= ($server=="DEV" ? "selected" : "") ?>>DEV - canmove-dev [local]</option>
+          <option value="PROD" <?= ($server=="PROD" ? "selected" : "") ?>>PROD - ecodata.biodivesitydata.se [89.45.234.73]</option>
+        </select> 
+      </div>
+    </div>
+
+
     <div class="form-group row">
       <div class="offset-sm-2 col-sm-10">
         <input type="submit" value="Check files available" name="submit" class="btn btn-primary"/>
@@ -54,21 +67,13 @@
         </tbody>
       </table>
 
-      <?php if (count($listHiddenOkFiles)>0) { ?>
+      <?php if ($listHiddenOkFiles!="") { ?>
 
         <form role="form" method="post">
           <input type="hidden" value="OK" id="execFormProcessFiles" name="execFormProcessFiles"/>
           <input type="hidden" value="<?= $listHiddenOkFiles ?>" id="listHiddenOkFiles" name="listHiddenOkFiles"/>
+          <input type="hidden" value="<?= $server ?>" id="serverHidden" name="serverHidden"/>
 
-          <div class="form-group row">
-            <label for="inputServer" class="col-sm-2 col-form-label">Server</label>
-            <div class="col-sm-10">
-              <select class="form-control" id="inputServer" name="server" placeholder="server">
-                <option value="DEV" <?= ($server=="DEV" ? "selected" : "") ?>>DEV - canmove-dev</option>
-                <option value="PROD" <?= ($server=="PROD" ? "selected" : "") ?>>PROD - ecodata.biodivesitydata.se</option>
-              </select> 
-            </div>
-          </div>
           <div class="form-group row">
             <div class="offset-sm-2 col-sm-10">
               <input type="submit" value="Process the OK Files" name="submit" class="btn btn-primary"/>

@@ -28,74 +28,78 @@ function consoleMessage($type, $message) {
 	return $msg;
 }
 
-function getArraySitesFromMongo ($protocol, $projectId) {
+function getArraySitesFromMongo ($protocol, $projectId, $server) {
 
     global $mongoConnection;
     
     $array_sites=array();
     
     /**************************** connection to mongoDB   ***/
-    $mng = new MongoDB\Driver\Manager($mongoConnection["url"]); // Driver Object created
+    $mng = new MongoDB\Driver\Manager($mongoConnection[$server]); // Driver Object created
 
-    if ($mng) echo consoleMessage("info", "Connection to mongoDb ok");
+    if ($mng) {
 
-    //$filter = [];
-    $filter = ['projects' => $projectId];
-    $options = [];
-    $query = new MongoDB\Driver\Query($filter, $options); 
+        //$filter = [];
+        $filter = ['projects' => $projectId];
+        $options = [];
+        $query = new MongoDB\Driver\Query($filter, $options); 
 
-    //db.site.find({"projects":"dab767a5-929e-4733-b8eb-c9113194201f"}, {"projects":1, "name":1}).pretty()
-    // 
-    $rows = $mng->executeQuery("ecodata.site", $query);
+        //db.site.find({"projects":"dab767a5-929e-4733-b8eb-c9113194201f"}, {"projects":1, "name":1}).pretty()
+        // 
+        $rows = $mng->executeQuery("ecodata.site", $query);
 
-    foreach ($rows as $row){
-        
-        if ($protocol=="natt") {
-            if (isset($row->kartaTx))
-                $indexSite=$row->kartaTx;
+        foreach ($rows as $row){
+            
+            if ($protocol=="natt") {
+                if (isset($row->kartaTx))
+                    $indexSite=$row->kartaTx;
+                else {
+                    echo consoleMessage("info", "No kartaTx for site ".$row->name);
+                    $indexSite=$row->name;
+                } 
+            }
+            elseif ($protocol=="kust") {
+                if (isset($row->name))
+                    $indexSite=$row->name;
+                else {
+                    echo consoleMessage("info", "No name for site ".$row->name);
+                    $indexSite=$row->name;
+                } 
+            }
+            elseif ($protocol=="punkt" || $protocol=="vinter" || $protocol=="sommar") {
+                if (isset($row->adminProperties->internalSiteId))
+                    $indexSite=$row->adminProperties->internalSiteId;
+                else {
+                    echo consoleMessage("info", "No internalSiteId for site ".$row->name);
+                    $indexSite=$row->name;
+                } 
+            }
             else {
-                echo consoleMessage("info", "No kartaTx for site ".$row->name);
-                $indexSite=$row->name;
-            } 
+                if (isset($row->karta))
+                    $indexSite=$row->karta;
+                else {
+                    echo consoleMessage("error", "No karta for site ".$row->name);
+                    $indexSite=$row->name;
+                } 
+
+            }   
+            $array_sites[$indexSite]=array();
+
+            $array_sites[$indexSite]["locationID"]=$row->siteId;
+            $array_sites[$indexSite]["locationName"]=$indexSite;
+            $array_sites[$indexSite]["decimalLatitude"]=$row->extent->geometry->decimalLatitude;
+            $array_sites[$indexSite]["decimalLongitude"]=$row->extent->geometry->decimalLongitude;
+
+            //$array_sites_req[]="'".$indexSite."'";
         }
-        elseif ($protocol=="kust") {
-            if (isset($row->name))
-                $indexSite=$row->name;
-            else {
-                echo consoleMessage("info", "No name for site ".$row->name);
-                $indexSite=$row->name;
-            } 
-        }
-        elseif ($protocol=="punkt" || $protocol=="vinter" || $protocol=="sommar") {
-            if (isset($row->adminProperties->internalSiteId))
-                $indexSite=$row->adminProperties->internalSiteId;
-            else {
-                echo consoleMessage("info", "No internalSiteId for site ".$row->name);
-                $indexSite=$row->name;
-            } 
-        }
-        else {
-            if (isset($row->karta))
-                $indexSite=$row->karta;
-            else {
-                echo consoleMessage("error", "No karta for site ".$row->name);
-                $indexSite=$row->name;
-            } 
 
-        }   
-        $array_sites[$indexSite]=array();
+        /**************************** connection to mongoDB   ***/
 
-        $array_sites[$indexSite]["locationID"]=$row->siteId;
-        $array_sites[$indexSite]["locationName"]=$indexSite;
-        $array_sites[$indexSite]["decimalLatitude"]=$row->extent->geometry->decimalLatitude;
-        $array_sites[$indexSite]["decimalLongitude"]=$row->extent->geometry->decimalLongitude;
-
-        //$array_sites_req[]="'".$indexSite."'";
+        return $array_sites;
     }
-
-    /**************************** connection to mongoDB   ***/
-
-    return $array_sites;
+    else {
+        return false;
+    }
 }
 
 // convert a string with HHMM to

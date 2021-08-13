@@ -13,195 +13,62 @@ $server="";
 $listHiddenOkFiles="";
 $listFiles=array();
 $protocol="vinter";
+$activityIdCreated=array();
 
 if (isset($_POST["execFormListFiles"]) && $_POST["execFormListFiles"]=="OK") {
 
-	$commands = [ 
-	    'aggregate' => "output", 
-	    'pipeline' =>[
-	        ['$lookup'=>[
-	        	'from'=>'activity',
-	        	'localField'=>'activityId',
-	        	'foreignField'=>'activityId',
-	        	'as'=>'actID'
-	        ]],
-	        ['$unwind'=> '$activityId'],
-	        ['$match'=>[
-	        	'actID.projectActivityId'=> $commonFields[$protocol]["projectActivityId"],
-	        	"actID.verificationStatus" => "approved"
-	        ]],
-	        ['$project'=>[
-	        	"data.period" => 1,
-		        "data.surveyDate" => 1,
-		        "actID.siteId" => 1
-	        ]],
-	        ['$lookup'=>[
-	        	'from'=>'site',
-	        	'localField'=>'actID.siteId',
-	        	'foreignField'=>'siteId',
-	        	'as'=>'siteID'
-	        ]],
-	        ['$unwind'=> '$siteID'],
-	        ['$project'=>[
-	        	"data.period" => 1,
-		        "data.surveyDate" => 1,
-		        "actID.siteId" => 1,
-	        	"siteID.adminProperties.internalSiteId" => 1
-	        ]],
-	        /*['$limit'=> 20],*/
-	    ]
-	];
+	$server=$_POST["inputServer"];
 
-	$mng = new MongoDB\Driver\Manager($mongoConnection["url"]);
+	$consoleTxt.=consoleMessage("info", "1) Get Existing Surveys");
 
-	$command = new MongoDB\Driver\Command($commands);
+	include "process/excel_import_get_existing_surveys.php";
 
-	try{
-	    $cursor = $mng->executeCommand("ecodata", $command);
+	if ($okCon) {
+		$consoleTxt.=consoleMessage("info", "2) Check filenames");
+
+		include "process/excel_import_filenames_check.php";
 	}
-	catch(Exception $e){
-	    $consoleTxt.=consoleMessage("error","MongoDB Connection Error");
-	    //exit;
-	}
-
-
-	$response = $cursor->toArray();
-	$consoleTxt.=consoleMessage("info", count($response[0]->result)." documents");
-
-	$tabSitesPeriod=array();
-	foreach ($response[0]->result as $document) {
-
-		// specific for the year in punkturutter
-		// year -1 if before june
-		if (substr($document->data->surveyDate, 5, 2)<6) {
-			$year=substr($document->data->surveyDate, 0, 4)-1;
-			//echo "mois decoupé :".substr($document->data->surveyDate, 5, 2)." => year : ".$year."\n";
-		}
-		else $year=substr($document->data->surveyDate, 0, 4);
-
-
-		$periodDoc=$document->data->period;
-		$siteId=$document->siteID->adminProperties->internalSiteId;
-		//var_dump($document);
-
-
-        $tabSitesPeriod[$siteId][]=$year."-".$periodDoc;
-
-	}
-
-	$consoleTxt.=consoleMessage("info", count($tabSitesPeriod)." surveys in the database");
-
-
-	// END 1** GET ALL THE EXISTING SURVEYS DATE/SITE FROM THE DATABASE
-
-
-
-
-
-	// 2** FILENAME CHECK
-
-
-	// date now
-	$micro_date = microtime();
-	$date_array = explode(" ",$micro_date);
-	$micsec=number_format($date_array[0]*1000, 0, ".", "");
-	$micsec=str_pad($micsec,3,"0", STR_PAD_LEFT);
-	if ($micsec==1000) $micsec=999;
-	$date_now_tz = date("Y-m-d",$date_array[1])."T".date("H:i:s",$date_array[1]).".".$micsec."Z";
-	//echo "Date: $date_now_tz\n";
-
-	$path_excel=PATH_INPUT_EXCEL.$database."/".$protocol."/";
-
-	$filesSurveys = scandir($path_excel);
-
-	$listFiles=array();
-
-
-	foreach($filesSurveys as $file) {
-		if ($file!=".." && $file!="." && (substr($file, strlen($file)-4, 4)==".xls" ||substr($file, strlen($file)-5, 5)==".xlsx")) {
-
-
-			//extract the filename without the extension
-			if (substr($file, strlen($file)-4, 4)==".xls") {
-				$filename=substr($file, 0, strlen($file)-4);
-			}
-			elseif (substr($file, strlen($file)-5, 5)==".xlsx") {
-				$filename=substr($file, 0, strlen($file)-5)==".xlsx";
-			}
-
-			$explodeFilename=explode("-", $filename);
-			$prefixFN=$explodeFilename[0];
-			$siteIdFN1=$explodeFilename[1];//persnr
-			$siteIdFN2=$explodeFilename[2];//indice
-			$siteIdFN3=str_replace("#", "", $explodeFilename[3]);//rnr
-			$siteIdFN=$siteIdFN1."-".$siteIdFN2."-".$siteIdFN3;
-			$periodFN=str_replace("P", "", $explodeFilename[4]);
-
-			switch($protocol) {
-				case "std":
-					break;
-				case "vinter":
-					$internalSiteId=$siteIdFN;
-					$templateFileName="Vin20";
-					break;
-				case "natt":
-					break;
-				case "kust":
-					break;
-			}
-
-			$infoFile=array();
-			$infoFile["filename"]=$file;
-			$infoFile["internalSiteId"]=$internalSiteId;
-			$infoFile["period"]=$periodFN;
-
-
-			$templateFileName="Vin20";
-
-			if ($prefixFN!=$templateFileName) {
-				$consoleTxt.=consoleMessage("error", $file. " can't be processed, wrong prefix. Must start with '".$templateFileName. "'. '".$prefixFN."' instead");
-			}
-			elseif(isset($tabSitesPeriod[$siteIdFN])) {
-				if (in_array($periodFN, $tabSitesPeriod[$siteIdFN])) {
-					$consoleTxt.=consoleMessage("error", $file. " can't be processed, period '".$periodFN. "' already existing for site '".$siteIdFN."'");
-					$infoFile["status"]="NO => period already exists in MongoDb";
-
-				}
-				else {
-					$consoleTxt.=consoleMessage("info", $file. " OK to be processed for period '".$periodFN. "' and site '".$siteIdFN."'");
-					$infoFile["status"]="OK";
-					
-					$listHiddenOkFiles.=$file."#";
-				}
-			}
-			else {
-				$consoleTxt.=consoleMessage("error", $file. " can't be processed because site '".$siteIdFN."' does not exist");
-				$infoFile["status"]="NO => site does not exist in MongoDb";
-			}
-
-			$listFiles[]=$infoFile;
-
-		}
-
-
-	}
-
-
-	$consoleTxt.=consoleMessage("info", count($listFiles)." files OK to be processed");
-
-	// END 2** FILENAME CHECK
-
-
 
 } // FIN IF $_POST["execFormListFiles"] OK
 
 
 
+
+
 if (isset($_POST["execFormProcessFiles"]) && $_POST["execFormProcessFiles"]=="OK") {
+
+
+	$server=$_POST["serverHidden"];
+
+
+	$mongoConnectionUrl=$mongoConnection[$server];
 
 	$consoleTxt.=consoleMessage("info", " List OK Files : ".$_POST["listHiddenOkFiles"]);
 
+	$listFilesOk=explode(FILENAME_SEPARATOR, $_POST["listHiddenOkFiles"]);
+
+	// remove the final empty file if needed
+	if ($listFilesOk[count($listFilesOk)-1]=="") unset($listFilesOk[count($listFilesOk)-1]);
+
+	if (count($listFilesOk)>0) {
+
+		$consoleTxt.=consoleMessage("info", "3) Check lists animals");
+
+		include "process/excel_import_list_animals.php";
+
+		if ($okList) {
+			include "process/excel_import_process_files.php";
+		}
+		else {
+			$consoleTxt.=consoleMessage("error", "Unable to proceed, due to errors in animals lists (see above)");
+		}
+	}
+	else {
+		$consoleTxt.=consoleMessage("info", "No OK file to process");
+	}
 } // FIN IF $_POST["execFormProcessFiles"] OK
+
+
 
 include ("views/header.html");
 
