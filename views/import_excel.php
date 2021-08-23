@@ -27,7 +27,8 @@
       <label for="inputServer" class="col-sm-2 col-form-label">MongoDb Server</label>
       <div class="col-sm-10">
         <select class="form-control" id="inputServer" name="inputServer" placeholder="server">
-          <option value="DEV" <?= ($server=="DEV" ? "selected" : "") ?>>DEV - canmove-dev [local]</option>
+          <option value="TEST" <?= ($server=="TEST" ? "selected" : "") ?>>TEST - local</option>
+          <option value="DEV" <?= ($server=="DEV" ? "selected" : "") ?>>DEV - canmove-dev</option>
           <option value="PROD" <?= ($server=="PROD" ? "selected" : "") ?>>PROD - ecodata.biodivesitydata.se [89.45.234.73]</option>
         </select> 
       </div>
@@ -41,9 +42,17 @@
     </div>
   </form>
 
-  <div class="form-group row">
-  	<label class="col-sm-2 col-form-label">List of files</label>
-  	<?php if (count($listFiles)>0) { ?>
+  <?php if (isset($final_result) &&  $final_result!="") { ?>
+  <p class="lead">
+    <b><?= $final_result ?></b>
+  </p>
+  <?php } ?>
+
+  <?php if (count($listFiles)>0) { ?>
+    <p class="lead">Files checked in folder <?= PATH_INPUT_EXCEL.$database ?>/<?= $protocol ?>/</p>
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label">List of files</label>
+
       <table class="table">
         <thead>
           <tr>
@@ -82,8 +91,9 @@
         </form>
 
       <?php }  ?>
-    <?php }  ?>
-  </div>
+    </div>
+  <?php }  ?>
+
   <div class="form-group row">
     <label for="consoleArea" class="col-sm-2 col-form-label">Console</label>
   	<textarea class="form-control" rows=20 id="consoleArea"><?= ($consoleTxt!="" ? $consoleTxt : "No message.") ?>

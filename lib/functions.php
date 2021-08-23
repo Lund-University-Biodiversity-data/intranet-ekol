@@ -1,4 +1,5 @@
 <?php
+
 // format: caracters spearated by '-'. Example: xxxx-xxxx-xxxx-xxxxxxxxx
 // generates an unique ID with hexa digits.
 function generate_uniqId_format ($format) {
@@ -131,5 +132,7 @@ function convertTime($time, $mode="AMPM") {
     
     return $time;
 }
+
+
 
 ?>

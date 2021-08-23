@@ -23,3 +23,12 @@ sudo pecl install mongodb
 create directories
 json/SFT/vinter
 excel-surveys/SFT
+
+
+** generate a ssh key for apache user **
+sudo -u www-data ssh-keygen -t rsa
+double check existence 
+ls -la /var/www/.ssh/id_rsa
+add server destination to known_hosts
+/var/www/.ssh/known_hosts
+add server's public key (/var/www/.ssh/id_rsa.pub) to destination server file authorized_keys

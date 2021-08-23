@@ -3,6 +3,8 @@
 
 $okCon=true;
 
+
+// get all the output for a dedicated scheme 
 $commands = [ 
     'aggregate' => "output", 
     'pipeline' =>[
@@ -14,8 +16,8 @@ $commands = [
         ]],
         ['$unwind'=> '$activityId'],
         ['$match'=>[
-        	'actID.projectActivityId'=> $commonFields[$protocol]["projectActivityId"],
-        	"actID.verificationStatus" => "approved"
+        	'actID.projectActivityId'=> $commonFields[$protocol]["projectActivityId"]/*,
+        	"actID.verificationStatus" => "approved"*/
         ]],
         ['$project'=>[
         	"data.period" => 1,
@@ -56,7 +58,7 @@ if ($okCon) {
     $consoleTxt.=consoleMessage("info","MongoDB ok to ".$mongoConnection[$server]);
 
     $response = $cursor->toArray();
-    $consoleTxt.=consoleMessage("info", count($response[0]->result)." documents");
+    $consoleTxt.=consoleMessage("info", count($response[0]->result)." surveys in the database for scheme ".$protocol);
 
     $tabSitesPeriod=array();
     foreach ($response[0]->result as $document) {
@@ -65,7 +67,7 @@ if ($okCon) {
         // year -1 if before june
         if (substr($document->data->surveyDate, 5, 2)<6) {
             $year=substr($document->data->surveyDate, 0, 4)-1;
-            //echo "mois decoupé :".substr($document->data->surveyDate, 5, 2)." => year : ".$year."\n";
+            //echo "mois decoupé :".substr($document->data->surveyDate, 5, 2)." => year : ".$year."<br>";
         }
         else $year=substr($document->data->surveyDate, 0, 4);
 
@@ -79,7 +81,7 @@ if ($okCon) {
 
     }
 
-    $consoleTxt.=consoleMessage("info", count($tabSitesPeriod)." surveys in the database");
+    $consoleTxt.=consoleMessage("info", count($tabSitesPeriod)." different sites surveyed for scheme ".$protocol);
 
 }
 

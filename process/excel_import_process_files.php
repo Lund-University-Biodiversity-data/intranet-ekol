@@ -1,5 +1,9 @@
 <?php
 
+use MongoDB\BSON\UTCDateTime;
+
+
+
 // 4** PROCESS FOR OK FILES
 
 switch($protocol) {
@@ -22,16 +26,17 @@ $nbFiles=0;
 
 $fileRefused=false;
 
+$arrActivityId=array();
 
-$arr_json_activity='[
-';
-$arr_json_output='[
-';
-$arr_json_record='[
-';
-$arr_json_person='[
-';
+$arr_json_activity=array();
+$arr_json_output=array();
+$arr_json_record=array();
+$arr_json_person=array();
 
+
+$initDate = new \DateTime();
+$stampedDate = $initDate->getTimestamp() * 1000;
+$nowISODate = new MongoDB\BSON\UTCDateTime($stampedDate);
 
 foreach($listFilesOk as $file) {
 
@@ -46,8 +51,13 @@ foreach($listFilesOk as $file) {
 			break;
 		case "vinter":
 			
-
-			$explodeFilename=explode("-", $file);
+		    if (substr($file, strlen($file)-4, 4)==".xls") {
+	            $filename=substr($file, 0, strlen($file)-4);
+	        }
+	        elseif (substr($file, strlen($file)-5, 5)==".xlsx") {
+	            $filename=substr($file, 0, strlen($file)-5)==".xlsx";
+	        }
+			$explodeFilename=explode("-", $filename);
 			$siteIdFN1=$explodeFilename[1];//persnr
 			$siteIdFN2=$explodeFilename[2];//indice
 			$siteIdFN3=str_replace("#", "", $explodeFilename[3]);//rnr
@@ -65,19 +75,9 @@ foreach($listFilesOk as $file) {
 	$consoleTxt.=consoleMessage("info", "Opens file ".$tmpfname);
 
 	try {
-		/*
-		$inputFileType = PHPExcel_IOFactory::identify($tmpfname);
-		$consoleTxt.=consoleMessage("info", "Input file type ".$inputFileType);
-		//$excelReader = PHPExcel_IOFactory::createReaderForFile($inputFileType);
-		//$excelObj = $excelReader->load($tmpfname);
-		$objReader = PHPExcel_IOFactory::createReader( $inputFileType );
-		//$objReader->setLoadSheetsOnly( $sheetname ); // Load specific sheet             
-		$excelObj = $objReader->load( $tmpfname );
-		$worksheet = $excelObj->getSheet(0);//
-		*/
 
 		$inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($tmpfname);
-		$consoleTxt.=consoleMessage("info", "Excel type ".$inputFileType);
+		//$consoleTxt.=consoleMessage("info", "Excel type ".$inputFileType);
 		$excelObj = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
 		$excelObj->setReadDataOnly(true);
 		$spreadsheet = $excelObj->load($tmpfname);
@@ -227,6 +227,16 @@ foreach($listFilesOk as $file) {
 				break;
 		}
 
+
+		if (isset($startTime) &&!is_numeric($startTime)) {
+			$consoleTxt.=consoleMessage("error", "Start time not numeric : ".$startTime);
+			$fileRefused=true;
+		}
+		if (isset($endTime) &&!is_numeric($endTime)) {
+			$consoleTxt.=consoleMessage("error", "End time not numeric : ".$endTime);
+			$fileRefused=true;
+		}
+
 		if ($siteKeyFilename!=$siteKey) {
 			$consoleTxt.=consoleMessage("error", "Filename site id (".$siteKeyFilename.") and site id in the file (".$siteKey.") don't match ");
 			$fileRefused=true;
@@ -278,6 +288,24 @@ foreach($listFilesOk as $file) {
 				$personId = generate_uniqId_format("xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx");
 				$explFN=explode(" ", $recorder_name);
 
+				$arr_json_person[]=array(
+					"dateCreated" => $nowISODate,
+					"lastUpdated" => $nowISODate,
+					"personId" => $personId,
+					"firstName" => $explFN[0],
+					"lastName" => $explFN[1],
+					"birthdate" => $birthdate_format,
+					"email" => $email,
+					"phoneNum" => $tel,
+					"mobileNum" => $mobile,
+					"address1" => $address1,
+					"address2" => $address2,
+					"postCode" => $post,
+					"town" => $city,
+					"projects"=> array($commonFields[$protocol]["projectId"]),
+					"internalPersonId" => $inventerare
+				);
+				/*
 				$arr_json_person.='{
 					"dateCreated" : ISODate("'.$date_now_tz.'"),
 					"lastUpdated" : ISODate("'.$date_now_tz.'"),
@@ -295,7 +323,7 @@ foreach($listFilesOk as $file) {
 					"projects": [ "'.$commonFields[$protocol]["projectId"].'" ],
 					"internalPersonId" : "'.$inventerare.'"
 				},';
-
+				*/
 				$consoleTxt.=consoleMessage("info", "Person to be created with personid: ".$personId);
 			}
 
@@ -310,10 +338,14 @@ foreach($listFilesOk as $file) {
 				$start_time=2359;
 				$finish_time=0;
 
-				$minutesSpentObserving='"minutesSpentObserving" : [
+				$minutesSpentObserving=array();
+				$timeOfObservation=array();
+
+
+				/*$minutesSpentObserving='"minutesSpentObserving" : [
 						{';
 				$timeOfObservation='"timeOfObservation" : [
-						{';
+						{';*/
 
 				$colStartTime="B";
 				$colStartMin="K";
@@ -327,20 +359,26 @@ foreach($listFilesOk as $file) {
 							$ind="p".$i;
 							
 							if ($timeofObs!="") {
-								$timeOfObservation.='
-								"TidP'.str_pad($i, 2, '0', STR_PAD_LEFT).'" : "'.$timeofObs.'",';
+								$timeOfObservation["TidP".str_pad($i, 2, '0', STR_PAD_LEFT)]=$timeofObs;
+
+								//$timeOfObservation.='
+								//"TidP'.str_pad($i, 2, '0', STR_PAD_LEFT).'" : "'.$timeofObs.'",';
 							}
 							if ($minSpentObs!="") {
-								$minutesSpentObserving.='
-								"TidL'.str_pad($i, 2, '0', STR_PAD_LEFT).'" : "'.$minSpentObs.'",';
+								$minutesSpentObserving["TidL".str_pad($i, 2, '0', STR_PAD_LEFT)]=$minSpentObs;
+
+								//$minutesSpentObserving.='
+								//"TidL'.str_pad($i, 2, '0', STR_PAD_LEFT).'" : "'.$minSpentObs.'",';
 							}
 							break;
 						case "natt":
 
 							$ind="p".str_pad($i, 2, '0', STR_PAD_LEFT);
 
-							$timeOfObservation.='
-							"TidP'.str_pad($i, 2, '0', STR_PAD_LEFT).'" : "'.$timeofObs.'",';
+							$timeOfObservation["TidP".str_pad($i, 2, '0', STR_PAD_LEFT)]=$timeofObs;
+
+							//$timeOfObservation.='
+							//"TidP'.str_pad($i, 2, '0', STR_PAD_LEFT).'" : "'.$timeofObs.'",';
 
 							break;
 					}
@@ -389,26 +427,30 @@ foreach($listFilesOk as $file) {
 				$finish_time=intval($hours.$minutes);
 
 
-				$distanceCovered='"distanceCovered" : [
-						{
-							';
+				$distanceCovered=array();
+
+				//$distanceCovered='"distanceCovered" : [
+				//		{
+				//			';
 
 				$iL="B";
 				for ($i=1; $i<=$nbPts; $i++) {
-					$distanceCovered.='
-					"distanceOnL'.str_pad($i, 2, '0', STR_PAD_LEFT).'" : "'.$worksheet->getCell($iL."27")->getValue().'",';
+					$distanceCovered["distanceOnL".str_pad($i, 2, '0', STR_PAD_LEFT)]=$worksheet->getCell($iL."27")->getValue();
+
+					//$distanceCovered.='
+					//"distanceOnL'.str_pad($i, 2, '0', STR_PAD_LEFT).'" : "'.$worksheet->getCell($iL."27")->getValue().'",';
 					$iL++;
 				}
 
-				$distanceCovered[strlen($distanceCovered)-1]=' ';
-				$distanceCovered.='}],';
+				//$distanceCovered[strlen($distanceCovered)-1]=' ';
+				//$distanceCovered.='}],';
 
 				
 				
-				$minutesSpentObserving[strlen($minutesSpentObserving)-1]=' ';
-				$minutesSpentObserving.='}],';
-				$timeOfObservation[strlen($timeOfObservation)-1]=' ';
-				$timeOfObservation.='}],';
+				//$minutesSpentObserving[strlen($minutesSpentObserving)-1]=' ';
+				//$minutesSpentObserving.='}],';
+				//$timeOfObservation[strlen($timeOfObservation)-1]=' ';
+				//$timeOfObservation.='}],';
 
 			}
 
@@ -425,14 +467,19 @@ foreach($listFilesOk as $file) {
 			
 			$activityId=generate_uniqId_format("xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx");
 			$eventID=$activityId;
+
+			$arrActivityId[$file]=$activityId;
+
 			$outputId=generate_uniqId_format("xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx");
 
-			$helpers="[{}]";
+			$helpers=array();
 
 			foreach ($list_id as $animals => $listId) {
-				$data_field[$animals]="";
+				//$data_field[$animals]="";
+				$data_field[$animals]=array();
 			}
-			$data_field["mammalsOnRoad"]="";
+			//$data_field["mammalsOnRoad"]="";
+			$data_field["mammalsOnRoad"]=array();
 
 			$listId = $list_id["birds"];
 
@@ -521,7 +568,7 @@ foreach($listFilesOk as $file) {
 
 
 
-					$data_field[$animalsDataField].='{';
+					//$data_field[$animalsDataField].='{';
 
 					$arrP=array();
 					$arrL=array();
@@ -535,8 +582,10 @@ foreach($listFilesOk as $file) {
 
 						$arrP[$iP]=($worksheet->getCell($colP.$iRowSpecies)->getValue()!="" ? $worksheet->getCell($colP.$iRowSpecies)->getValue() : 0);
 
-						$data_field[$animalsDataField].='"P'.str_pad($iP, 2, '0', STR_PAD_LEFT).'": "'.$arrP[$iP].'",
-						';
+						$data_field[$animalsDataField]["P".str_pad($iP, 2, '0', STR_PAD_LEFT)]=$arrP[$iP];
+
+						//$data_field[$animalsDataField].='"P'.str_pad($iP, 2, '0', STR_PAD_LEFT).'": "'.$arrP[$iP].'",
+						//';
 
 
 						if ($arrP[$iP]>0) {
@@ -545,8 +594,11 @@ foreach($listFilesOk as $file) {
 
 						if ($protocol!="vinter") {
 							$arrL[$iP]=($worksheet->getCell($colL.$iRowSpecies)->getValue()!="" ? $worksheet->getCell($colL.$iRowSpecies)->getValue() : 0);
-							$data_field[$animalsDataField].='"L'.str_pad($iP, 2, '0', STR_PAD_LEFT).'": "'.$arrL[$iP].'",
-							';
+
+							$data_field[$animalsDataField]["L".str_pad($iP, 2, '0', STR_PAD_LEFT)]=$arrL[$iP];
+
+							//$data_field[$animalsDataField].='"L'.str_pad($iP, 2, '0', STR_PAD_LEFT).'": "'.$arrL[$iP].'",
+							//';
 							$colL++;
 						}
 
@@ -560,14 +612,19 @@ foreach($listFilesOk as $file) {
 							$arrL[0]=$worksheet->getCell("T".$iRowSpecies)->getOldCalculatedValue();
 							$IC=$arrP[0]+$arrL[0];
 
-							$data_field[$animalsDataField].='"pointCount" : '.$arrP[0].',
-							';
-							$data_field[$animalsDataField].='"lineCount" : '.$arrL[0].',
-							';
+							$data_field[$animalsDataField]["pointCount"]=$arrP[0];
+							$data_field[$animalsDataField]["lineCount"]=$arrL[0];
+
+							//$data_field[$animalsDataField].='"pointCount" : '.$arrP[0].',
+							//';
+							//$data_field[$animalsDataField].='"lineCount" : '.$arrL[0].',
+							//';
 							break;
 						case "vinter":
-							$data_field[$animalsDataField].='"pk" : "'.$nbSpP.'",
-							';
+
+							$data_field[$animalsDataField]["pk"]=$nbSpP;
+							//$data_field[$animalsDataField].='"pk" : "'.$nbSpP.'",
+							//';
 
 							$IC=$worksheet->getCell("X".$iRowSpecies)->getOldCalculatedValue();
 							break;
@@ -608,10 +665,20 @@ foreach($listFilesOk as $file) {
 					$outputSpeciesId=generate_uniqId_format("xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx");
 
 
-					$data_field[$animalsDataField].=
-						'"swedishRank":"'.$rank.'",';
+					$data_field[$animalsDataField]["swedishRank"]=$rank;
+					//$data_field[$animalsDataField].=
+					//	'"swedishRank":"'.$rank.'",';
 
-					$data_field[$animalsDataField].='
+					$data_field[$animalsDataField][$speciesFieldName]=array(
+						"listId" => $listId,
+						"commonName" => "",
+						"outputSpeciesId" => $outputSpeciesId,
+						"scientificName" => $sn,
+						"name" => $name,
+						"guid" => $guid
+					);
+
+					/*$data_field[$animalsDataField].='
 						"'.$speciesFieldName.'" : {
 							"listId" : "'.$listId.'",
 							"commonName" : "",
@@ -620,16 +687,53 @@ foreach($listFilesOk as $file) {
 							"name" : "'.$name.'",
 							"guid" : "'.$guid.'"
 						},
-						';
+						';*/
 
-					$data_field[$animalsDataField].=
-						'"individualCount" : '.$IC.'
-					},';
+					$data_field[$animalsDataField]["individualCount"]=$IC;
+					//$data_field[$animalsDataField].=
+					//	'"individualCount" : '.$IC.'
+					//},';
 
 
 					$occurenceID=generate_uniqId_format("xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx");
 
 
+					$arr_json_record[]=array(
+						"dateCreated" => $nowISODate,
+						"lastUpdated" => $nowISODate,
+						"occurrenceID" => $occurenceID,
+						"status" => "active",
+						"recordedBy" => $recorder_name,
+						"rightsHolder" => $commonFields["rightsHolder"],
+						"institutionID" => $commonFields["institutionID"],
+						"institutionCode" => $commonFields["institutionCode"],
+						"basisOfRecord" => $commonFields["basisOfRecord"],
+						"datasetID" => $commonFields[$protocol]["projectActivityId"],
+						"datasetName" => $commonFields[$protocol]["datasetName"],
+						"licence" => $commonFields["licence"],
+						"locationID" => $array_sites[$siteKey]["locationID"],
+						"locationName" => $array_sites[$siteKey]["locationName"],
+						"locationRemarks" => "",
+						"eventID" => $eventID,
+						"eventTime" => $start_time,
+						"eventRemarks" => $eventRemarks,
+						"notes" => $notes,
+						"guid" => $guid,
+						"name" => $name,
+						"scientificName" => $sn,
+						"multimedia" => array(),
+						"activityId" => $activityId,
+						"decimalLatitude" => $array_sites[$siteKey]["decimalLatitude"],
+						"decimalLongitude" => $array_sites[$siteKey]["decimalLongitude"],
+						"eventDate" => $eventDate,
+						"individualCount" => $IC,
+						"outputId" => $outputId,
+						"outputSpeciesId" => $outputSpeciesId,
+						"projectActivityId" => $commonFields[$protocol]["projectActivityId"],
+						"projectId" => $commonFields[$protocol]["projectId"],
+						"userId" => $commonFields["userId"]
+					);
+					/*
 					$arr_json_record.='{
 						"dateCreated" : ISODate("'.$date_now_tz.'"),
 						"lastUpdated" : ISODate("'.$date_now_tz.'"),
@@ -665,13 +769,14 @@ foreach($listFilesOk as $file) {
 						"projectId" : "'.$commonFields[$protocol]["projectId"].'",
 						"userId" : "'.$commonFields["userId"].'"
 					},';
-
+					*/
 				}
 
 				$iRowSpecies++;
 
 			}
 
+			/*
 			// replace last comma by 
 			foreach ($list_id as $animals => $listId) {
 				if (strlen($data_field[$animals])>0)
@@ -679,16 +784,23 @@ foreach($listFilesOk as $file) {
 			}
 			if (isset($data_field["mammalsOnRoad"]) && strlen($data_field["mammalsOnRoad"])>0) $data_field["mammalsOnRoad"][strlen($data_field["mammalsOnRoad"])-1]=' ';
 			//echo "data_field: ".$data_field[$animals]."\n";
+			*/
 
+			$specific_fields=array();
 
-
-			$specific_fields="";
+			//$specific_fields="";
 
 			switch ($protocol) {
 
 				case "std":
 
-					$specific_fields.='
+					$specific_fields["timeOfObservation"]=$timeOfObservation;
+					$specific_fields["distanceCovered"]=$distanceCovered;
+					$specific_fields["minutesSpentObserving"]=$minutesSpentObserving;
+					$specific_fields["minutesSpentObserving"]=$minutesSpentObserving;
+					$specific_fields["mammalObservations"]=$data_field["mammals"];
+
+					/*$specific_fields.='
 					'.$timeOfObservation.'
 					'.$distanceCovered.'
 					'.$minutesSpentObserving.'
@@ -697,7 +809,7 @@ foreach($listFilesOk as $file) {
 						'.$data_field["mammals"].'
 					],
 					'
-					;
+					;*/
 
 				break;
 
@@ -721,15 +833,37 @@ foreach($listFilesOk as $file) {
 							break;
 					}
 					*/
+					$specific_fields["transport"]=$transport;
+					$specific_fields["snow"]=$snow;
+					$specific_fields["period"]=$periodFN;
+
+					/*
 					$specific_fields.=
 					'"transport" : "'.$transport.'",
 					"snow" : "'.$snow.'",
 					"period" : "'.$periodFN.'",';
-
+					*/
 					break;
 
 				case "natt":
 
+					$specific_fields["cloudsStart"]=$cloudsStart;
+					$specific_fields["temperatureStart"]=$tempStart;
+					$specific_fields["windStart"]=$windStart;
+					$specific_fields["precipitationStart"]=$precipStart;
+					$specific_fields["cloudsEnd"]=$cloudsEnd;
+					$specific_fields["temperatureEnd"]=$tempEnd;
+					$specific_fields["windEnd"]=$windEnd;
+					$specific_fields["precipitationEnd"]=$precipEnd;
+					$specific_fields["period"]=$per;
+					$specific_fields["timeOfObservation"]=$timeOfObservation;
+					$specific_fields["mammalsCounted"]="ja";
+					$specific_fields["mammalObservations"]=$data_field["mammals"];
+					$specific_fields["mammalObservationsOnRoad"]=$data_field["mammalsOnRoad"];
+					$specific_fields["youngOwlObservations"]=$data_field["owls"];
+					$specific_fields["amphibianObservations"]=$data_field["amphibians"];
+					$specific_fields["amphibiansCounted"]="ja";
+					/*
 					$specific_fields.=
 					'"cloudsStart" : "'. $cloudStart.'",
 					"temperatureStart" : "'. $tempStart.'",
@@ -756,13 +890,32 @@ foreach($listFilesOk as $file) {
 					"amphibianObservations" : [
 						'.$data_field["amphibians"].'
 					],';
-
+					*/
 				break;
 
 
 			}
-			
 
+			$arr_json_activity[]=array(
+				"activityId" => $activityId,
+				"assessment" => false,
+				"dateCreated" => $nowISODate,
+				"lastUpdated" => $nowISODate,
+				"progress" => "planned",
+				"projectActivityId" => $commonFields[$protocol]["projectActivityId"],
+				"projectId" => $commonFields[$protocol]["projectId"],
+				"projectStage" => "",
+				"siteId" => $array_sites[$siteKey]["locationID"],
+				"status" => "active",
+				"type" => $commonFields[$protocol]["type"],
+				"userId" => $commonFields["userId"],
+				"personId" => $personId,
+				"mainTheme" => "",
+				"verificationStatus" => "not verified",
+				"excelFile" => $file
+			);
+
+			/*
 			$arr_json_activity.='{
 				"activityId" : "'.$activityId.'",
 				"assessment" : false,
@@ -781,7 +934,52 @@ foreach($listFilesOk as $file) {
 				"verificationStatus" : "not verified",
 				"excelFile" : "'.$file.'"
 			},';
+			*/
 
+			$data_array=array (
+				"eventRemarks" => $eventRemarks,
+				"surveyFinishTime" => $finish_time,
+				"locationAccuracy" => 50,
+				"comments" => $comments,
+				"surveyDate" => $date_survey,
+				"locationHiddenLatitude" => $array_sites[$siteKey]["decimalLatitude"],
+				"locationLatitude" => $array_sites[$siteKey]["decimalLatitude"],
+				"locationSource" => "Google maps",
+				"recordedBy" => $recorder_name,
+				"helpers" => $helpers,
+				"surveyStartTime" => $start_time,
+				"locationCentroidLongitude" => null,
+				"observations" => array(
+					/*$data_field["birds"]*/
+				),
+				"location" => $array_sites[$siteKey]["locationID"],
+				"locationLongitude" => $array_sites[$siteKey]["decimalLongitude"],
+				"locationHiddenLongitude" => $array_sites[$siteKey]["decimalLongitude"],
+				"locationCentroidLatitude" => null
+			);
+			$data_array=array_merge($specific_fields, $data_array);
+
+			$arr_json_output[]=array(
+				"activityId" => $activityId,
+				"dateCreated" => $nowISODate,
+				"lastUpdated" => $nowISODate,
+				"outputId" => $outputId,
+				"status" => "active",
+				"outputNotCompleted" => false,
+				"data" => $data_array,
+				"selectFromSitesOnly" => true,
+				"_callbacks" => array(
+					"sitechanged" => array(null)
+				),
+				"mapElementId" => "locationMap",
+				"checkMapInfo" => array(
+					"validation" => true
+				),
+				"name" => $commonFields[$protocol]["name"],
+				"dataOrigin" => $dataOrigin
+			);
+
+			/*
 			$arr_json_output.='{
 				"activityId" : "'.$activityId.'",
 				"dateCreated" : ISODate("'.$date_now_tz.'"),
@@ -824,6 +1022,7 @@ foreach($listFilesOk as $file) {
 				"name" : "'.$commonFields[$protocol]["name"].'",
 				"dataOrigin" : "'.$dataOrigin.'"
 			},';
+			*/
 
 
 
@@ -847,75 +1046,16 @@ $ratioSpecies = $speciesFound / ($speciesFound+$speciesNotFound);
 $consoleTxt.=consoleMessage("info", "Species ratio found in the species lists : ".$speciesFound." / ".($speciesFound+$speciesNotFound)." = ".number_format($ratioSpecies*100, 2)."%");
 
 // replace last comma by 
-$arr_json_output[strlen($arr_json_output)-1]=' ';
-$arr_json_output.=']';
-$arr_json_activity[strlen($arr_json_activity)-1]=' ';
-$arr_json_activity.=']';
-$arr_json_record[strlen($arr_json_record)-1]=' ';
-$arr_json_record.=']';
-$arr_json_person[strlen($arr_json_person)-1]=' ';
-$arr_json_person.=']';
+//$arr_json_output[strlen($arr_json_output)-1]=' ';
+//$arr_json_output.=']';
+//$arr_json_activity[strlen($arr_json_activity)-1]=' ';
+//$arr_json_activity.=']';
+//$arr_json_record[strlen($arr_json_record)-1]=' ';
+//$arr_json_record.=']';
+//$arr_json_person[strlen($arr_json_person)-1]=' ';
+//$arr_json_person.=']';
 
 //echo $arr_json_output;
 //echo "\n";
 
-if ($fileRefused) {
-	$consoleTxt.=consoleMessage("error", "NO FILE CREATED FOR ".$file);
-}
-elseif ($nbFiles==0) {
-	$consoleTxt.=consoleMessage("error", "NO FILE TO CREATE");
-}
-else {
-	for ($i=1;$i<=4;$i++) {
-		switch ($i) {
-			case 1:
-				$typeO="activity";
-				$json=$arr_json_activity;
-				break;
-			case 2:
-				$typeO="output";
-				$json=$arr_json_output;
-				break;
-			case 3:
-				$typeO="record";
-				$json=$arr_json_record;
-				break;
-			case 4:
-				$typeO="person";
-				$json=$arr_json_person;
-				break;
-		}
-		$filename_json='excel_json_'.$database.'_'.$protocol.'_'.$typeO.'s_'.date("Y-m-d-His").'.json';
-		$path=PATH_OUTPUT_JSON.$database.'/'.$protocol."/".$filename_json;
-		//echo 'db.'.$typeO.'.remove({"dateCreated" : {$gte: new ISODate("'.date("Y-m-d").'T01:15:31Z")}})'."\n";
-		echo 'mongoimport --db ecodata --collection '.$typeO.' --jsonArray --file '.$path."\n";
-		//$json = json_encode($arr_rt, JSON_UNESCAPED_SLASHES); 
-		if ($fp = fopen($path, 'w')) {
-			fwrite($fp, $json);
-			fclose($fp);
-		}
-		else $consoleTxt.=consoleMessage("error", "can't create file ".$path);
-
-		//echo 'PATH: '.$path."\n\n";
-
-	}
-
-
-	if ($ratioSpecies!=1) {
-		var_dump($arrSpeciesNotFound);
-	}
-
-	if ($server=="PROD") $serverHostPath="ubuntu@89.45.234.73:/home/ubuntu/convert-SFT-SEBMS-to-MongoDB/dump_json_sft_sebms/";
-	else $serverHostPath="radar@canmove-dev.ekol.lu.se:/home/radar/convert-SFT-SEBMS-to-MongoDB/dump_json_sft_sebms/";
-	echo "scp ".PATH_OUTPUT_JSON."/".$database."/".$protocol."/excel_json_* ".$serverHostPath.$database."/".$protocol."/\n";
-
-	if (!$debug) {
-		// move files to OK folder
-		foreach ($listFiles as $fil) {
-			exec('mv "'.$path_excel.$fil.'" '.$path_excel."OK/");
-		}
-		$consoleTxt.=consoleMessage("info", $nbFiles." files analyzed and converted in json");
-	}
-
-}
 ?>

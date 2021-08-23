@@ -2,16 +2,7 @@
 // 2** FILENAME CHECK
 
 
-// date now
-$micro_date = microtime();
-$date_array = explode(" ",$micro_date);
-$micsec=number_format($date_array[0]*1000, 0, ".", "");
-$micsec=str_pad($micsec,3,"0", STR_PAD_LEFT);
-if ($micsec==1000) $micsec=999;
-$date_now_tz = date("Y-m-d",$date_array[1])."T".date("H:i:s",$date_array[1]).".".$micsec."Z";
-//echo "Date: $date_now_tz\n";
 
-$path_excel=PATH_INPUT_EXCEL.$database."/".$protocol."/";
 
 $filesSurveys = scandir($path_excel);
 
@@ -43,7 +34,9 @@ foreach($filesSurveys as $file) {
                 break;
             case "vinter":
                 $internalSiteId=$siteIdFN;
-                $templateFileName="Vin20";
+                $templateFileName="Vin";
+                $yearStudied=substr($prefixFN, strlen($templateFileName), 2);
+                $yearFull="20".$yearStudied;
                 break;
             case "natt":
                 break;
@@ -56,15 +49,21 @@ foreach($filesSurveys as $file) {
         $infoFile["internalSiteId"]=$internalSiteId;
         $infoFile["period"]=$periodFN;
 
+        /*
+        echo "Year Full:".$yearFull."<br>";
+        echo $siteIdFN."<br>";
+        print_r($tabSitesPeriod[$siteIdFN]);
+        echo "<br>";
+        */
 
-        $templateFileName="Vin20";
-
-        if ($prefixFN!=$templateFileName) {
+        if ($prefixFN!=$templateFileName.$yearStudied) {
             $consoleTxt.=consoleMessage("error", $file. " can't be processed, wrong prefix. Must start with '".$templateFileName. "'. '".$prefixFN."' instead");
+            $infoFile["status"]="NO => wrong filename, does not start with correct template.";
         }
-        elseif(isset($tabSitesPeriod[$siteIdFN])) {
-            if (in_array($periodFN, $tabSitesPeriod[$siteIdFN])) {
-                $consoleTxt.=consoleMessage("error", $file. " can't be processed, period '".$periodFN. "' already existing for site '".$siteIdFN."'");
+
+        elseif(isset($array_sites[$siteIdFN])) {
+            if (in_array($yearFull."-".$periodFN, $tabSitesPeriod[$siteIdFN])) {
+                $consoleTxt.=consoleMessage("error", $file. " can't be processed, period '".$periodFN. "' already existing for site '".$siteIdFN."' and year ".$yearFull);
                 $infoFile["status"]="NO => period already exists in MongoDb";
 
             }
@@ -89,6 +88,7 @@ foreach($filesSurveys as $file) {
 
 
 $consoleTxt.=consoleMessage("info", count($listFiles)." files found.");
+
 
 // END 2** FILENAME CHECK
 
