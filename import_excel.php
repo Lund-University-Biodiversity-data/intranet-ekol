@@ -41,12 +41,13 @@ $path_excel=PATH_INPUT_EXCEL.$database."/".$protocol."/";
 
 if (isset($_POST["execFormListFiles"]) && $_POST["execFormListFiles"]=="OK") {
 
+	$server=$_POST["inputServer"];
+
 	$array_sites=getArraySitesFromMongo($protocol, $commonFields[$protocol]["projectId"], $server);
 	if ($array_sites=== false) {
 	    $consoleTxt.=consoleMessage("error", "Can't connect to MongoDb");
 	}
 	else {
-		$server=$_POST["inputServer"];
 
 		$consoleTxt.=consoleMessage("info", "1) Get Existing Surveys");
 
@@ -64,12 +65,13 @@ if (isset($_POST["execFormListFiles"]) && $_POST["execFormListFiles"]=="OK") {
 
 if (isset($_POST["execFormProcessFiles"]) && $_POST["execFormProcessFiles"]=="OK") {
 
+	$server=$_POST["serverHidden"];
+
 	$array_sites=getArraySitesFromMongo($protocol, $commonFields[$protocol]["projectId"], $server);
 	if ($array_sites=== false) {
 	    $consoleTxt.=consoleMessage("error", "Can't connect to MongoDb");
 	}
 	else {
-		$server=$_POST["serverHidden"];
 
 		$mongoConnectionUrl=$mongoConnection[$server];
 
