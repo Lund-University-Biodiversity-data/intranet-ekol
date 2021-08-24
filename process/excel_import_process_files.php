@@ -481,10 +481,13 @@ foreach($listFilesOk as $file) {
 			//$data_field["mammalsOnRoad"]="";
 			$data_field["mammalsOnRoad"]=array();
 
+
 			$listId = $list_id["birds"];
 
 			// loop on the rows
 			while ($worksheet->getCell($colTotObs.$iRowSpecies)->getValue() != "") {
+
+				$dataAnimal=array();
 
 				//echo "V".$iRowSpecies.":".$worksheet->getCell("V".$iRowSpecies)->getOldCalculatedValue()."(".$worksheet->getCell("S".$iRowSpecies)->getOldCalculatedValue()." - ".$worksheet->getCell("T".$iRowSpecies)->getOldCalculatedValue().")\n";
 
@@ -582,7 +585,7 @@ foreach($listFilesOk as $file) {
 
 						$arrP[$iP]=($worksheet->getCell($colP.$iRowSpecies)->getValue()!="" ? $worksheet->getCell($colP.$iRowSpecies)->getValue() : 0);
 
-						$data_field[$animalsDataField]["P".str_pad($iP, 2, '0', STR_PAD_LEFT)]=$arrP[$iP];
+						$dataAnimal["P".str_pad($iP, 2, '0', STR_PAD_LEFT)]=$arrP[$iP];
 
 						//$data_field[$animalsDataField].='"P'.str_pad($iP, 2, '0', STR_PAD_LEFT).'": "'.$arrP[$iP].'",
 						//';
@@ -595,7 +598,7 @@ foreach($listFilesOk as $file) {
 						if ($protocol!="vinter") {
 							$arrL[$iP]=($worksheet->getCell($colL.$iRowSpecies)->getValue()!="" ? $worksheet->getCell($colL.$iRowSpecies)->getValue() : 0);
 
-							$data_field[$animalsDataField]["L".str_pad($iP, 2, '0', STR_PAD_LEFT)]=$arrL[$iP];
+							$dataAnimal["L".str_pad($iP, 2, '0', STR_PAD_LEFT)]=$arrL[$iP];
 
 							//$data_field[$animalsDataField].='"L'.str_pad($iP, 2, '0', STR_PAD_LEFT).'": "'.$arrL[$iP].'",
 							//';
@@ -612,8 +615,8 @@ foreach($listFilesOk as $file) {
 							$arrL[0]=$worksheet->getCell("T".$iRowSpecies)->getOldCalculatedValue();
 							$IC=$arrP[0]+$arrL[0];
 
-							$data_field[$animalsDataField]["pointCount"]=$arrP[0];
-							$data_field[$animalsDataField]["lineCount"]=$arrL[0];
+							$dataAnimal["pointCount"]=$arrP[0];
+							$dataAnimal["lineCount"]=$arrL[0];
 
 							//$data_field[$animalsDataField].='"pointCount" : '.$arrP[0].',
 							//';
@@ -622,7 +625,7 @@ foreach($listFilesOk as $file) {
 							break;
 						case "vinter":
 
-							$data_field[$animalsDataField]["pk"]=$nbSpP;
+							$dataAnimal["pk"]=$nbSpP;
 							//$data_field[$animalsDataField].='"pk" : "'.$nbSpP.'",
 							//';
 
@@ -665,11 +668,11 @@ foreach($listFilesOk as $file) {
 					$outputSpeciesId=generate_uniqId_format("xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx");
 
 
-					$data_field[$animalsDataField]["swedishRank"]=$rank;
+					$dataAnimal["swedishRank"]=$rank;
 					//$data_field[$animalsDataField].=
 					//	'"swedishRank":"'.$rank.'",';
 
-					$data_field[$animalsDataField][$speciesFieldName]=array(
+					$dataAnimal[$speciesFieldName]=array(
 						"listId" => $listId,
 						"commonName" => "",
 						"outputSpeciesId" => $outputSpeciesId,
@@ -689,7 +692,7 @@ foreach($listFilesOk as $file) {
 						},
 						';*/
 
-					$data_field[$animalsDataField]["individualCount"]=$IC;
+					$dataAnimal["individualCount"]=$IC;
 					//$data_field[$animalsDataField].=
 					//	'"individualCount" : '.$IC.'
 					//},';
@@ -770,10 +773,11 @@ foreach($listFilesOk as $file) {
 						"userId" : "'.$commonFields["userId"].'"
 					},';
 					*/
+
+					$data_field[$animals][]=$dataAnimal;
 				}
 
 				$iRowSpecies++;
-
 			}
 
 			/*
@@ -949,9 +953,7 @@ foreach($listFilesOk as $file) {
 				"helpers" => $helpers,
 				"surveyStartTime" => $start_time,
 				"locationCentroidLongitude" => null,
-				"observations" => array(
-					$data_field["birds"]
-				),
+				"observations" => $data_field["birds"],
 				"location" => $array_sites[$siteKey]["locationID"],
 				"locationLongitude" => $array_sites[$siteKey]["decimalLongitude"],
 				"locationHiddenLongitude" => $array_sites[$siteKey]["decimalLongitude"],
