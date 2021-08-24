@@ -950,7 +950,7 @@ foreach($listFilesOk as $file) {
 				"surveyStartTime" => $start_time,
 				"locationCentroidLongitude" => null,
 				"observations" => array(
-					/*$data_field["birds"]*/
+					$data_field["birds"]
 				),
 				"location" => $array_sites[$siteKey]["locationID"],
 				"locationLongitude" => $array_sites[$siteKey]["decimalLongitude"],
