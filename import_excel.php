@@ -12,7 +12,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 $debug=false;
 
 $consoleTxt="";
-$server="";
+$server=DEFAULT_SERVER;
 $listHiddenOkFiles="";
 $listFiles=array();
 $protocol="vinter";

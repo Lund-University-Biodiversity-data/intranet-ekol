@@ -27,7 +27,9 @@
       <label for="inputServer" class="col-sm-2 col-form-label">MongoDb Server</label>
       <div class="col-sm-10">
         <select class="form-control" id="inputServer" name="inputServer" placeholder="server">
+          <?php if (isset($mongoConnection["TEST"])) { ?>
           <option value="TEST" <?= ($server=="TEST" ? "selected" : "") ?>>TEST - local</option>
+          <?php } ?>
           <option value="DEV" <?= ($server=="DEV" ? "selected" : "") ?>>DEV - canmove-dev</option>
           <option value="PROD" <?= ($server=="PROD" ? "selected" : "") ?>>PROD - ecodata.biodivesitydata.se [89.45.234.73]</option>
         </select> 

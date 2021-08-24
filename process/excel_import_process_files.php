@@ -144,7 +144,7 @@ foreach($listFilesOk as $file) {
 
 				$ruttname=$worksheet->getCell('A10')->getValue();
 				$kartakod=$worksheet->getCell('G10')->getValue();
-				$length=$worksheet->getCell('L10')->getValue();
+				$distance=$worksheet->getCell('L10')->getValue();
 				$transport=$worksheet->getCell('O10')->getValue();
 				$snow=$worksheet->getCell('R10')->getValue();
 
@@ -839,6 +839,7 @@ foreach($listFilesOk as $file) {
 					*/
 					$specific_fields["transport"]=$transport;
 					$specific_fields["snow"]=$snow;
+					$specific_fields["distance"]=$distance;
 					$specific_fields["period"]=$periodFN;
 
 					/*
