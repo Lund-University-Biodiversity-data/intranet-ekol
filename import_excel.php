@@ -36,8 +36,12 @@ $final_result="";
 
 $path_excel=PATH_INPUT_EXCEL.$database."/".$protocol."/";
 
-
-
+if (ENVIRONMENT=="TEST") {
+	$hostExcelFiles="localhost";
+}
+else {
+	$hostExcelFiles="Serveur Canmove-App";	
+}
 
 if (isset($_POST["execFormListFiles"]) && $_POST["execFormListFiles"]=="OK") {
 
@@ -57,6 +61,7 @@ if (isset($_POST["execFormListFiles"]) && $_POST["execFormListFiles"]=="OK") {
 			$consoleTxt.=consoleMessage("info", "2) Check filenames");
 
 			include "process/excel_import_filenames_check.php";
+
 		}
 	}
 } // FIN IF $_POST["execFormListFiles"] OK
@@ -92,10 +97,16 @@ if (isset($_POST["execFormProcessFiles"]) && $_POST["execFormProcessFiles"]=="OK
 				include "process/excel_import_process_files.php";
 
 				if ($fileRefused) {
+					$final_result.="<p><b>Something wrong happened. Please check the file template and the console.</b></p>";
 					$consoleTxt.=consoleMessage("error", "NO FILE CREATED FOR ".$file);
 				}
 				else {
 					include "process/excel_import_insert_mongo.php";
+
+					if ($finalOk)
+						$final_result.="<p><b>SUCCESS</b></p>";
+					else
+						$final_result.="<p><b>Something wrong happened. Please check the console, and warn ".EMAIL_PROBLEM." if needed</b></p>";
 				}
 			}
 			else {

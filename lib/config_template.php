@@ -4,12 +4,17 @@ define("PATH_PHP", "/usr/bin/php");
 
 define ("URL_WEBSITE", "http://localhost/");
 
+define("EMAIL_PROBLEM", "XXXXX@biol.lu.se");
+
+
 define("PATH_WEBSERVER_ROOT", "/home/XXXXX/");
 define("PATH_CONVERT_DATA", PATH_WEBSERVER_ROOT."intranet-ekol/extract/");
 define("PATH_OUTPUT_JSON", PATH_WEBSERVER_ROOT."intranet-ekol/json/");
 
 define ("PATH_INPUT_EXCEL", PATH_WEBSERVER_ROOT."intranet-ekol/excel-surveys/");
 
+define("DEFAULT_SERVER", "PROD");
+define("ENVIRONMENT", "PROD");
 
 define("URL_LISTS_WS", "https://lists.biodiversitydata.se/ws/");
 define("URL_LISTS_ITEMS", URL_LISTS_WS."speciesListItems/");

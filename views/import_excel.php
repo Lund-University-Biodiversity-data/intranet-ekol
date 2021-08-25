@@ -3,8 +3,15 @@
   <h2>Excel importer</h2>
 
   <p class="lead">
-  	Importing Excel file into Mongo database through JSON files
+  	Importing Excel files into Mongo database. 
   </p>
+
+  <p>
+    Excel files should be stored on server : <?= $hostExcelFiles ?>.<br>
+    Please use a <a href="https://filezilla-project.org/download.php?type=client" target="_blank">FTP client</a> to drop files. Contact <?= EMAIL_PROBLEM ?> if needed ;-)<br>
+    Folder path on server : <?= PATH_INPUT_EXCEL.$database ?>/
+  </p>
+
 
   <form role="form" method="post">
   	<input type="hidden" value="OK" id="execFormListFiles" name="execFormListFiles"/>
@@ -22,6 +29,15 @@
       </div>
     </div>
 
+      <p >
+        The Excel files has to follow a specific template :
+        <ul>
+          <li><b>Line 7</b> must contain personnummer, ruttnummer, date, etc.</li>
+          <li><b>Line 10</b> must contain ruttnamn, karta, etc.</li>
+          <li><b>Line 19</b> must contain comments.</li>
+          <li><b>Line 39</b> must be the first line with species observations.</li>
+        </ul>
+      </p>
 
     <div class="form-group row">
       <label for="inputServer" class="col-sm-2 col-form-label">MongoDb Server</label>
@@ -51,7 +67,7 @@
   <?php } ?>
 
   <?php if (count($listFiles)>0) { ?>
-    <p class="lead">Files checked in folder <?= PATH_INPUT_EXCEL.$database ?>/<?= $protocol ?>/</p>
+
     <div class="form-group row">
       <label class="col-sm-2 col-form-label">List of files</label>
 
@@ -97,7 +113,7 @@
   <?php }  ?>
 
   <div class="form-group row">
-    <label for="consoleArea" class="col-sm-2 col-form-label">Console</label>
+    <label for="consoleArea" class="col-sm-2 col-form-label">CONSOLE</label>
   	<textarea class="form-control" rows=20 id="consoleArea"><?= ($consoleTxt!="" ? $consoleTxt : "No message.") ?>
   	</textarea>
   </div>

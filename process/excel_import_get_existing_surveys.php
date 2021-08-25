@@ -22,7 +22,8 @@ $commands = [
         ['$project'=>[
         	"data.period" => 1,
 	        "data.surveyDate" => 1,
-	        "actID.siteId" => 1
+	        "actID.siteId" => 1,
+            "activityId" => 1
         ]],
         ['$lookup'=>[
         	'from'=>'site',
@@ -35,7 +36,8 @@ $commands = [
         	"data.period" => 1,
 	        "data.surveyDate" => 1,
 	        "actID.siteId" => 1,
-        	"siteID.adminProperties.internalSiteId" => 1
+        	"siteID.adminProperties.internalSiteId" => 1,
+            "activityId" => 1
         ]],
         /*['$limit'=> 20],*/
     ]
@@ -77,14 +79,13 @@ if ($okCon) {
         //var_dump($document);
 
 
-        $tabSitesPeriod[$siteId][]=$year."-".$periodDoc;
+        $tabSitesPeriod[$siteId][$year."-".$periodDoc]=$document->activityId;
 
     }
 
     $consoleTxt.=consoleMessage("info", count($tabSitesPeriod)." different sites surveyed for scheme ".$protocol);
 
 }
-
 
 // END 1** GET ALL THE EXISTING SURVEYS DATE/SITE FROM THE DATABASE
 

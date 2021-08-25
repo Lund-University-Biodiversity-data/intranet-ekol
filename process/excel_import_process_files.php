@@ -22,8 +22,6 @@ switch($protocol) {
 }
 
 
-$nbFiles=0;
-
 $fileRefused=false;
 
 $arrActivityId=array();
@@ -40,8 +38,6 @@ $nowISODate = new MongoDB\BSON\UTCDateTime($stampedDate);
 
 foreach($listFilesOk as $file) {
 
-
-	$nbFiles++;
 
 	switch ($protocol) {
 
@@ -68,8 +64,6 @@ foreach($listFilesOk as $file) {
 
 			break;
 	}
-
-	if (isset($limitFiles) && $limitFiles<$nbFiles) break;
 
 	$tmpfname = PATH_INPUT_EXCEL.$database."/".$protocol."/".$file;
 	$consoleTxt.=consoleMessage("info", "Opens file ".$tmpfname);
@@ -916,7 +910,7 @@ foreach($listFilesOk as $file) {
 				"userId" => $commonFields["userId"],
 				"personId" => $personId,
 				"mainTheme" => "",
-				"verificationStatus" => "not verified",
+				"verificationStatus" => "approved",
 				"excelFile" => $file
 			);
 
@@ -1032,7 +1026,7 @@ foreach($listFilesOk as $file) {
 
 		}
 		else {
-			$consoleTxt.=consoleMessage("error", "UNKNOWN SITE");
+			$consoleTxt.=consoleMessage("error", "UNKNOWN SITE. Maybe not the correct cell in the file ? ");
 			$fileRefused=true;
 		}
 	}

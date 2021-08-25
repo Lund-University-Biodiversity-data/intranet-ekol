@@ -49,12 +49,6 @@ foreach($filesSurveys as $file) {
         $infoFile["internalSiteId"]=$internalSiteId;
         $infoFile["period"]=$periodFN;
 
-        /*
-        echo "Year Full:".$yearFull."<br>";
-        echo $siteIdFN."<br>";
-        print_r($tabSitesPeriod[$siteIdFN]);
-        echo "<br>";
-        */
 
         if ($prefixFN!=$templateFileName.$yearStudied) {
             $consoleTxt.=consoleMessage("error", $file. " can't be processed, wrong prefix. Must start with '".$templateFileName. "'. '".$prefixFN."' instead");
@@ -62,9 +56,13 @@ foreach($filesSurveys as $file) {
         }
 
         elseif(isset($array_sites[$siteIdFN])) {
-            if (in_array($yearFull."-".$periodFN, $tabSitesPeriod[$siteIdFN])) {
-                $consoleTxt.=consoleMessage("error", $file. " can't be processed, period '".$periodFN. "' already existing for site '".$siteIdFN."' and year ".$yearFull);
-                $infoFile["status"]="NO => period already exists in MongoDb";
+            if (isset($tabSitesPeriod[$siteIdFN][$yearFull."-".$periodFN])) {
+                
+                if ($server=="PROD") $link=$linkBioActivity["PROD"];
+                else $link=$linkBioActivity["DEV"];
+
+                $consoleTxt.=consoleMessage("error", $file. " can't be processed, period '".$periodFN. "' already existing for site '".$siteIdFN."' and year ".$yearFull.' => activityId : '.$tabSitesPeriod[$siteIdFN][$yearFull."-".$periodFN]);
+                $infoFile["status"]='NO => period <a href="'.$link.$tabSitesPeriod[$siteIdFN][$yearFull."-".$periodFN].'" target="_blank" >already exists in MongoDb</a>';
 
             }
             else {
