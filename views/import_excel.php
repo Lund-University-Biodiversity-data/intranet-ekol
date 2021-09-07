@@ -9,7 +9,8 @@
   <p>
     Excel files should be stored on server : <?= $hostExcelFiles ?>.<br>
     Please use a <a href="https://filezilla-project.org/download.php?type=client" target="_blank">FTP client</a> to drop files. Contact <?= EMAIL_PROBLEM ?> if needed ;-)<br>
-    Folder path on server : <?= PATH_INPUT_EXCEL.$database ?>/
+    Folder path on server : <?= PATH_INPUT_EXCEL.$database ?>/<br>
+    Keep in mind that you can control the surveys inside BioCollect with the direct link right after a successful import, <strong>but you have to wait tomorrow to see the records in the different pages of BioCollect</strong>, once the next full reindexing of the database has been achieved.
   </p>
 
 

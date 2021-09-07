@@ -6,6 +6,7 @@ define ("URL_WEBSITE", "http://localhost/");
 
 define("EMAIL_PROBLEM", "XXXXX@biol.lu.se");
 
+define("PATH_SHARED_FUNCTIONS", "/XXXXX/repos/shared-functions");
 
 define("PATH_WEBSERVER_ROOT", "/home/XXXXX/");
 define("PATH_CONVERT_DATA", PATH_WEBSERVER_ROOT."intranet-ekol/extract/");

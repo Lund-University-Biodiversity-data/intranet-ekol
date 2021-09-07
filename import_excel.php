@@ -2,7 +2,9 @@
 $database="SFT";
 $dataOrigin="scriptExcel";
 require "lib/config.php";
-require "lib/functions.php";
+
+require PATH_SHARED_FUNCTIONS."generic-functions.php";
+require PATH_SHARED_FUNCTIONS."mongo-functions.php";
 
 require 'vendor/autoload.php';
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
