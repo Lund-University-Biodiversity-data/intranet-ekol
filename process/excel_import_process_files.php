@@ -62,6 +62,9 @@ foreach($listFilesOk as $file) {
 
 			$siteKeyFilename = $siteIdFN;
 
+			$inventerareCheck=$siteIdFN1."-".$siteIdFN2;
+
+
 			break;
 	}
 
@@ -130,17 +133,17 @@ foreach($listFilesOk as $file) {
 				$vinter=$worksheet->getCell('A1')->getValue();
 				$period=$worksheet->getCell('C1')->getValue();				
 
-				$inventerare=$worksheet->getCell('A7')->getValue();
-				$rnr=str_pad($worksheet->getCell('D7')->getValue(), 2, '0', STR_PAD_LEFT);
-				$datum=$worksheet->getCell('H7')->getValue();
-				$startTime=$worksheet->getCell('L7')->getValue();
-				$endTime=$worksheet->getCell('O7')->getValue();
+				$inventerare=$worksheet->getCell('A9')->getValue();
+				$rnr=str_pad($worksheet->getCell('D9')->getValue(), 2, '0', STR_PAD_LEFT);
+				$datum=$worksheet->getCell('H9')->getValue();
+				$startTime=$worksheet->getCell('L9')->getValue();
+				$endTime=$worksheet->getCell('O9')->getValue();
 
-				$ruttname=$worksheet->getCell('A10')->getValue();
-				$kartakod=$worksheet->getCell('G10')->getValue();
-				$distance=$worksheet->getCell('L10')->getValue();
-				$transport=$worksheet->getCell('O10')->getValue();
-				$snow=$worksheet->getCell('R10')->getValue();
+				$ruttname=$worksheet->getCell('A12')->getValue();
+				//$kartakod=$worksheet->getCell('G10')->getValue();
+				$distance=$worksheet->getCell('L12')->getValue();
+				$transport=$worksheet->getCell('O12')->getValue();
+				$snow=$worksheet->getCell('R12')->getValue();
 
 				$recorder_name=$worksheet->getCell('B12')->getValue();
 				$adress=$worksheet->getCell('B13')->getValue();
@@ -154,19 +157,24 @@ foreach($listFilesOk as $file) {
 
 				$notes=str_replace('"', "'", $worksheet->getCell('A19')->getValue());
 
-				$newRoute=$worksheet->getCell('X7')->getValue();
-				$mapAttached=$worksheet->getCell('X8')->getValue();
-				$coordAttached=$worksheet->getCell('X9')->getValue();
+				$newRoute=$worksheet->getCell('X9')->getValue();
+				$mapAttached=$worksheet->getCell('X10')->getValue();
+				$coordAttached=$worksheet->getCell('X11')->getValue();
 
 				$siteKey=$inventerare."-".$rnr;
 
-				$eventRemarks=str_replace('"', "'", $worksheet->getCell('A19')->getValue());
+				$eventRemarks=str_replace('"', "'", $worksheet->getCell('A21')->getValue());
 				$notes="";
 				$comments=$notes;
 
-				$iRowSpecies=39;
+				$iRowSpecies=30;
 				$colSpeciesCode="V";
 				$colTotObs="X";
+
+				if ($inventerare!=$inventerareCheck) {
+					$consoleTxt.=consoleMessage("error", "Not the same Personummer in the filename and file content ! ".$inventerare." VS ".$inventerareCheck);
+					$fileRefused=true;
+				}
 
 				break;
 				
@@ -235,7 +243,7 @@ foreach($listFilesOk as $file) {
 			$consoleTxt.=consoleMessage("error", "Filename site id (".$siteKeyFilename.") and site id in the file (".$siteKey.") don't match ");
 			$fileRefused=true;
 		}
-		$consoleTxt.=consoleMessage("info", "Inveterare : ".$inventerare); 
+		$consoleTxt.=consoleMessage("info", "Inventerare : ".$inventerare); 
 
 		// in case of a 6 digit date, we add 20
 		if (strlen($datum)==6) $datum="20".$datum;
@@ -278,6 +286,11 @@ foreach($listFilesOk as $file) {
 			}
 			else {
 
+
+				$consoleTxt.=consoleMessage("error", "Person does not exist in the database : ".$inventerare);
+				$fileRefused=true;
+
+				/*
 				$userId = $commonFields["userId"];
 				$personId = generate_uniqId_format("xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx");
 				$explFN=explode(" ", $recorder_name);
@@ -299,26 +312,9 @@ foreach($listFilesOk as $file) {
 					"projects"=> array($commonFields[$protocol]["projectId"]),
 					"internalPersonId" => $inventerare
 				);
-				/*
-				$arr_json_person.='{
-					"dateCreated" : ISODate("'.$date_now_tz.'"),
-					"lastUpdated" : ISODate("'.$date_now_tz.'"),
-					"personId" : "'.$personId.'",
-					"firstName" : "'.$explFN[0].'",
-					"lastName" : "'.$explFN[1].'",
-					"birthdate" : "'.$birthdate_format.'",
-					"email" : "'.$email.'",
-					"phoneNum" : "'.$tel.'",
-					"mobileNum" : "'.$mobile.'",
-					"address1" : "'.$address1.'",
-					"address2" : "'.$address2.'",
-					"postCode" : "'.$post.'",
-					"town" : "'.$city.'",
-					"projects": [ "'.$commonFields[$protocol]["projectId"].'" ],
-					"internalPersonId" : "'.$inventerare.'"
-				},';
-				*/
 				$consoleTxt.=consoleMessage("info", "Person to be created with personid: ".$personId);
+
+				*/
 			}
 
 
@@ -641,7 +637,11 @@ foreach($listFilesOk as $file) {
 						$rank=$array_species_art[$art]["rank"];
 					}
 					else {
-						if ($debug) $consoleTxt.=consoleMessage("error", "No species guid for art ".$art);
+						if (trim($art)=="") {
+							$consoleTxt.=consoleMessage("error", "No art specified in row ".$iRowSpecies);
+						}else {
+							$consoleTxt.=consoleMessage("error", "No species guid for art ".$art.", in row ".$iRowSpecies);
+						}
 						$speciesNotFound++;
 						$listId="error-unmatched";
 						$guid="";
@@ -1033,7 +1033,7 @@ foreach($listFilesOk as $file) {
 
 
 
-
+	if ($fileRefused) break;
 }
 
 

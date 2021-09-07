@@ -99,8 +99,8 @@ if (isset($_POST["execFormProcessFiles"]) && $_POST["execFormProcessFiles"]=="OK
 				include "process/excel_import_process_files.php";
 
 				if ($fileRefused) {
-					$final_result.="<p><b>Something wrong happened. Please check the file template and the console.</b></p>";
-					$consoleTxt.=consoleMessage("error", "NO FILE CREATED FOR ".$file);
+					$final_result.="<p><b>Something wrong happened with ".$file.". Please check the file template and the console.</b></p>";
+					$consoleTxt.=consoleMessage("error", "File could not be processed ".$file);
 				}
 				else {
 					include "process/excel_import_insert_mongo.php";

@@ -35,7 +35,7 @@ for ($i=1;$i<=4;$i++) {
 	}
 	//exit();
 
-	$consoleTxt.=consoleMessage("info", $nbRows[$typeO]." document(s) added to colection ".$typeO);
+	$consoleTxt.=consoleMessage("info", $nbRows[$typeO]." document(s) added to collection ".$typeO);
 /*
 	$filename_json='excel_json_'.$database.'_'.$protocol.'_'.$typeO.'s_'.date("Y-m-d-His").'.json';
 	$path=PATH_OUTPUT_JSON.$database.'/'.$protocol."/".$filename_json;
@@ -78,7 +78,7 @@ if (!$debug) {
 			$finalOk=false;
 		}
 		else{
-			$consoleTxt.=consoleMessage("info", "Comand MV executed. File moved.");
+			$consoleTxt.=consoleMessage("info", "Command MV executed. File moved.");
 			//$consoleTxt.=consoleMessage("info", print_r($outputMv));
 		}
 	}
@@ -99,10 +99,10 @@ if (!$debug) {
 
 	exec($cmdScp, $outputScp, $retVal);
 	if ($retVal) {
-		$consoleTxt.=consoleMessage("error", "Can't copy to server host. Scp comand error : ".$cmdScp);
+		$consoleTxt.=consoleMessage("error", "Can't copy to server host. Scp command error : ".$cmdScp);
 	}
 	else {
-		$consoleTxt.=consoleMessage("info", "Comand Scp executed. Json files sent. ");
+		$consoleTxt.=consoleMessage("info", "Command Scp executed. Json files sent. ");
 		//$consoleTxt.=consoleMessage("info", print_r($outputScp));
 
 		$final_result="<b>JSONS FILES TRANSFERED AND CREATED !</b><br>";

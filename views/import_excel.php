@@ -33,10 +33,10 @@
       <p >
         The Excel files has to follow a specific template :
         <ul>
-          <li><b>Line 7</b> must contain personnummer, ruttnummer, date, etc.</li>
-          <li><b>Line 10</b> must contain ruttnamn, karta, etc.</li>
-          <li><b>Line 19</b> must contain comments.</li>
-          <li><b>Line 39</b> must be the first line with species observations.</li>
+          <li><b>Line 9</b> must contain personnummer, ruttnummer, date, etc.</li>
+          <li><b>Line 12</b> must contain ruttnamn, karta, etc.</li>
+          <li><b>Line 21</b> must contain comments.</li>
+          <li><b>Line 30</b> must be the first line with species observations.</li>
         </ul>
       </p>
 

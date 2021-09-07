@@ -85,7 +85,7 @@ foreach($filesSurveys as $file) {
 }
 
 
-$consoleTxt.=consoleMessage("info", count($listFiles)." files found.");
+$consoleTxt.=consoleMessage("info", count($listFiles)." file(s) found.");
 
 
 // END 2** FILENAME CHECK

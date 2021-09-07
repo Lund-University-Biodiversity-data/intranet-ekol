@@ -14,7 +14,7 @@ $array_species_art=array();
 
 foreach ($list_id as $animals => $listId) {
 
-	$consoleTxt.=consoleMessage("info", "Get info from species list ".$listId);
+	$consoleTxt.=consoleMessage("info", "Get info from species list ".$animals.", ".$listId);
 
 	$url=URL_LISTS_ITEMS.$list_id[$animals].URL_LISTS_INCLUDE_KBV;
 	$obj = json_decode(file_get_contents($url), true);
@@ -101,7 +101,7 @@ foreach ($list_id as $animals => $listId) {
 
 			*/
 		}
-		else $consoleTxt.=consoleMessage("error", "No lsid for ".$sp["name"]);		
+		//else $consoleTxt.=consoleMessage("error", "No lsid for ".$sp["name"]);		
 	}
 
 }
