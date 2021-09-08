@@ -21,13 +21,20 @@ define("URL_LISTS_WS", "https://lists.biodiversitydata.se/ws/");
 define("URL_LISTS_ITEMS", URL_LISTS_WS."speciesListItems/");
 define("URL_LISTS_INCLUDE_KBV", "?includeKVP=true");
 
-
 define("FILENAME_SEPARATOR", "|");
 
+define("URL_BIOCOLLECT_DEV", "http://devt.bioatlas.se:8087/");
+define("URL_BIOCOLLECT_PROD", "https://biocollect.bioatlas.se/");
+define("URL_BIOCOLLECT_ENVIRONMENT", "sft/");
 //$postgres DATABASE TO STORE 
 
-$linkBioActivity["DEV"]="http://canmove-dev.ekol.lu.se:8080/sft/bioActivity/index/";
-$linkBioActivity["PROD"]="https://biocollect.biodiversitydata.se/sft/bioActivity/index/";
+$linkBioActivity["TEST"]=URL_BIOCOLLECT_DEV.URL_BIOCOLLECT_ENVIRONMENT."/bioActivity/index/";
+$linkBioActivity["DEV"]=URL_BIOCOLLECT_DEV.URL_BIOCOLLECT_ENVIRONMENT."/bioActivity/index/";
+$linkBioActivity["PROD"]=URL_BIOCOLLECT_PROD.URL_BIOCOLLECT_ENVIRONMENT."/bioActivity/index/";
+
+$linkBioSite["TEST"]=URL_BIOCOLLECT_DEV.URL_BIOCOLLECT_ENVIRONMENT."/site/index/";
+$linkBioSite["DEV"]=URL_BIOCOLLECT_DEV.URL_BIOCOLLECT_ENVIRONMENT."/site/index/";
+$linkBioSite["PROD"]=URL_BIOCOLLECT_PROD.URL_BIOCOLLECT_ENVIRONMENT."/site/index/";
 
 
 $list_id["birds"]="dr627";

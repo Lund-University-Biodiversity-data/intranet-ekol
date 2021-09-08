@@ -3,7 +3,7 @@
   <h2>Excel importer</h2>
 
   <p class="lead">
-  	Importing Excel files into Mongo database. 
+  	Importing Excel files into Mongo database for SFT. 
   </p>
 
   <p>
