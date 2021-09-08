@@ -18,7 +18,7 @@ foreach($filesSurveys as $file) {
             $filename=substr($file, 0, strlen($file)-4);
         }
         elseif (substr($file, strlen($file)-5, 5)==".xlsx") {
-            $filename=substr($file, 0, strlen($file)-5)==".xlsx";
+            $filename=substr($file, 0, strlen($file)-5);
         }
 
         $explodeFilename=explode("-", $filename);

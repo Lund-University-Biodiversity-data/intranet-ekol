@@ -9,11 +9,14 @@ php transform_excel_json.php DEV std 2 debug
  - install the repo Lund-University-Biodiversity-data/shared-functions.git
  - rename config.template.php in config.php, and change the folders paths
  
+
 ** transform excel forms to json **
 sudo apt install composer
 sudo apt-get install php-mbstring
 composer require phpoffice/phpspreadsheet
 
+** for reading XLSX file
+sudo apt-get install php7.4-xml
 
 ** enable mongo to php **
 
