@@ -1,17 +1,20 @@
 <?php
 
 
-$array_sites=getArraySitesFromMongo($protocol, $commonFields[$protocol]["projectId"], $server);
-if ($array_sites=== false) {
+$arrSitesDetails=getArraySitesFromMongo($protocol, $commonFields[$protocol]["projectId"], $server);
+if ($arrSitesDetails=== false) {
     $consoleTxt.=consoleMessage("error", "Can't connect to MongoDb");
 }
 else {
 
 	$consoleTxt.=consoleMessage("info", "1) Get sites for protocol ".$protocol);
-	$consoleTxt.=consoleMessage("info", count($array_sites)." site(s).");
+	$consoleTxt.=consoleMessage("info", count($arrSitesDetails)." site(s).");
 
 	//include "process/excel_import_get_existing_surveys.php";
-	foreach ($array_sites as $indexSite => $dataSite) {
+	foreach ($arrSitesDetails as $indexSite => $dataSite) {
+
+		$arrSites[]=$dataSite["locationID"];
+		$arrSitesInternal[$dataSite["locationID"]]=$indexSite;
 		$lineSite=array();
 
 		$lineSite["locationID"]=$dataSite["locationID"];
@@ -19,7 +22,7 @@ else {
 		$lineSite["locationName"]=$dataSite["locationName"];
 		$lineSite["bookedBy"]=$dataSite["bookedBy"];
 		$lineSite["bookingComment"]=$dataSite["bookingComment"];
-		$lineSite["lastYearSurveyed"]="?";
+		$lineSite["lastYearSurveyed"]="";
 
 		if (trim($lineSite["bookedBy"])!="") {
 			$lineSite["booked"]="yes";

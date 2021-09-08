@@ -14,7 +14,9 @@ $protocol="std";
 $arrRecap=array();
 $arrPersons=array();
 $arrPersonsDetails=array();
-
+$arrSites=array();
+$arrSitesInternal=array();
+$arrSitesDetails=array();
 
 $mng = new MongoDB\Driver\Manager($mongoConnection[$server]);
 

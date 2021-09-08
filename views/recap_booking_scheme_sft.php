@@ -64,6 +64,7 @@
             <th scope="col">#</th>
             <th scope="col">internalSiteId</th>
             <th scope="col">Site name</th>
+            <th scope="col">Lan</th>
             <th scope="col">Last year surveyed</th>
             <th scope="col">Excel file</th>
             <th scope="col">Booked?</th>
@@ -78,6 +79,7 @@
               <th scope="row"><?= ($idS++) ?></th>
               <td><a href="<?= $dataSite["urlBioCollect"] ?>" target="_blank"><?= $siteId ?></a></td>
               <td><?= $dataSite["locationName"] ?></td>
+              <td></td>
               <td><?= $dataSite["lastYearSurveyed"] ?></td>
               <td></td>
               <td><?= $dataSite["booked"] ?></td>

@@ -1,5 +1,7 @@
 <?php
 
+$consoleTxt.=consoleMessage("info", "2) Get surveyors for protocol ".$protocol);
+
 $mng = new MongoDB\Driver\Manager($mongoConnection[$server]);
 
 $filter = ['personId' => ['$in' => $arrPersons]];
@@ -14,6 +16,8 @@ foreach ($rows as $row){
 }
 
 
+$consoleTxt.=consoleMessage("info", count($arrPersonsDetails)." person(s).");
+
 // check no missing data
 foreach ($arrPersons as $person){
 
@@ -26,4 +30,5 @@ foreach ($arrPersons as $person){
 	}
 
 }
+
 ?>
