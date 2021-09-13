@@ -10,6 +10,9 @@ php transform_excel_json.php DEV std 2 debug
  - rename config.template.php in config.php, and change the folders paths
  
 
+#bootstrap table 
+npm install bootstrap-table
+
 ** transform excel forms to json **
 sudo apt install composer
 sudo apt-get install php-mbstring
@@ -39,3 +42,4 @@ ls -la /var/www/.ssh/id_rsa
 add server destination to known_hosts
 /var/www/.ssh/known_hosts
 add server's public key (/var/www/.ssh/id_rsa.pub) to destination server file authorized_keys
+

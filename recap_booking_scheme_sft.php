@@ -17,6 +17,9 @@ $arrPersonsDetails=array();
 $arrSites=array();
 $arrSitesInternal=array();
 $arrSitesDetails=array();
+$arrExcelReceived=array();
+
+$pathInputFiles=PATH_INPUT_EXCEL.$database."/".$protocol."/received/";
 
 $mng = new MongoDB\Driver\Manager($mongoConnection[$server]);
 
@@ -32,6 +35,8 @@ if (isset($_POST["execFormRecapBookingScheme"]) && $_POST["execFormRecapBookingS
 	}
 
 	include "process/recap_booking_sft_get_lastsurvey.php";
+
+	include "process/recap_booking_sft_get_excelreceived.php";
 
 	ksort($arrRecap);
 }

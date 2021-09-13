@@ -1,3 +1,14 @@
+
+<!-- bootstrap tables -->
+<link href="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.css" rel="stylesheet">
+<script src="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.js"></script>
+<!-- bootstrap tables + export buttons -->
+<script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.10.21/tableExport.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.10.21/libs/jsPDF/jspdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.10.21/libs/jsPDF-AutoTable/jspdf.plugin.autotable.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.18.3/dist/extensions/export/bootstrap-table-export.min.js"></script>
+
+
 <div class="container">
 
   <h2>Booking recap for SFT</h2>
@@ -8,9 +19,8 @@
 
   <p>
     Columns obtained from Mongo Database<br>
-    Excel files received checked from folder ""
+    Excel files received checked from folder <?= $pathInputFiles ?>
   </p>
-
 
   <form role="form" method="post">
   	<input type="hidden" value="OK" id="execFormRecapBookingScheme" name="execFormRecapBookingScheme"/>
@@ -58,39 +68,51 @@
     <div class="form-group row">
       <label class="col-sm-2 col-form-label">Recap</label>
 
-      <table class="table">
+
+      <table id="table"
+        data-toggle="table"
+        data-show-columns="true"
+        data-search="true"
+        data-show-export="true">
         <thead>
           <tr>
-            <th scope="col">#</th>
-            <th scope="col">internalSiteId</th>
-            <th scope="col">Site name</th>
-            <th scope="col">Lan</th>
-            <th scope="col">Last year surveyed</th>
-            <th scope="col">Excel file</th>
-            <th scope="col">Booked?</th>
-            <th scope="col">Booking comment</th>
-            <th scope="col">Name</th>
-            <th scope="col">Email</th>
+            <th data-sortable="true" scope="col">#</th>
+            <th data-field="internalSiteId" data-sortable="true" scope="col">internalSiteId</th>
+            <th data-field="uttnamn" data-sortable="true" scope="col">Ruttnamn</th>
+            <th data-field="lan" data-sortable="true" scope="col">Lan</th>
+            <th data-sortable="true" scope="col">Last year surveyed</th>
+            <th data-sortable="true" scope="col">Excel file</th>
+            <th data-sortable="true" scope="col">Booked?</th>
+            <th data-sortable="true" scope="col">Booking comment</th>
+            <th data-sortable="true" scope="col">Name</th>
+            <th data-sortable="true" scope="col">Email</th>
           </tr>
         </thead>
         <tbody>
-          <?php $idS=1; foreach ($arrRecap as $siteId => $dataSite) { ?>
+          <?php $idS=0; foreach ($arrRecap as $siteId => $dataSite) { $idS++;?>
             <tr>
-              <th scope="row"><?= ($idS++) ?></th>
+              <th scope="row"><?= $idS ?></th>
               <td><a href="<?= $dataSite["urlBioCollect"] ?>" target="_blank"><?= $siteId ?></a></td>
               <td><?= $dataSite["locationName"] ?></td>
               <td></td>
               <td><?= $dataSite["lastYearSurveyed"] ?></td>
-              <td></td>
+              <td><?= $dataSite["excelReceived"] ?></td>
               <td><?= $dataSite["booked"] ?></td>
               <td><?= $dataSite["bookingComment"] ?></td>
               <td><?= ($dataSite["booked"]=="yes" ? $arrPersonsDetails[$dataSite["bookedBy"]]["name"] : "") ?></td>
               <td><?= ($dataSite["booked"]=="yes" ? $arrPersonsDetails[$dataSite["bookedBy"]]["email"] : "") ?></td>
-              <td></td>
             </tr>
           <?php } ?>
         </tbody>
       </table>
+
+      <script>
+        $(function() {
+          $('#table').bootstrapTable()
+        })
+      </script>
+
+
     </div>
   <?php }  ?>
 
@@ -100,3 +122,4 @@
   	</textarea>
   </div>
 </div>
+

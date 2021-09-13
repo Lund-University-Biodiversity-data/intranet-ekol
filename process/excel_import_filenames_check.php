@@ -21,22 +21,27 @@ foreach($filesSurveys as $file) {
             $filename=substr($file, 0, strlen($file)-5);
         }
 
-        $explodeFilename=explode("-", $filename);
-        $prefixFN=$explodeFilename[0];
-        $siteIdFN1=$explodeFilename[1];//persnr
-        $siteIdFN2=$explodeFilename[2];//indice
-        $siteIdFN3=str_replace("#", "", $explodeFilename[3]);//rnr
-        $siteIdFN=$siteIdFN1."-".$siteIdFN2."-".$siteIdFN3;
-        $periodFN=str_replace("P", "", $explodeFilename[4]);
 
         switch($protocol) {
             case "std":
                 break;
             case "vinter":
+
+                $explodeFilename=explode("-", $filename);
+                $prefixFN=$explodeFilename[0];
+                $siteIdFN1=$explodeFilename[1];//persnr
+                $siteIdFN2=$explodeFilename[2];//indice
+                $siteIdFN3=str_replace("#", "", $explodeFilename[3]);//rnr
+                $siteIdFN=$siteIdFN1."-".$siteIdFN2."-".$siteIdFN3;
+                $periodFN=str_replace("P", "", $explodeFilename[4]);
+
                 $internalSiteId=$siteIdFN;
                 $templateFileName="Vin";
                 $yearStudied=substr($prefixFN, strlen($templateFileName), 2);
                 $yearFull="20".$yearStudied;
+
+                $expectedFileName=$templateFileName.$yearStudied;
+
                 break;
             case "natt":
                 break;
@@ -50,11 +55,10 @@ foreach($filesSurveys as $file) {
         $infoFile["period"]=$periodFN;
 
 
-        if ($prefixFN!=$templateFileName.$yearStudied) {
-            $consoleTxt.=consoleMessage("error", $file. " can't be processed, wrong prefix. Must start with '".$templateFileName. "'. '".$prefixFN."' instead");
+        if ($prefixFN!=$expectedFileName) {
+            $consoleTxt.=consoleMessage("error", $file. " can't be processed, wrong prefix. Must start with '".$expectedFileName. "'. '".$prefixFN."' instead");
             $infoFile["status"]="NO => wrong filename, does not start with correct template.";
         }
-
         elseif(isset($array_sites[$siteIdFN])) {
             if (isset($tabSitesPeriod[$siteIdFN][$yearFull."-".$periodFN])) {
                 
