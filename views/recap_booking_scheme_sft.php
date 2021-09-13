@@ -93,7 +93,7 @@
             <tr>
               <th scope="row"><?= $idS ?></th>
               <td><a href="<?= $dataSite["urlBioCollect"] ?>" target="_blank"><?= $siteId ?></a></td>
-              <td><?= $dataSite["locationName"] ?></td>
+              <td><?= $dataSite["commonName"] ?></td>
               <td></td>
               <td><?= $dataSite["lastYearSurveyed"] ?></td>
               <td><?= $dataSite["excelReceived"] ?></td>
