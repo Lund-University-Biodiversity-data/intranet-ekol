@@ -73,11 +73,9 @@ if ($okCon) {
         }
         else $year=substr($document->data->surveyDate, 0, 4);
 
-
         $periodDoc=$document->data->period;
         $siteId=$document->siteID->adminProperties->internalSiteId;
         //var_dump($document);
-
 
         $tabSitesPeriod[$siteId][$year."-".$periodDoc]=$document->activityId;
 

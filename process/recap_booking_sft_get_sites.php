@@ -21,9 +21,11 @@ else {
 		$lineSite["urlBioCollect"]=$linkBioSite[$server].$dataSite["locationID"];
 		$lineSite["commonName"]=$dataSite["commonName"];
 		$lineSite["county"]=$dataSite["county"];
+		$lineSite["booked"]=$dataSite["bookedBy"];
 		$lineSite["bookedBy"]=$dataSite["bookedBy"];
 		$lineSite["bookingComment"]=$dataSite["bookingComment"];
 		$lineSite["lastYearSurveyed"]="";
+		$lineSite["lastYearSurveyedStatus"]="";
 		$lineSite["excelReceived"]="";
 		$lineSite["excelReceivedYear"]="";
 
