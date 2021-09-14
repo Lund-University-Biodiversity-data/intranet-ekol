@@ -4,16 +4,28 @@ require("lib/config.php");
 $result="";
 $file_download="";
 $protocol="std";
+$inputDataObject="data";
 
 if (isset($_POST["execFormExtract"]) && $_POST["execFormExtract"]=="OK") {
 
-	$protocol = (isset($_POST["protocol"]) ? $_POST["protocol"] : "");
+	$protocol = (isset($_POST["inputProtocol"]) ? $_POST["inputProtocol"] : "");
+	$inputDataObject = (isset($_POST["inputDataObject"]) ? $_POST["inputDataObject"] : "");
 
 	if ($protocol) {
 		$output=null;
 		$retval=null;
 
-		$cmd=PATH_PHP." ".PATH_CONVERT_DATA."create_extract_excel.php ".$protocol;
+		switch ($inputDataObject) {
+			case "persons":
+				$cmd=PATH_PHP." ".PATH_CONVERT_DATA."create_extract_excel_persons.php ".$protocol;
+				break;
+			case "sites":
+				break;
+			case "data":
+				$cmd=PATH_PHP." ".PATH_CONVERT_DATA."create_extract_excel.php ".$protocol;
+				break;
+		}
+		
 		exec($cmd, $output, $retval);
 
 		//print_r(str_replace("\n", "<br>", $output));
