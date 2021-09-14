@@ -25,6 +25,7 @@ else {
 		$lineSite["bookingComment"]=$dataSite["bookingComment"];
 		$lineSite["lastYearSurveyed"]="";
 		$lineSite["excelReceived"]="";
+		$lineSite["excelReceivedYear"]="";
 
 		if (trim($lineSite["bookedBy"])!="") {
 			$lineSite["booked"]="yes";
