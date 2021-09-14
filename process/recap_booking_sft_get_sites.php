@@ -20,6 +20,7 @@ else {
 		$lineSite["locationID"]=$dataSite["locationID"];
 		$lineSite["urlBioCollect"]=$linkBioSite[$server].$dataSite["locationID"];
 		$lineSite["commonName"]=$dataSite["commonName"];
+		$lineSite["county"]=$dataSite["county"];
 		$lineSite["bookedBy"]=$dataSite["bookedBy"];
 		$lineSite["bookingComment"]=$dataSite["bookingComment"];
 		$lineSite["lastYearSurveyed"]="";

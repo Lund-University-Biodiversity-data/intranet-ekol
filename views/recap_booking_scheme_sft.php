@@ -8,6 +8,35 @@
 <script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.10.21/libs/jsPDF-AutoTable/jspdf.plugin.autotable.js"></script>
 <script src="https://unpkg.com/bootstrap-table@1.18.3/dist/extensions/export/bootstrap-table-export.min.js"></script>
 
+<style>
+/* Tooltip container */
+.tooltipCustom {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltipCustom .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+ 
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltipCustom:hover .tooltiptext {
+  visibility: visible;
+}
+</style>
+
 
 <div class="container">
 
@@ -52,7 +81,7 @@
 
     <div class="form-group row">
       <div class="offset-sm-2 col-sm-10">
-        <input type="submit" value="Gimme the recap dude" name="submit" class="btn btn-primary"/>
+        <input type="submit" value="Search" name="submit" class="btn btn-primary"/>
       </div>
     </div>
   </form>
@@ -79,10 +108,11 @@
             <th data-sortable="true" scope="col">#</th>
             <th data-field="internalSiteId" data-sortable="true" scope="col">internalSiteId</th>
             <th data-field="uttnamn" data-sortable="true" scope="col">Ruttnamn</th>
-            <th data-field="lan" data-sortable="true" scope="col">Lan</th>
-            <th data-sortable="true" scope="col">Last year surveyed</th>
-            <th data-sortable="true" scope="col">Excel file</th>
             <th data-sortable="true" scope="col">Booked?</th>
+            <th data-field="lan" data-sortable="true" scope="col">Lan</th>
+            <th data-sortable="true" scope="col">Reported BC</th>
+            <th data-sortable="true" scope="col">Status</th>
+            <th data-sortable="true" scope="col">Reported Excel</th>
             <th data-sortable="true" scope="col">Booking comment</th>
             <th data-sortable="true" scope="col">Name</th>
             <th data-sortable="true" scope="col">Email</th>
@@ -94,10 +124,13 @@
               <th scope="row"><?= $idS ?></th>
               <td><a href="<?= $dataSite["urlBioCollect"] ?>" target="_blank"><?= $siteId ?></a></td>
               <td><?= $dataSite["commonName"] ?></td>
-              <td></td>
-              <td><?= $dataSite["lastYearSurveyed"] ?></td>
-              <td><?= $dataSite["excelReceived"] ?></td>
               <td><?= $dataSite["booked"] ?></td>
+              <td><?= $dataSite["county"] ?></td>
+              <td><?= $dataSite["lastYearSurveyed"] ?></td>
+              <td><?= $dataSite["lastYearSurveyedStatus"] ?></td>
+              <td><div class="tooltipCustom"><?= $dataSite["excelReceivedYear"] ?>
+                <span class="tooltiptext"><?= $dataSite["excelReceived"] ?></span>
+              </div></td>
               <td><?= $dataSite["bookingComment"] ?></td>
               <td><?= ($dataSite["booked"]=="yes" ? $arrPersonsDetails[$dataSite["bookedBy"]]["name"] : "") ?></td>
               <td><?= ($dataSite["booked"]=="yes" ? $arrPersonsDetails[$dataSite["bookedBy"]]["email"] : "") ?></td>

@@ -23,6 +23,15 @@ $startime=time();
 			$yr=substr($row->data->surveyDate, 0, 4);
 			if ($arrRecap[$arrSitesInternal[$row->data->location]]["lastYearSurveyed"]=="" || $arrRecap[$arrSitesInternal[$row->data->location]]["lastYearSurveyed"]<$yr) {
 				$arrRecap[$arrSitesInternal[$row->data->location]]["lastYearSurveyed"]=$yr;
+
+				// get the verificationStatus of the activityId
+				$queryAct = new MongoDB\Driver\Query(["activityId" => $row->activityId], $options); 
+				$rowsAct = $mng->executeQuery("ecodata.activity", $queryAct);
+				foreach ($rowsAct as $rowAct){
+					$arrRecap[$arrSitesInternal[$row->data->location]]["lastYearSurveyedStatus"]=$rowAct->verificationStatus;
+				}
+
+				
 				//echo "new year for ".$arrSitesInternal[$row->data->location]." : ".$yr."<br>";
 			}
 		}

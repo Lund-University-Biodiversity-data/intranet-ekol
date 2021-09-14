@@ -70,6 +70,7 @@ if (file_exists($pathInputFiles)) {
 
 	        		if (isset($arrRecap[$internalSiteId])) {
 	        			$arrRecap[$internalSiteId]["excelReceived"].=$file."<br>";
+	        			$arrRecap[$internalSiteId]["excelReceivedYear"].=$yearFull."<br>";
 	        		}
 	        	}
 	        }
