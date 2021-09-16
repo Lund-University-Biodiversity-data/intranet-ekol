@@ -17,9 +17,8 @@ if (isset($_POST["execFormExtract"]) && $_POST["execFormExtract"]=="OK") {
 
 		switch ($inputDataObject) {
 			case "persons":
-				$cmd=PATH_PHP." ".PATH_CONVERT_DATA."create_extract_excel_persons.php ".$protocol;
-				break;
 			case "sites":
+				$cmd=PATH_PHP." ".PATH_CONVERT_DATA."create_extract_excel_".$inputDataObject.".php ".$protocol;
 				break;
 			case "data":
 				$cmd=PATH_PHP." ".PATH_CONVERT_DATA."create_extract_excel.php ".$protocol;
