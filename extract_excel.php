@@ -1,6 +1,12 @@
 <?php
 require("lib/config.php");
 
+// IMPORTANT CONTROL OF THE WORDPRESS LOGIN
+include "lib/check_login.php";
+if (!$okConWordPress) exit;
+// END CHECK LOGIN
+
+
 $result="";
 $file_download="";
 $protocol="std";

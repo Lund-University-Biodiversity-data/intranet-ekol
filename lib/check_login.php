@@ -22,7 +22,7 @@ if (ENVIRONMENT=="PROD") {
 			$okConWordPress=true;
 
 		} else {
-			echo 'Please LOG IN first on <a href="'.URL_WEBSITE.'">the intranet</a>';;
+			echo 'Please LOG IN first on <a href="'.URL_WEBSITE.'intranet/">the intranet</a>';;
 		}
 	}
 	else {
