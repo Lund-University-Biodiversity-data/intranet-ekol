@@ -3,6 +3,9 @@
 define("PATH_PHP", "/usr/bin/php");
 
 define ("URL_WEBSITE", "http://localhost/");
+define ("URL_WEBSITE_EXTRACTMONGO", URL_WEBSITE."extractmongo/");
+
+define ("PATH_WORDPRESS_LOGIN", "/usr/share/wordpress/wp-load.php");
 
 define("EMAIL_PROBLEM", "XXXXX@biol.lu.se");
 

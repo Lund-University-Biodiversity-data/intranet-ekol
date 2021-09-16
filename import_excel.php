@@ -3,6 +3,11 @@ $database="SFT";
 $dataOrigin="scriptExcel";
 require "lib/config.php";
 
+// IMPORTANT CONTROL OF THE WORDPRESS LOGIN
+include "lib/check_login.php";
+if (!$okConWordPress) exit;
+// END CHECK LOGIN
+
 require PATH_SHARED_FUNCTIONS."generic-functions.php";
 require PATH_SHARED_FUNCTIONS."mongo-functions.php";
 
