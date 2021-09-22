@@ -1,4 +1,6 @@
 <div class="container">
+  <div class="float-right">Hi <?= $current_user->display_name ?> ! <a href="<?= URL_LOGOUT ?>">logout</a></div><br>
+  
   <h2>Excel generator</h2>
 
   <p class="lead">
