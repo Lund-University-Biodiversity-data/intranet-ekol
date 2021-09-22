@@ -4,6 +4,7 @@ define("PATH_PHP", "/usr/bin/php");
 
 define ("URL_WEBSITE", "http://localhost/");
 define ("URL_WEBSITE_EXTRACTMONGO", URL_WEBSITE."extractmongo/");
+define ("URL_LOGOUT", "wp-login.php?action=logout");
 
 define ("PATH_WORDPRESS_LOGIN", "/usr/share/wordpress/wp-load.php");
 

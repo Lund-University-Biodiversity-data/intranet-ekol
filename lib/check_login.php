@@ -18,7 +18,7 @@ if (ENVIRONMENT=="PROD") {
 		if ( is_user_logged_in() ) {
 			global $current_user;
 			get_currentuserinfo();
-			echo '<p><small>Hi ' . $current_user->display_name.'</small></p>';
+			//echo '<p><small>Hi ' . $current_user->display_name.'</small></p>';
 			$okConWordPress=true;
 
 		} else {
