@@ -12,6 +12,9 @@ if (!$okConWordPress) exit;
 require PATH_SHARED_FUNCTIONS."generic-functions.php";
 require PATH_SHARED_FUNCTIONS."mongo-functions.php";
 
+$county=getCountyLanArray();
+$province=getProvinceLskArray();
+
 $consoleTxt="";
 $server=DEFAULT_SERVER;
 

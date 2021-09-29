@@ -27,8 +27,8 @@ define("URL_LISTS_INCLUDE_KBV", "?includeKVP=true");
 
 define("FILENAME_SEPARATOR", "|");
 
-define("URL_BIOCOLLECT_DEV", "http://devt.bioatlas.se:8087/");
-define("URL_BIOCOLLECT_PROD", "https://biocollect.bioatlas.se/");
+define("URL_BIOCOLLECT_DEV", "http://devt.biodiversitydata.se:8087/");
+define("URL_BIOCOLLECT_PROD", "https://biocollect.biodiversitydata.se/");
 define("URL_BIOCOLLECT_ENVIRONMENT", "sft/");
 //$postgres DATABASE TO STORE 
 
