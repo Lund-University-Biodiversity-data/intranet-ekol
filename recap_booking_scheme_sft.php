@@ -99,10 +99,14 @@ if (isset($_POST["execFormRecapBookingScheme"]) && $_POST["execFormRecapBookingS
 				$line[]=$dataSite["booked"];
 				$line[]=$dataSite["county"];
 
-				if (is_numeric($dataSite["lastYearSurveyed"]) || is_numeric($dataSite["excelReceived"]) || is_numeric($dataSite["paperSurveySubmitted"])) {
-					$line[]="YES!";
+				if (
+					(is_numeric($dataSite["lastYearSurveyed"]) && $dataSite["lastYearSurveyed"]==date("Y"))
+					|| (is_numeric($dataSite["excelReceived"])  && $dataSite["excelReceived"]==date("Y"))
+					|| (is_numeric($dataSite["paperSurveySubmitted"])  && $dataSite["paperSurveySubmitted"]==date("Y") )
+				) {
+					$line[]="Ja";
 				}
-				else $line[]="NO!";
+				else $line[]="Nej";
 
 				$line[]=$dataSite["lastYearSurveyed"];
 				$line[]=$dataSite["lastYearSurveyedStatus"];
