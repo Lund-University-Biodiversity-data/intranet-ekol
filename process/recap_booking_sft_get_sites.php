@@ -20,11 +20,14 @@ else {
 		$lineSite["locationID"]=$dataSite["locationID"];
 		$lineSite["urlBioCollect"]=$linkBioSite[$server].$dataSite["locationID"];
 		$lineSite["commonName"]=$dataSite["commonName"];
+		$lineSite["routetype"]=$dataSite["routetype"];
 		$lineSite["county"]=$dataSite["lan"];
 		$lineSite["province"]=$dataSite["lsk"];
 		$lineSite["booked"]=$dataSite["bookedBy"];
 		$lineSite["bookedBy"]=$dataSite["bookedBy"];
 		$lineSite["bookingComment"]=$dataSite["bookingComment"];
+		$lineSite["paperSurveySubmitted"]=$dataSite["paperSurveySubmitted"];
+		$lineSite["summarySurveySubmitted"]=$dataSite["summarySurveySubmitted"];
 		$lineSite["lastYearSurveyed"]="";
 		$lineSite["lastYearSurveyedStatus"]="";
 		$lineSite["excelReceived"]="";

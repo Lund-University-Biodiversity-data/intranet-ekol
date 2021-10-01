@@ -106,35 +106,17 @@
         data-show-export="true">
         <thead>
           <tr>
-            <th data-sortable="true" scope="col">#</th>
-            <th data-field="internalSiteId" data-sortable="true" scope="col">internalSiteId</th>
-            <th data-field="uttnamn" data-sortable="true" scope="col">Ruttnamn</th>
-            <th data-sortable="true" scope="col">Booked?</th>
-            <th data-field="lan" data-sortable="true" scope="col">Lan</th>
-            <th data-sortable="true" scope="col">Reported BC</th>
-            <th data-sortable="true" scope="col">Status</th>
-            <th data-sortable="true" scope="col">Reported Excel</th>
-            <th data-sortable="true" scope="col">Booking comment</th>
-            <th data-sortable="true" scope="col">Name</th>
-            <th data-sortable="true" scope="col">Email</th>
+            <?php foreach ($arrHeader as $headerT) { ?>
+              <th data-sortable="true" scope="col"><?= $headerT ?></th>
+            <?php } ?>
           </tr>
         </thead>
         <tbody>
-          <?php $idS=0; foreach ($arrRecap as $siteId => $dataSite) { $idS++;?>
+          <?php foreach ($arrContent as $lineContent) { ?>
             <tr>
-              <th scope="row"><?= $idS ?></th>
-              <td><a href="<?= $dataSite["urlBioCollect"] ?>" target="_blank"><?= $siteId ?></a></td>
-              <td><?= $dataSite["commonName"] ?></td>
-              <td><?= $dataSite["booked"] ?></td>
-              <td><?= $dataSite["county"] ?></td>
-              <td><?= $dataSite["lastYearSurveyed"] ?></td>
-              <td><?= $dataSite["lastYearSurveyedStatus"] ?></td>
-              <td><div class="tooltipCustom"><?= $dataSite["excelReceivedYear"] ?>
-                <span class="tooltiptext"><?= $dataSite["excelReceived"] ?></span>
-              </div></td>
-              <td><?= $dataSite["bookingComment"] ?></td>
-              <td><?= ($dataSite["booked"]=="yes" ? $arrPersonsDetails[$dataSite["bookedBy"]]["name"] : "") ?></td>
-              <td><?= ($dataSite["booked"]=="yes" ? $arrPersonsDetails[$dataSite["bookedBy"]]["email"] : "") ?></td>
+              <?php foreach ($lineContent as $cont) { ?>
+                <td scope="row"><?= $cont ?></td>
+              <?php } ?>
             </tr>
           <?php } ?>
         </tbody>

@@ -20,6 +20,7 @@ $server=DEFAULT_SERVER;
 
 $protocol="std";
 
+
 $arrRecap=array();
 $arrPersons=array();
 $arrPersonsDetails=array();
@@ -48,6 +49,133 @@ if (isset($_POST["execFormRecapBookingScheme"]) && $_POST["execFormRecapBookingS
 	include "process/recap_booking_sft_get_excelreceived.php";
 
 	ksort($arrRecap);
+
+
+
+	$arrHeader=array();
+	$arrContent=array();
+
+	switch ($protocol) {
+		case "std":
+		case "natt":
+
+			$arrHeader[]="#";
+			$arrHeader[]="Internal Site Id";
+			$arrHeader[]="Ruttnamn";
+			$arrHeader[]="Bokad ?";
+			$arrHeader[]="Lan";
+			$arrHeader[]="Reported OK?";
+			$arrHeader[]="Reported BC";
+			$arrHeader[]="Status BC";
+			$arrHeader[]="Reported Excel";
+			$arrHeader[]="Reported Paper";
+			$arrHeader[]="Booking comment";
+			$arrHeader[]="Name";
+			$arrHeader[]="Email";
+
+			/*
+			<!--
+            <th data-sortable="true" scope="col">#</th>
+            <th data-field="internalSiteId" data-sortable="true" scope="col">internalSiteId</th>
+            <th data-field="ruttnamn" data-sortable="true" scope="col">Ruttnamn</th>
+            <th data-sortable="true" scope="col">Booked?</th>
+            <th data-field="lan" data-sortable="true" scope="col">Lan</th>
+            <th data-sortable="true" scope="col">Reported BC</th>
+            <th data-sortable="true" scope="col">Status</th>
+            <th data-sortable="true" scope="col">Reported Excel</th>
+            <th data-sortable="true" scope="col">Booking comment</th>
+            <th data-sortable="true" scope="col">Name</th>
+            <th data-sortable="true" scope="col">Email</th>
+            -->
+            */
+			$idS=0;
+			foreach ($arrRecap as $siteId => $dataSite) { 
+				$idS++;
+				$line=array();
+
+				$line[]=$idS;
+				$line[]='<a href="'.$dataSite["urlBioCollect"].'" target="_blank">'.$siteId.'</a>';
+				$line[]=$dataSite["commonName"];
+				$line[]=$dataSite["booked"];
+				$line[]=$dataSite["county"];
+
+				if (is_numeric($dataSite["lastYearSurveyed"]) || is_numeric($dataSite["excelReceived"]) || is_numeric($dataSite["paperSurveySubmitted"])) {
+					$line[]="YES!";
+				}
+				else $line[]="NO!";
+
+				$line[]=$dataSite["lastYearSurveyed"];
+				$line[]=$dataSite["lastYearSurveyedStatus"];
+				$line[]='<div class="tooltipCustom">'.$dataSite["excelReceivedYear"].'
+                <span class="tooltiptext">'.$dataSite["excelReceived"].'</span></div>';
+				$line[]=$dataSite["paperSurveySubmitted"];
+				$line[]=($dataSite["booked"]=="yes" ? $arrPersonsDetails[$dataSite["bookedBy"]]["name"] : "");
+				$line[]=($dataSite["booked"]=="yes" ? $arrPersonsDetails[$dataSite["bookedBy"]]["email"] : "");
+
+				$arrContent[]=$line;
+
+
+				/*
+				<?php $idS=0; foreach ($arrRecap as $siteId => $dataSite) { $idS++;?>
+		            <tr>
+		              <th scope="row"><?= $idS ?></th>
+		              <td><a href="<?= $dataSite["urlBioCollect"] ?>" target="_blank"><?= $siteId ?></a></td>
+		              <td><?= $dataSite["commonName"] ?></td>
+		              <td><?= $dataSite["booked"] ?></td>
+		              <td><?= $dataSite["county"] ?></td>
+		              <td><?= $dataSite["lastYearSurveyed"] ?></td>
+		              <td><?= $dataSite["lastYearSurveyedStatus"] ?></td>
+		              <td><div class="tooltipCustom"><?= $dataSite["excelReceivedYear"] ?>
+		                <span class="tooltiptext"><?= $dataSite["excelReceived"] ?></span>
+		              </div></td>
+		              <td><?= $dataSite["bookingComment"] ?></td>
+		              <td><?= ($dataSite["booked"]=="yes" ? $arrPersonsDetails[$dataSite["bookedBy"]]["name"] : "") ?></td>
+		              <td><?= ($dataSite["booked"]=="yes" ? $arrPersonsDetails[$dataSite["bookedBy"]]["email"] : "") ?></td>
+		            </tr>
+		          <?php } ?>
+		          */
+
+			}
+
+			
+			break;
+		case "kust":
+
+			$arrHeader[]="#";
+			$arrHeader[]="Internal Site Id";
+			$arrHeader[]="Ruttnamn";
+			$arrHeader[]="Ruttyp";
+			$arrHeader[]="Bokad ?";
+			$arrHeader[]="Lan";
+			$arrHeader[]="Reported BC";
+			$arrHeader[]="Status BC";
+			$arrHeader[]="Reported summary";
+			$arrHeader[]="Booking comment";
+			$arrHeader[]="Name";
+			$arrHeader[]="Email";
+
+			$idS=0;
+			foreach ($arrRecap as $siteId => $dataSite) { 
+				$idS++;
+				$line=array();
+
+				$line[]=$idS;
+				$line[]='<a href="'.$dataSite["urlBioCollect"].'" target="_blank">'.$siteId.'</a>';
+				$line[]=$dataSite["commonName"];
+				$line[]=$dataSite["routetype"];
+				$line[]=$dataSite["booked"];
+				$line[]=$dataSite["county"];
+				$line[]=$dataSite["lastYearSurveyed"];
+				$line[]=$dataSite["lastYearSurveyedStatus"];
+				$line[]=$dataSite["summarySurveySubmitted"];
+				$line[]=($dataSite["booked"]=="yes" ? $arrPersonsDetails[$dataSite["bookedBy"]]["name"] : "");
+				$line[]=($dataSite["booked"]=="yes" ? $arrPersonsDetails[$dataSite["bookedBy"]]["email"] : "");
+
+				$arrContent[]=$line;
+
+			}
+	}
+
 }
 
 include ("views/header.html");
