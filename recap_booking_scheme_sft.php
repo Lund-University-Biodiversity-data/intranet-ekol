@@ -109,6 +109,7 @@ if (isset($_POST["execFormRecapBookingScheme"]) && $_POST["execFormRecapBookingS
 				$line[]='<div class="tooltipCustom">'.$dataSite["excelReceivedYear"].'
                 <span class="tooltiptext">'.$dataSite["excelReceived"].'</span></div>';
 				$line[]=$dataSite["paperSurveySubmitted"];
+				$line[]=$dataSite["bookingComment"];
 				$line[]=($dataSite["booked"]=="yes" ? $arrPersonsDetails[$dataSite["bookedBy"]]["name"] : "");
 				$line[]=($dataSite["booked"]=="yes" ? $arrPersonsDetails[$dataSite["bookedBy"]]["email"] : "");
 
@@ -168,6 +169,7 @@ if (isset($_POST["execFormRecapBookingScheme"]) && $_POST["execFormRecapBookingS
 				$line[]=$dataSite["lastYearSurveyed"];
 				$line[]=$dataSite["lastYearSurveyedStatus"];
 				$line[]=$dataSite["summarySurveySubmitted"];
+				$line[]=$dataSite["bookingComment"];
 				$line[]=($dataSite["booked"]=="yes" ? $arrPersonsDetails[$dataSite["bookedBy"]]["name"] : "");
 				$line[]=($dataSite["booked"]=="yes" ? $arrPersonsDetails[$dataSite["bookedBy"]]["email"] : "");
 
