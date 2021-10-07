@@ -145,17 +145,18 @@ foreach($listFilesOk as $file) {
 				$transport=$worksheet->getCell('O12')->getValue();
 				$snow=$worksheet->getCell('R12')->getValue();
 
-				$recorder_name=$worksheet->getCell('B12')->getValue();
-				$adress=$worksheet->getCell('B13')->getValue();
-				$post=$worksheet->getCell('B14')->getValue();
-				$city=$worksheet->getCell('F14')->getValue();
-				$email=$worksheet->getCell('N12')->getValue();
+				$recorder_name=$worksheet->getCell('B14')->getValue();
+				$adress=$worksheet->getCell('B15')->getValue();
+				$post=$worksheet->getCell('B16')->getValue();
+				$city=$worksheet->getCell('F16')->getValue();
+				$email=$worksheet->getCell('N14')->getValue();
 				$address1=$recorder_name;
 				$address2="";
-				$tel=$worksheet->getCell('N13')->getValue();
-				$mobile=$worksheet->getCell('N14')->getValue();
+				$tel=$worksheet->getCell('N15')->getValue();
+				$mobile=$worksheet->getCell('N16')->getValue();
 
-				$notes=str_replace('"', "'", $worksheet->getCell('A19')->getValue());
+				$notes="";
+				//str_replace('"', "'", $worksheet->getCell('A21')->getValue());
 
 				$newRoute=$worksheet->getCell('X9')->getValue();
 				$mapAttached=$worksheet->getCell('X10')->getValue();
