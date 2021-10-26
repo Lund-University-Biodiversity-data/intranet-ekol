@@ -63,7 +63,6 @@ foreach($listFilesOk as $file) {
 
 			$inventerareCheck=$siteIdFN1."-".$siteIdFN2;
 
-			if (count($person))
 			break;
 	}
 
