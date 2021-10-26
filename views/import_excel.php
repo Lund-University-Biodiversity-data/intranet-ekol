@@ -23,11 +23,11 @@
       <label for="inputProtocol" class="col-sm-2 col-form-label">Protocol</label>
       <div class="col-sm-10">
         <select class="form-control" id="inputProtocol" name="protocol" placeholder="protocol">
-        	<option value="std" <?= ($protocol=="sft" ? "selected" : "") ?>>Standardrutterna</option>
+        	<!--<option value="std" <?= ($protocol=="sft" ? "selected" : "") ?>>Standardrutterna</option>
         	<option value="natt" <?= ($protocol=="natt" ? "selected" : "") ?>>Nattrutterna</option>
           <option value="kust" <?= ($protocol=="kust" ? "selected" : "") ?>>Kustfågelrutterna</option>
+          <option value="sommar" <?= ($protocol=="sommar" ? "selected" : "") ?>>Sommarrutterna</option>-->
           <option value="vinter" <?= ($protocol=="vinter" ? "selected" : "") ?>>Vinterrutterna</option>
-          <option value="sommar" <?= ($protocol=="sommar" ? "selected" : "") ?>>Sommarrutterna</option>
         </select>	
       </div>
     </div>
