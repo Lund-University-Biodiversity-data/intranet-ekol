@@ -30,6 +30,7 @@ if (ENVIRONMENT=="PROD") {
 	}
 }
 else {
+	$current_user->display_name="NO_USER_ON_DEV";
 	$okConWordPress=true;
 }
 

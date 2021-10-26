@@ -3,7 +3,6 @@
 use MongoDB\BSON\UTCDateTime;
 
 
-
 // 4** PROCESS FOR OK FILES
 
 switch($protocol) {
@@ -64,7 +63,7 @@ foreach($listFilesOk as $file) {
 
 			$inventerareCheck=$siteIdFN1."-".$siteIdFN2;
 
-
+			if (count($person))
 			break;
 	}
 
@@ -175,6 +174,18 @@ foreach($listFilesOk as $file) {
 				if ($inventerare!=$inventerareCheck) {
 					$consoleTxt.=consoleMessage("error", "Not the same Personummer in the filename and file content ! ".$inventerare." VS ".$inventerareCheck);
 					$fileRefused=true;
+				}
+				else {
+					// get person from MongoDb
+					$person= getPersonFromInternalId ($inventerareCheck) ;
+					if (!isset($person["personId"])) {
+						$consoleTxt.=consoleMessage("error", "Can't find one person in MongoDb for ".$inventerareCheck);
+						$fileRefused=true;
+					}
+					elseif (mb_strtoupper($recorder_name)!= mb_strtoupper($person["firstName"]." ".$person["lastName"])) {
+						$consoleTxt.=consoleMessage("error", "Not the same surveyor name in the file (".mb_strtoupper($recorder_name).") and in the database (".mb_strtoupper($person["firstName"]." ".$person["lastName"]).")");
+						$fileRefused=true;
+					}
 				}
 
 				break;

@@ -37,6 +37,7 @@
         <ul>
           <li><b>Line 9</b> must contain personnummer, ruttnummer, date, etc.</li>
           <li><b>Line 12</b> must contain ruttnamn, karta, etc.</li>
+          <li><b>Line 14</b> must contain first and last name</li>
           <li><b>Line 21</b> must contain comments.</li>
           <li><b>Line 30</b> must be the first line with species observations.</li>
         </ul>
