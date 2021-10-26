@@ -176,7 +176,7 @@ foreach($listFilesOk as $file) {
 				}
 				else {
 					// get person from MongoDb
-					$person= getPersonFromInternalId ($inventerareCheck) ;
+					$person= getPersonFromInternalId ($inventerareCheck, $server) ;
 					if (!isset($person["personId"])) {
 						$consoleTxt.=consoleMessage("error", "Can't find one person in MongoDb for ".$inventerareCheck);
 						$fileRefused=true;
