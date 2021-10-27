@@ -30,7 +30,7 @@ switch($protocol) {
 	default:
 		$templateFileName="VinYY-YYMMDD-X-#XX-PX.xls";
 		if (file_exists(PATH_INPUT_EXCEL.$database."/".$protocol."/"."Template/".$templateFileName)) {
-			$templateUrl=PATH_INPUT_EXCEL.$database."/".$protocol."/"."Template/".$templateFileName;
+			$templateUrl=URL_WEBSITE_SURVEYS.$database."/".$protocol."/"."Template/".$templateFileName;
 		}
 		break;
 
