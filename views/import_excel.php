@@ -31,7 +31,11 @@
         </select>	
       </div>
     </div>
-
+      <?php
+        if (isset($templateUrl) && $templateUrl) {
+          ?>
+          <p>You can download the template <a href="<?= $templateUrl ?>">here</a> </p>
+        <?php } ?>
       <p >
         The Excel files has to follow a specific template :
         <ul>

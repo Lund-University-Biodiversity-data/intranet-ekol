@@ -23,6 +23,19 @@ $server=DEFAULT_SERVER;
 $listHiddenOkFiles="";
 $listFiles=array();
 $protocol="vinter";
+
+$templatePath="";
+switch($protocol) {
+	case "vinter":
+	default:
+		$templateFileName="VinYY-YYMMDD-X-#XX-PX.xls";
+		if (file_exists(PATH_INPUT_EXCEL.$database."/".$protocol."/"."Template/".$templateFileName)) {
+			$templateUrl=PATH_INPUT_EXCEL.$database."/".$protocol."/"."Template/".$templateFileName;
+		}
+		break;
+
+}
+
 $activityIdCreated=array();
 
 
@@ -125,7 +138,6 @@ if (isset($_POST["execFormProcessFiles"]) && $_POST["execFormProcessFiles"]=="OK
 		}
 	}
 } // FIN IF $_POST["execFormProcessFiles"] OK
-
 
 
 include ("views/header.html");
