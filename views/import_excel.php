@@ -34,8 +34,10 @@
       <?php
         if (isset($templateUrl) && $templateUrl) {
           ?>
-          <p>You can download the template <a href="<?= $templateUrl ?>">here</a> </p>
+          <p>Please find all the instructions in <a href="<?= $templateUrl ?>">the excel template file here</a> </p>
         <?php } ?>
+
+      <!--
       <p >
         The Excel files has to follow a specific template :
         <ul>
@@ -46,7 +48,7 @@
           <li><b>Line 30</b> must be the first line with species observations.</li>
         </ul>
       </p>
-
+      -->
     <div class="form-group row">
       <label for="inputServer" class="col-sm-2 col-form-label">MongoDb Server</label>
       <div class="col-sm-10">

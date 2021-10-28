@@ -187,6 +187,15 @@ foreach($listFilesOk as $file) {
 					}
 				}
 
+				if ($period!=$periodFN) {
+					$consoleTxt.=consoleMessage("error", "Not the same period in the filename and file content ! ".$period." VS ".$periodFN);
+					$fileRefused=true;
+				}
+				elseif ($period>5 || $period<0) {
+					$consoleTxt.=consoleMessage("error", "Period field must be a number between 1 and 5");
+					$fileRefused=true;
+				}
+
 				break;
 				
 			case "natt":
@@ -240,6 +249,26 @@ foreach($listFilesOk as $file) {
 				break;
 		}
 
+		if (isset($transport) && trim($transport)!="") {
+			if (!is_numeric($transport) || $transport<0 || $transport>3 ) {
+				$consoleTxt.=consoleMessage("error", "Transport field is supposed to be a number between 1 and 3, instead of : ".$transport);
+				$fileRefused=true;
+			}
+		}
+
+		if (isset($snow) && trim($snow)!="") {
+			if (!is_numeric($snow) || $snow<0 || $snow>3 ) {
+				$consoleTxt.=consoleMessage("error", "Snow field is supposed to be a number between 1 and 3, instead of : ".$snow);
+				$fileRefused=true;
+			}
+		}
+
+		if (isset($distance) && trim($distance)!="") {
+			if (!is_numeric($distance)) {
+				$consoleTxt.=consoleMessage("error", "Distance field is supposed to be a number, instead of : ".$distance);
+				$fileRefused=true;
+			}
+		}
 
 		if (isset($startTime) &&!is_numeric($startTime)) {
 			$consoleTxt.=consoleMessage("error", "Start time not numeric : ".$startTime);
@@ -247,6 +276,11 @@ foreach($listFilesOk as $file) {
 		}
 		if (isset($endTime) &&!is_numeric($endTime)) {
 			$consoleTxt.=consoleMessage("error", "End time not numeric : ".$endTime);
+			$fileRefused=true;
+		}
+
+		if (!isset($datum) || trim($datum)=="" || (strlen($datum)!=6)) {
+			$consoleTxt.=consoleMessage("error", "Wrong format for datum (YYMMDD) : ".$datum);
 			$fileRefused=true;
 		}
 
