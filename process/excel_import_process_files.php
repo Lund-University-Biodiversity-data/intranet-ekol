@@ -250,8 +250,8 @@ foreach($listFilesOk as $file) {
 		}
 
 		if (isset($transport) && trim($transport)!="") {
-			if (!is_numeric($transport) || $transport<0 || $transport>3 ) {
-				$consoleTxt.=consoleMessage("error", "Transport field is supposed to be a number between 1 and 3, instead of : ".$transport);
+			if (!is_numeric($transport) || $transport<0 || $transport>4 ) {
+				$consoleTxt.=consoleMessage("error", "Transport field is supposed to be a number between 1 and 4, instead of : ".$transport);
 				$fileRefused=true;
 			}
 		}
@@ -773,7 +773,7 @@ foreach($listFilesOk as $file) {
 						"outputSpeciesId" => $outputSpeciesId,
 						"projectActivityId" => $commonFields[$protocol]["projectActivityId"],
 						"projectId" => $commonFields[$protocol]["projectId"],
-						"userId" => $commonFields["userId"]
+						"userId" => strval($commonFields["userId"])
 					);
 					/*
 					$arr_json_record.='{
@@ -952,7 +952,7 @@ foreach($listFilesOk as $file) {
 				"siteId" => $array_sites[$siteKey]["locationID"],
 				"status" => "active",
 				"type" => $commonFields[$protocol]["type"],
-				"userId" => $commonFields["userId"],
+				"userId" => strval($commonFields["userId"]),
 				"personId" => $personId,
 				"mainTheme" => "",
 				"verificationStatus" => "approved",
