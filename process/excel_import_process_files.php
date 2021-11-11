@@ -90,7 +90,7 @@ foreach($listFilesOk as $file) {
 	if (!$fileRefused) {
 
 
-		$lastRow = $worksheet->getHighestRow();
+		//$lastRow = $worksheet->getHighestRow();
 
 		switch($protocol) {
 			case "std":
@@ -490,11 +490,17 @@ foreach($listFilesOk as $file) {
 			}
 
 
+			if ($start_time!="N/A" && $start_time!="") {
+				$start_time=convertTime($start_time, "24H");
+				$eventDate=date("Y-m-d", strtotime($datum))."T".$start_time.":00Z";
+			}
+			else {
+				$eventDate=date("Y-m-d", strtotime($datum))."T00:00:00Z";
 
-			$start_time=convertTime($start_time, "24H");
-			$finish_time=convertTime($finish_time, "24H");
+			}
+			if ($finish_time!="N/A" && $finish_time!="")
+				$finish_time=convertTime($finish_time, "24H");
 
-			$eventDate=date("Y-m-d", strtotime($datum))."T".$start_time.":00Z";
 
 			//$eventTime=date("H:i", strtotime($rtEvents["datum"]));
 
@@ -817,6 +823,44 @@ foreach($listFilesOk as $file) {
 				}
 
 				$iRowSpecies++;
+			}
+
+
+			// at the end of the loop for processing the species rows, we try to find the "Antal arter totalt" to verify the number of rows expected
+			// we check 200 rows max, should me more than enough
+			$textNumberSpeciesFound="Antal arter totalt";
+			$columnTextNumberSpeciesFound='A';
+			$columnValueNumberSpeciesFound='D';
+			$lineNumberSpeciesFound=false;
+			for ($iCheckNumberRows=$iRowSpecies; $iCheckNumberRows<=$iRowSpecies+200; $iCheckNumberRows++) {
+
+				if ($worksheet->getCell($columnTextNumberSpeciesFound.$iCheckNumberRows)->getValue() == $textNumberSpeciesFound) {
+					
+					if (is_numeric($worksheet->getCell($columnValueNumberSpeciesFound.$iCheckNumberRows)->getOldCalculatedValue())) {
+
+						$valueCheckNumberSpecies=$worksheet->getCell($columnValueNumberSpeciesFound.$iCheckNumberRows)->getOldCalculatedValue();
+						$lineNumberSpeciesFound=true;
+						$iCheckNumberRows=$iRowSpecies+200;
+
+					}
+					elseif (is_numeric($worksheet->getCell($columnValueNumberSpeciesFound.$iCheckNumberRows)->getValue())) {
+
+						$valueCheckNumberSpecies=$worksheet->getCell($columnValueNumberSpeciesFound.$iCheckNumberRows)->getValue();
+						$lineNumberSpeciesFound=true;
+						$iCheckNumberRows=$iRowSpecies+200;
+
+					}
+				}
+			}
+			if (!$lineNumberSpeciesFound || trim($valueCheckNumberSpecies)=="") {
+				$consoleTxt.=consoleMessage("error", "Something is wrong with the text/value for '".$textNumberSpeciesFound."' (numeric value ?)");
+				$fileRefused=true;
+			}
+			else {
+				if (count($arr_json_record) != $valueCheckNumberSpecies) {
+					$consoleTxt.=consoleMessage("error", "Missing records ! ".$valueCheckNumberSpecies." rows expected according to '".$textNumberSpeciesFound."' but ".count($arr_json_record)." ready to be added");
+					$fileRefused=true;
+				}
 			}
 
 			/*
