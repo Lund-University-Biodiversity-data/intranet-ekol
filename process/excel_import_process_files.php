@@ -37,7 +37,6 @@ $nowISODate = new MongoDB\BSON\UTCDateTime($stampedDate);
 
 foreach($listFilesOk as $file) {
 
-	$valueCheckNumberSpecies=0;
 	
 	switch ($protocol) {
 
@@ -833,6 +832,7 @@ foreach($listFilesOk as $file) {
 			$columnTextNumberSpeciesFound='A';
 			$columnValueNumberSpeciesFound='D';
 			$lineNumberSpeciesFound=false;
+			$valueCheckNumberSpecies=0;
 			for ($iCheckNumberRows=$iRowSpecies; $iCheckNumberRows<=$iRowSpecies+200; $iCheckNumberRows++) {
 
 				if ($worksheet->getCell($columnTextNumberSpeciesFound.$iCheckNumberRows)->getValue() == $textNumberSpeciesFound) {
