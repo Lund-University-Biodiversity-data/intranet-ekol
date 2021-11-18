@@ -89,7 +89,7 @@ foreach($listFilesOk as $file) {
 
 	if (!$fileRefused) {
 
-
+		$recordReadyAdded=0;
 		//$lastRow = $worksheet->getHighestRow();
 
 		switch($protocol) {
@@ -781,6 +781,7 @@ foreach($listFilesOk as $file) {
 						"projectId" => $commonFields[$protocol]["projectId"],
 						"userId" => strval($commonFields["userId"])
 					);
+					$recordReadyAdded++;
 					/*
 					$arr_json_record.='{
 						"dateCreated" : ISODate("'.$date_now_tz.'"),
@@ -858,8 +859,8 @@ foreach($listFilesOk as $file) {
 				$fileRefused=true;
 			}
 			else {
-				if (count($arr_json_record) != $valueCheckNumberSpecies) {
-					$consoleTxt.=consoleMessage("error", "Missing records ! ".$valueCheckNumberSpecies." rows expected according to '".$textNumberSpeciesFound."' but ".count($arr_json_record)." ready to be added");
+				if ($recordReadyAdded != $valueCheckNumberSpecies) {
+					$consoleTxt.=consoleMessage("error", "Missing records ! ".$valueCheckNumberSpecies." rows expected according to '".$textNumberSpeciesFound."' but ".$recordReadyAdded." ready to be added");
 					$fileRefused=true;
 				}
 			}
