@@ -37,7 +37,8 @@ $nowISODate = new MongoDB\BSON\UTCDateTime($stampedDate);
 
 foreach($listFilesOk as $file) {
 
-
+	$valueCheckNumberSpecies=0;
+	
 	switch ($protocol) {
 
 		case "std":
