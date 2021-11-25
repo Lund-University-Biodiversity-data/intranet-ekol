@@ -40,7 +40,8 @@ $commands = [
             "activityId" => 1
         ]],
         /*['$limit'=> 20],*/
-    ]
+    ],
+    'cursor' => new stdClass,
 ];
 
 $mng = new MongoDB\Driver\Manager($mongoConnection[$server]);
@@ -49,6 +50,7 @@ $command = new MongoDB\Driver\Command($commands);
 
 try{
     $cursor = $mng->executeCommand("ecodata", $command);
+
 }
 catch(Exception $e){
     $consoleTxt.=consoleMessage("error","MongoDB Connection Error ".$mongoConnection[$server]);
@@ -60,10 +62,12 @@ if ($okCon) {
     $consoleTxt.=consoleMessage("info","MongoDB ok to ".$mongoConnection[$server]);
 
     $response = $cursor->toArray();
-    $consoleTxt.=consoleMessage("info", count($response[0]->result)." surveys in the database for scheme ".$protocol);
+    //$consoleTxt.=consoleMessage("info", count($response[0]->result)." surveys in the database for scheme ".$protocol);
+    $consoleTxt.=consoleMessage("info", count($response)." surveys in the database for scheme ".$protocol);
 
     $tabSitesPeriod=array();
-    foreach ($response[0]->result as $document) {
+    //foreach ($response[0]->result as $document) {
+    foreach ($response as $document) {
 
         // specific for the year in punkturutter
         // year -1 if before june
