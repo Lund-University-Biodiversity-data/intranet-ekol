@@ -9,6 +9,7 @@ switch($protocol) {
 	case "std":
 		$nbPts=8;
 		break;
+	case "sommar":
 	case "vinter":
 		$nbPts=20;
 		break;
@@ -43,6 +44,25 @@ foreach($listFilesOk as $file) {
 		case "std":
 		case "natt":
 			$siteKeyFilename = substr($file, 0, 5);
+			break;
+		case "sommar":
+
+			if (substr($file, strlen($file)-4, 4)==".xls") {
+	            $filename=substr($file, 0, strlen($file)-4);
+	        }
+	        elseif (substr($file, strlen($file)-5, 5)==".xlsx") {
+	            $filename=substr($file, 0, strlen($file)-5);
+	        }
+			$explodeFilename=explode("-", $filename);
+			$siteIdFN1=$explodeFilename[1];//persnr
+			$siteIdFN2=$explodeFilename[2];//indice
+			$siteIdFN3=str_replace("#", "", $explodeFilename[3]);//rnr
+			$siteIdFN=$siteIdFN1."-".$siteIdFN2."-".$siteIdFN3;
+
+			$siteKeyFilename = $siteIdFN;
+
+			$inventerareCheck=$siteIdFN1."-".$siteIdFN2;
+
 			break;
 		case "vinter":
 			
@@ -126,9 +146,10 @@ foreach($listFilesOk as $file) {
 
 				break;
 
+			case "sommar":
 			case "vinter":
 
-				$vinter=$worksheet->getCell('A1')->getValue();
+				//$vinter=$worksheet->getCell('A1')->getValue();
 				$period=$worksheet->getCell('C1')->getValue();				
 
 				$inventerare=$worksheet->getCell('A9')->getValue();
@@ -141,7 +162,6 @@ foreach($listFilesOk as $file) {
 				//$kartakod=$worksheet->getCell('G10')->getValue();
 				$distance=$worksheet->getCell('L12')->getValue();
 				$transport=$worksheet->getCell('O12')->getValue();
-				$snow=$worksheet->getCell('R12')->getValue();
 
 				$recorder_name=$worksheet->getCell('B14')->getValue();
 				$adress=$worksheet->getCell('B15')->getValue();
@@ -187,14 +207,20 @@ foreach($listFilesOk as $file) {
 					}
 				}
 
-				if ($period!=$periodFN) {
-					$consoleTxt.=consoleMessage("error", "Not the same period in the filename and file content ! ".$period." VS ".$periodFN);
-					$fileRefused=true;
+				if ($protocol=="vinter") {
+
+					$snow=$worksheet->getCell('R12')->getValue();
+
+					if ($period!=$periodFN) {
+						$consoleTxt.=consoleMessage("error", "Not the same period in the filename and file content ! ".$period." VS ".$periodFN);
+						$fileRefused=true;
+					}
+					elseif ($period>5 || $period<0) {
+						$consoleTxt.=consoleMessage("error", "Period field must be a number between 1 and 5");
+						$fileRefused=true;
+					}
 				}
-				elseif ($period>5 || $period<0) {
-					$consoleTxt.=consoleMessage("error", "Period field must be a number between 1 and 5");
-					$fileRefused=true;
-				}
+				
 
 				break;
 				
@@ -364,7 +390,7 @@ foreach($listFilesOk as $file) {
 
 
 
-			if ($protocol=="vinter") {
+			if ($protocol=="vinter" || $protocol=="sommar") {
 				$start_time=$startTime;
 				$finish_time=$endTime;
 			}
@@ -539,6 +565,7 @@ foreach($listFilesOk as $file) {
 					case "natt":
 						if ($worksheet->getCell($colTotObs.$iRowSpecies)->getOldCalculatedValue()==1) $okAnalyzeRow=true;
 						break;
+					case "sommar":
 					case "vinter":
 						if ($worksheet->getCell($colTotObs.$iRowSpecies)->getOldCalculatedValue()>0) {
 							$okAnalyzeRow=true;
@@ -564,6 +591,7 @@ foreach($listFilesOk as $file) {
 
 							break;
 
+						case "sommar":
 						case "vinter":
 							
 							$animals="birds";
@@ -636,7 +664,7 @@ foreach($listFilesOk as $file) {
 							$nbSpP++;
 						}
 
-						if ($protocol!="vinter") {
+						if ($protocol!="vinter" && $protocol!="sommar") {
 							$arrL[$iP]=($worksheet->getCell($colL.$iRowSpecies)->getValue()!="" ? $worksheet->getCell($colL.$iRowSpecies)->getValue() : 0);
 
 							$dataAnimal["L".str_pad($iP, 2, '0', STR_PAD_LEFT)]=$arrL[$iP];
@@ -664,6 +692,7 @@ foreach($listFilesOk as $file) {
 							//$data_field[$animalsDataField].='"lineCount" : '.$arrL[0].',
 							//';
 							break;
+						case "sommar":
 						case "vinter":
 
 							$dataAnimal["pk"]=$nbSpP;
@@ -902,37 +931,19 @@ foreach($listFilesOk as $file) {
 
 				break;
 
-				case "vinter":
-					/*
-					switch ($transport){
-						case 1:
-						case 2:
-						case 3:
-						default:
-							$transport_text="cykel eller moped";
-							break;
-					}
+				case "sommar":
+					$specific_fields["transport"]=$transport;
+					$specific_fields["distance"]=$distance;
+					$specific_fields["period"]=$periodFN;
 
-					switch ($snow){
-						case 1:
-						case 2:
-						case 3:
-						default:
-							$snow_text="cykel eller moped";
-							break;
-					}
-					*/
+					break;
+
+				case "vinter":
 					$specific_fields["transport"]=$transport;
 					$specific_fields["snow"]=$snow;
 					$specific_fields["distance"]=$distance;
 					$specific_fields["period"]=$periodFN;
 
-					/*
-					$specific_fields.=
-					'"transport" : "'.$transport.'",
-					"snow" : "'.$snow.'",
-					"period" : "'.$periodFN.'",';
-					*/
 					break;
 
 				case "natt":

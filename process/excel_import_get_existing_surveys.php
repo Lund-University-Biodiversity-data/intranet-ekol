@@ -77,7 +77,10 @@ if ($okCon) {
         $siteId=$document->siteID->adminProperties->internalSiteId;
         //var_dump($document);
 
-        $tabSitesPeriod[$siteId][$year."-".$periodDoc]=$document->activityId;
+        if ($protocol=="vinter")
+            $tabSitesPeriod[$siteId][$year."-".$periodDoc]=$document->activityId;
+        elseif ($protocol=="sommar")
+            $tabSitesPeriod[$siteId][$year]=$document->activityId;
 
     }
 
@@ -86,8 +89,6 @@ if ($okCon) {
 }
 
 // END 1** GET ALL THE EXISTING SURVEYS DATE/SITE FROM THE DATABASE
-
-
 
 
 ?>

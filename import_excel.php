@@ -22,19 +22,9 @@ $consoleTxt="";
 $server=DEFAULT_SERVER;
 $listHiddenOkFiles="";
 $listFiles=array();
-$protocol="vinter";
+$protocol="sommar";
 
-$templatePath="";
-switch($protocol) {
-	case "vinter":
-	default:
-		$templateFileName="VinYY-YYMMDD-X-#XX-PX.xls";
-		if (file_exists(PATH_INPUT_EXCEL.$database."/".$protocol."/"."Template/".$templateFileName)) {
-			$templateUrl=URL_WEBSITE_SURVEYS.$database."/".$protocol."/"."Template/".str_replace("#", "%23", $templateFileName);
-		}
-		break;
 
-}
 
 $activityIdCreated=array();
 
@@ -48,13 +38,8 @@ if ($micsec==1000) $micsec=999;
 $date_now_tz = date("Y-m-d",$date_array[1])."T".date("H:i:s",$date_array[1]).".".$micsec."Z";
 //echo "Date: $date_now_tz\n";
 
-
-//exec ("scp -i lib/ssh/id_rsa.pub /home/mathieu/Documents/repos/intranet-ekol/json/SFT/vinter/excel_json_* radar@canmove-dev.ekol.lu.se:/home/radar/convert-SFT-SEBMS-to-MongoDB/dump_json_sft_sebms/SFT/vinter/");
-
 $final_result="";
 
-
-$path_excel=PATH_INPUT_EXCEL.$database."/".$protocol."/";
 
 if (ENVIRONMENT=="TEST") {
 	$hostExcelFiles="localhost";
@@ -65,7 +50,30 @@ else {
 
 if (isset($_POST["execFormListFiles"]) && $_POST["execFormListFiles"]=="OK") {
 
+	$protocol = (isset($_POST["inputProtocol"]) ? $_POST["inputProtocol"] : "");
 	$server=$_POST["inputServer"];
+
+	$path_excel=PATH_INPUT_EXCEL.$database."/".$protocol."/";
+
+	$templatePath="";
+	switch($protocol) {
+		case "sommar":
+			$templateFileName="SomYY-YYMMDD-X-#XX.xls";
+			if (file_exists(PATH_INPUT_EXCEL.$database."/".$protocol."/"."Template/".$templateFileName)) {
+				$templateUrl=URL_WEBSITE_SURVEYS.$database."/".$protocol."/"."Template/".str_replace("#", "%23", $templateFileName);
+			}
+			break;
+
+		case "vinter":
+		default:
+			$templateFileName="VinYY-YYMMDD-X-#XX-PX.xls";
+			if (file_exists(PATH_INPUT_EXCEL.$database."/".$protocol."/"."Template/".$templateFileName)) {
+				$templateUrl=URL_WEBSITE_SURVEYS.$database."/".$protocol."/"."Template/".str_replace("#", "%23", $templateFileName);
+			}
+			break;
+
+	}
+
 
 	$array_sites=getArraySitesFromMongo($protocol, $commonFields[$protocol]["projectId"], $server);
 	if ($array_sites=== false) {
@@ -90,7 +98,11 @@ if (isset($_POST["execFormListFiles"]) && $_POST["execFormListFiles"]=="OK") {
 
 if (isset($_POST["execFormProcessFiles"]) && $_POST["execFormProcessFiles"]=="OK") {
 
+	$protocol = (isset($_POST["inputProtocolHidden"]) ? $_POST["inputProtocolHidden"] : "");
+
 	$server=$_POST["serverHidden"];
+
+	$path_excel=PATH_INPUT_EXCEL.$database."/".$protocol."/";
 
 	$array_sites=getArraySitesFromMongo($protocol, $commonFields[$protocol]["projectId"], $server);
 	if ($array_sites=== false) {
