@@ -803,7 +803,7 @@ foreach($listFilesOk as $file) {
 						"decimalLatitude" => $array_sites[$siteKey]["decimalLatitude"],
 						"decimalLongitude" => $array_sites[$siteKey]["decimalLongitude"],
 						"eventDate" => $eventDate,
-						"individualCount" => $IC,
+						"individualCount" => strval($IC),
 						"outputId" => $outputId,
 						"outputSpeciesId" => $outputSpeciesId,
 						"projectActivityId" => $commonFields[$protocol]["projectActivityId"],
