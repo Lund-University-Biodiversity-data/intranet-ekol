@@ -186,7 +186,11 @@ foreach($listFilesOk as $file) {
 				$notes="";
 				$comments=$notes;
 
-				$iRowSpecies=30;
+				if ($protocol=="vinter") 
+					$iRowSpecies=30;
+				elseif ($protocol=="sommar") 
+					$iRowSpecies=41;
+				
 				$colSpeciesCode="V";
 				$colTotObs="X";
 
