@@ -87,7 +87,7 @@ if (isset($_POST["execFormListFiles"]) && $_POST["execFormListFiles"]=="OK") {
 
 		if ($okCon) {
 			$consoleTxt.=consoleMessage("info", "2) Check filenames");
-
+			
 			include "process/excel_import_filenames_check.php";
 
 		}
