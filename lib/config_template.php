@@ -67,6 +67,11 @@ $commonFields["licence"]="https://creativecommons.org/publicdomain/zero/1.0/";
 switch ($database) {
 	case "SFT":
 
+		$DB["host"]="localhost";
+		$DB["username"]="postgres";
+		$DB["database"]="sft_migration";
+		$DB["password"]="";
+
 		// STANDARDRUTTERNA
 		$commonFields["std"]["projectId"]="89383d0f-9735-4fe7-8eb4-8b2e9e9b7b5c";
 		$commonFields["std"]["projectActivityId"]="a14cf615-a26b-48a7-87fd-00360f3d03d6";

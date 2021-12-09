@@ -19,11 +19,14 @@ $server=DEFAULT_SERVER;
 $internalSiteId="";
 $kartaTx="";
 $lan="";
+$siteName="";
+
 $listFiles=array();
 $protocol="sommar";
 
 $activityIdCreated=array();
 
+$mng = new MongoDB\Driver\Manager($mongoConnection[$server]);
 
 // date now
 $micro_date = microtime();
@@ -36,58 +39,34 @@ $date_now_tz = date("Y-m-d",$date_array[1])."T".date("H:i:s",$date_array[1])."."
 
 $final_result="";
 
+require "process/punkt_site_get_param_data.php";
+
 if (isset($_POST["formPunktSite"]) && $_POST["formPunktSite"]=="OK") {
 
-	/*
-	$protocol = (isset($_POST["inputProtocol"]) ? $_POST["inputProtocol"] : "");
-	$server=$_POST["inputServer"];
+	$internalSiteId=$_POST["inputInternalSiteId"];
+	$kartaTx=$_POST["inputKartaTx"];
+	$lan=$_POST["inputLan"];
+	$siteName=$_POST["inputSiteName"];
 
-	$path_excel=PATH_INPUT_EXCEL.$database."/".$protocol."/";
+	if (trim($_POST["inputLan"])=="" || trim($_POST["inputInternalSiteId"])=="" || trim($_POST["inputKartaTx"])=="" || trim($_POST["inputSiteName"])=="") {
 
-	$templatePath="";
-	switch($protocol) {
-		case "sommar":
-			$templateFileName="SomYY-YYMMDD-X-#XX.xls";
-			if (file_exists(PATH_INPUT_EXCEL.$database."/".$protocol."/"."Template/".$templateFileName)) {
-				$templateUrl=URL_WEBSITE_SURVEYS.$database."/".$protocol."/"."Template/".str_replace("#", "%23", $templateFileName);
-			}
-			break;
-
-		case "vinter":
-		default:
-			$templateFileName="VinYY-YYMMDD-X-#XX-PX.xls";
-			if (file_exists(PATH_INPUT_EXCEL.$database."/".$protocol."/"."Template/".$templateFileName)) {
-				$templateUrl=URL_WEBSITE_SURVEYS.$database."/".$protocol."/"."Template/".str_replace("#", "%23", $templateFileName);
-			}
-			break;
-
-	}
-
-
-	$array_sites=getArraySitesFromMongo($protocol, $commonFields[$protocol]["projectId"], $server);
-	if ($array_sites=== false) {
-	    $consoleTxt.=consoleMessage("error", "Can't connect to MongoDb");
+		$final_result.="<p><b>ERROR - All the fields are mandatory.</b></p>";
+		$consoleTxt.=consoleMessage("error", "All the fields are mandatory.");
 	}
 	else {
+		require "process/punkt_site_create_json.php";
 
-		$consoleTxt.=consoleMessage("info", "1) Get Existing Surveys");
+		if (isset($siteId) && $siteId!="") {
+			if ($server=="PROD") $link=$linkBioSite["PROD"];
+			else $link=$linkBioSite["DEV"];
 
-		include "process/excel_import_get_existing_surveys.php";
-
-		if ($okCon) {
-			$consoleTxt.=consoleMessage("info", "2) Check filenames");
-//echo "YEAH";exit();
-			include "process/excel_import_filenames_check.php";
+			$final_result.='Site created => <a target="_blank" href="'.$link.$siteId.'">LINK TO BIOCOLLECT</a><br>';
 
 		}
+		else
+			$final_result.="<p><b>Something wrong happened. Please check the console, and warn ".EMAIL_PROBLEM." if needed</b></p>";
 	}
 	
-	*/
-$link="";
-$actID="";
-	$final_result.='SITE NOT CREATED BUT THE LINK TO IT WILL BE HERE => <a target="_blank" href="'.$link.$actID.'">LINK TO BIOCOLLECT</a><br>';
-
-	$consoleTxt.=consoleMessage("info", "NOTHING TRIED, EVERYTHING WORKED :)");
 
 } // FIN IF $_POST["formPunktSite"] OK
 
