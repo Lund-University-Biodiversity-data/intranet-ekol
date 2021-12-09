@@ -1,7 +1,5 @@
 <?php
 
-$siteId=generate_uniqId_format("xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx");
-
 $explInternalSiteId=explode("-", $internalSiteId);
 if (count($explInternalSiteId)!=3) {
 	$consoleTxt.= consoleMessage("error", "Wrong format for the persnr, must contain 3 parts (".count($explInternalSiteId).")");
@@ -28,6 +26,8 @@ else {
 		else {
 			$consoleTxt.= consoleMessage("info", "WGS84 coordinates found for ".$kartaTx.' ('.$lat.'/'.$lon.')');
 						
+			$siteId=generate_uniqId_format("xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx");
+
 			$initDate = new \DateTime();
 			$stampedDate = $initDate->getTimestamp() * 1000;
 			$nowISODate = new MongoDB\BSON\UTCDateTime($stampedDate);
@@ -81,7 +81,7 @@ else {
 
 			$result = $mng->executeBulkWrite('ecodata.site', $bulk);
 
-			$consoleTxt.=consoleMessage("info", "Json OK with siteId ".$siteId);
+			$consoleTxt.=consoleMessage("info", "Site created in MongoDb with siteId ".$siteId);
 		}
 
 	}
