@@ -50,7 +50,7 @@
     <div class="form-group row">
       <label for="inputSiteName" class="col-sm-2 col-form-label">Popular name</label>
       <div class="col-sm-10">
-        <input type="text" maxlength=20 class="form-control" id="inputSiteName" name="inputSiteName" placeholder="popular name WITHOUT internalId" value="<?= $siteName ?>">
+        <input type="text" class="form-control" id="inputSiteName" name="inputSiteName" placeholder="popular name WITHOUT internalId" value="<?= $siteName ?>">
         </select> 
       </div>
     </div>

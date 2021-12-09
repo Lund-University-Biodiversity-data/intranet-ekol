@@ -14,6 +14,8 @@ else {
 		$consoleTxt.= consoleMessage("error", "No personId found in the database with the persnr ".$persnr);
 	}
 	else {
+		$consoleTxt.= consoleMessage("info", "personId found in the database with the persnr ".$persnr);
+
 		$qKarta="SELECT * FROM koordinater_mittpunkt_topokartan WHERE kartatx='".$kartaTx."'";
 		$rKarta = pg_query($db_connection, $qKarta);
 		$rtKarta = pg_fetch_array($rKarta);
@@ -24,52 +26,8 @@ else {
 			$consoleTxt.= consoleMessage("error", "Can't get the WGS84 coordinates for ".$kartaTx.' ('.$lat.'/'.$lon.')');
 		}
 		else {
-			$json='{
-				"siteId" : "'.$siteId.'",
-				"name" : "'.$siteName.'",
-				"dateCreated" : ISODate("'.$date_now_tz.'"),
-				"lastUpdated" : ISODate("'.$date_now_tz.'"),
-				"status" : "active",
-				"type" : "",
-				"area" : "0",
-				"projects" : [
-					"'.$commonFields[$protocol]["projectId"].'"
-				],
-				"extent" : {
-					"geometry" : {
-						"type" : "Point",
-						"coordinates" : [
-							'.$lon.',
-							'.$lat.'
-						],
-						"decimalLongitude" : '.$lon.',
-						"decimalLatitude" : '.$lat.',
-						"areaKmSq" : 0,
-						"aream2" : 0,
-						"centre" : [
-							'.$lon.',
-							'.$lat.'
-						]
-					},
-					"source" : "Point"
-				},
-				"geoIndex" : {
-					"type" : "Point",
-					"coordinates" : [
-						'.$lon.',
-						'.$lat.'
-					]
-				},
-				"transectParts" : [],
-				"adminProperties" : {
-					"internalSiteId" : "'.$internalSiteId.'",
-					"lan" : "'.$lan.'",
-					"kartaTx" : "'.$kartaTx.'"
-				},
-				"owner" : "'.$person["personId"].'",
-				"verificationStatus" : "godkänd"
-			}';
-			
+			$consoleTxt.= consoleMessage("info", "WGS84 coordinates found for ".$kartaTx.' ('.$lat.'/'.$lon.')');
+						
 			$initDate = new \DateTime();
 			$stampedDate = $initDate->getTimestamp() * 1000;
 			$nowISODate = new MongoDB\BSON\UTCDateTime($stampedDate);
