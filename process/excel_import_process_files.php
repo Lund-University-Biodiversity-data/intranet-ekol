@@ -818,10 +818,9 @@ foreach($listFilesOk as $file) {
 
 				case "std":
 
-					$specific_fields["timeOfObservation"]=$timeOfObservation;
-					$specific_fields["distanceCovered"]=$distanceCovered;
-					$specific_fields["minutesSpentObserving"]=$minutesSpentObserving;
-					$specific_fields["minutesSpentObserving"]=$minutesSpentObserving;
+					$specific_fields["timeOfObservation"]=array($timeOfObservation);
+					$specific_fields["distanceCovered"]=array($distanceCovered);
+					$specific_fields["minutesSpentObserving"]=array($minutesSpentObserving);
 					$specific_fields["mammalObservations"]=$data_field["mammals"];
 					$specific_fields["isGpsUsed"]=$isGpsUsed;
 
