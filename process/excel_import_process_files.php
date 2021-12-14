@@ -38,7 +38,8 @@ $nowISODate = new MongoDB\BSON\UTCDateTime($stampedDate);
 
 foreach($listFilesOk as $file) {
 
-	
+	$userId=$commonFields["userId"];
+
 	switch ($protocol) {
 
 		case "std":
@@ -396,6 +397,7 @@ foreach($listFilesOk as $file) {
 		}
 		else {
 			$personId=$person["personId"];
+			if (isset($person["userId"]) && $person["userId"]!="") $userId=$person["userId"];
 		}
 
 		if (isset($transport) && trim($transport)!="") {
@@ -745,7 +747,7 @@ foreach($listFilesOk as $file) {
 						"outputSpeciesId" => $outputSpeciesId,
 						"projectActivityId" => $commonFields[$protocol]["projectActivityId"],
 						"projectId" => $commonFields[$protocol]["projectId"],
-						"userId" => strval($commonFields["userId"])
+						"userId" => strval($userId)
 					);
 					$recordReadyAdded[$animals]++;
 
@@ -914,7 +916,7 @@ foreach($listFilesOk as $file) {
 				"siteId" => $array_sites[$siteKey]["locationID"],
 				"status" => "active",
 				"type" => $commonFields[$protocol]["type"],
-				"userId" => strval($commonFields["userId"]),
+				"userId" => strval($userId),
 				"personId" => $personId,
 				"mainTheme" => "",
 				"verificationStatus" => "approved",
