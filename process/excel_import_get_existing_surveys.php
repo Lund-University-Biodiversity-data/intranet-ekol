@@ -44,8 +44,6 @@ $commands = [
     'cursor' => new stdClass,
 ];
 
-$mng = new MongoDB\Driver\Manager($mongoConnection[$server]);
-
 $command = new MongoDB\Driver\Command($commands);
 
 try{
@@ -69,13 +67,16 @@ if ($okCon) {
     //foreach ($response[0]->result as $document) {
     foreach ($response as $document) {
 
+        $year=substr($document->data->surveyDate, 0, 4);
+        
         // specific for the year in punkturutter
-        // year -1 if before june
-        if (substr($document->data->surveyDate, 5, 2)<6) {
-            $year=substr($document->data->surveyDate, 0, 4)-1;
-            //echo "mois decoupé :".substr($document->data->surveyDate, 5, 2)." => year : ".$year."<br>";
+        if ($protocol=="sommar" || $protocol=="vinter") {
+            // year -1 if before june
+            if (substr($document->data->surveyDate, 5, 2)<6) {
+                $year=substr($document->data->surveyDate, 0, 4)-1;
+                //echo "mois decoupé :".substr($document->data->surveyDate, 5, 2)." => year : ".$year."<br>";
+            }
         }
-        else $year=substr($document->data->surveyDate, 0, 4);
 
         $periodDoc=$document->data->period;
         $siteId=$document->siteID->adminProperties->internalSiteId;
@@ -83,7 +84,7 @@ if ($okCon) {
 
         if ($protocol=="vinter")
             $tabSitesPeriod[$siteId][$year."-".$periodDoc]=$document->activityId;
-        elseif ($protocol=="sommar")
+        elseif ($protocol=="sommar" || $protocol=="std")
             $tabSitesPeriod[$siteId][$year]=$document->activityId;
 
     }
@@ -93,6 +94,5 @@ if ($okCon) {
 }
 
 // END 1** GET ALL THE EXISTING SURVEYS DATE/SITE FROM THE DATABASE
-
 
 ?>

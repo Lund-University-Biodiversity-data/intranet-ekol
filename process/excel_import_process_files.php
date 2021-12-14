@@ -109,45 +109,151 @@ foreach($listFilesOk as $file) {
 
 	if (!$fileRefused) {
 
-		$recordReadyAdded=0;
+		//$recordReadyAdded=0;
 		//$lastRow = $worksheet->getHighestRow();
 
 		switch($protocol) {
 			case "std":
+
+				$datumExpectedFormat="YYYYMMDD";
+
 				$kartakod=$worksheet->getCell('A9')->getValue();
-				$ruttname=$worksheet->getCell('D9')->getValue();
+				$ruttname=$worksheet->getCell('D9')->getValue(); // not used
 				$datum=$worksheet->getCell('K9')->getValue();
+
 				$inventerare = $worksheet->getCell('C13')->getValue();
 
 				$recorder_name=$worksheet->getCell('B15')->getValue();
-				$adress=$worksheet->getCell('B16')->getValue();
-				$post=$worksheet->getCell('B17')->getValue();
-				$city=$worksheet->getCell('F17')->getValue();
-				$email=$worksheet->getCell('N15')->getValue();
-				$address1=$recorder_name;
-				$address2=$worksheet->getCell('B16')->getValue();
-				$tel=$worksheet->getCell('N16')->getValue();
-				$mobile=$worksheet->getCell('N17')->getValue();
+				$adress=$worksheet->getCell('B16')->getValue(); // not used
+				$post=$worksheet->getCell('B17')->getValue(); // not used
+				$city=$worksheet->getCell('F17')->getValue(); // not used
+				$email=$worksheet->getCell('N15')->getValue(); // not used
+				$address1=$recorder_name; // not used
+				$address2=$worksheet->getCell('B16')->getValue(); // not used
+				$tel=$worksheet->getCell('N16')->getValue(); // not used
+				$mobile=$worksheet->getCell('N17')->getValue(); // not used
 
 				$eventRemarks=str_replace('"', "'", $worksheet->getCell('A32')->getValue());
 				$notes=str_replace('"', "'", $worksheet->getCell('A35')->getValue());
 				$comments=$notes;
 
+
 				$rowStartTime=23;
+
+				// get the start_time/finish_time + timeOfObservation
+
+				// find the start time and finish time
+				$start_time=2359;
+				$finish_time=0;
+				$timeOfObservation=array();
+
+				$iInd=1;
+				for ($iCol="B";$iCol<="I";$iCol++) {
+					$val=$worksheet->getCell($iCol.$rowStartTime)->getValue();
+
+					if ($val!="" && !is_numeric($val)) {
+						$consoleTxt.=consoleMessage("error", "TimeOfObservation: wrong format for cell ".$iCol.$rowStartTime);
+						$fileRefused=true;
+					}
+
+					$timeOfObservation["TidP".str_pad($iInd, 2, '0', STR_PAD_LEFT)]=strval($val);
+					
+					if ($val!="") {
+						$val=intval($val);
+
+						if ($val<0 || $val>2400) {
+							$consoleTxt.=consoleMessage("error", "ERROR time value ".$val." for P".$i);
+							$fileRefused=true;
+						}
+						if ($val<$start_time)
+							$start_time=$val;
+
+						// add 24 hours to the night tmes, to help comparing
+						if ($val<1200)
+							$val+=2400;
+
+						if ($val>$finish_time)
+							$finish_time=$val;
+
+						if ($val>2400) $val-=2400;
+					}
+
+					$iInd++;
+				}
+
+
+				if ($start_time>2400) $start_time-=2400;
+				if ($finish_time>2400) $finish_time-=2400;
+
+				$start_time_brut=$start_time;
+
+
+				// add 5 minutes 
+				$finish_time_5min=str_pad($finish_time, 4, '0', STR_PAD_LEFT);
+				$hours=intval(substr($finish_time_5min, 0, 2));
+				$minutes=intval(substr($finish_time_5min, 2, 2));
+				if ($minutes>=55) {
+					$minutes=str_pad(($minutes+5)-60, 2, '0', STR_PAD_LEFT);
+
+					if ($hours==23) $hours=0;
+					else $hours++;
+				}
+				else {
+					$minutes+=5;
+				}
+				$finish_time=intval($hours.$minutes);
+
+				$minutesSpentObserving=array();
+				$iInd=1;
+				for ($iCol="K";$iCol<="R";$iCol++) {
+					$val=$worksheet->getCell($iCol.$rowStartTime)->getValue();
+					if ($val!="" && !is_numeric($val)) {
+						$consoleTxt.=consoleMessage("error", "MinutesSpentObserving: wrong format for cell ".$iCol.$rowStartTime);
+						$fileRefused=true;
+					}
+					$minutesSpentObserving["TidL".str_pad($iInd, 2, '0', STR_PAD_LEFT)]=strval($val);
+					$iInd++;
+				}
+
+				$rowDistance=27;
+
+				$distanceCovered=array();
+				$iInd=1;
+				for ($iCol="B";$iCol<="I";$iCol++) {
+					$val=$worksheet->getCell($iCol.$rowDistance)->getValue();
+					if ($val!="" && !is_numeric($val)) {
+						$consoleTxt.=consoleMessage("error", "DistanceCovered: wrong format for cell ".$iCol.$rowDistance);
+						$fileRefused=true;
+					}
+					$distanceCovered["distanceOnL".str_pad($iInd, 2, '0', STR_PAD_LEFT)]=strval($val);
+					$iInd++;
+				}
+
 				$iRowSpecies=39;
 				$colSpeciesCode="R";
 				$colTotObs="V";
-
 				
 				$arrJaGps=["X", "x", "ja", "Ja", "JA"];
 				$isGpsUsed=(in_array($worksheet->getCell('T31')->getValue(), $arrJaGps)  ? "ja" : "nej");
 
-				$siteKey=$kartakod;
+				$siteKey=$kartakod;				
+				
+				$checkTotalData[0]["animals"]='birds';
+				$checkTotalData[0]["textNumberSpeciesFound"]="Antal fågelarter totalt";
+				$checkTotalData[0]["columnTextNumberSpeciesFound"]='A';
+				$checkTotalData[0]["columnValueNumberSpeciesFound"]='D';
+
+				$checkTotalData[1]["animals"]='mammals';
+				$checkTotalData[1]["textNumberSpeciesFound"]="Antal däggdjursarter totalt";
+				$checkTotalData[1]["columnTextNumberSpeciesFound"]='A';
+				$checkTotalData[1]["columnValueNumberSpeciesFound"]='E';
 
 				break;
 
 			case "sommar":
 			case "vinter":
+
+				$datumExpectedFormat="YYMMDD";
 
 				//$vinter=$worksheet->getCell('A1')->getValue();
 				$period=$worksheet->getCell('C1')->getValue();				
@@ -198,18 +304,6 @@ foreach($listFilesOk as $file) {
 					$consoleTxt.=consoleMessage("error", "Not the same Personummer in the filename and file content ! ".$inventerare." VS ".$inventerareCheck);
 					$fileRefused=true;
 				}
-				else {
-					// get person from MongoDb
-					$person= getPersonFromInternalId ($inventerareCheck, $server) ;
-					if (!isset($person["personId"])) {
-						$consoleTxt.=consoleMessage("error", "Can't find one person in MongoDb for ".$inventerareCheck);
-						$fileRefused=true;
-					}
-					elseif (mb_strtoupper($recorder_name)!= mb_strtoupper($person["firstName"]." ".$person["lastName"])) {
-						$consoleTxt.=consoleMessage("error", "Not the same surveyor name in the file (".mb_strtoupper($recorder_name).") and in the database (".mb_strtoupper($person["firstName"]." ".$person["lastName"]).")");
-						$fileRefused=true;
-					}
-				}
 
 				if ($protocol=="vinter") {
 
@@ -226,9 +320,17 @@ foreach($listFilesOk as $file) {
 				}
 				
 
+				$checkTotalData[0]["textNumberSpeciesFound"]="Antal fågelarter totalt";
+				$checkTotalData[0]["columnTextNumberSpeciesFound"]='A';
+				$checkTotalData[0]["columnValueNumberSpeciesFound"]='D';
+
 				break;
 				
 			case "natt":
+
+
+				$datumExpectedFormat="YYMMDD";
+
 				$kartakod=$worksheet->getCell('A9')->getValue();
 				$ruttname=$worksheet->getCell('D9')->getValue();
 				$datum=$worksheet->getCell('L9')->getValue();
@@ -279,6 +381,23 @@ foreach($listFilesOk as $file) {
 				break;
 		}
 
+
+		// get person from MongoDb
+		
+		$consoleTxt.=consoleMessage("info", "Inventerare : ".$inventerare); 
+		$person= getPersonFromInternalId ($inventerare, $server) ;
+		if (!isset($person["personId"])) {
+			$consoleTxt.=consoleMessage("error", "Can't find one person in MongoDb for ".$inventerare);
+			$fileRefused=true;
+		}
+		elseif (mb_strtoupper($recorder_name)!= mb_strtoupper($person["firstName"]." ".$person["lastName"])) {
+			$consoleTxt.=consoleMessage("error", "Not the same surveyor name in the file (".mb_strtoupper($recorder_name).") and in the database (".mb_strtoupper($person["firstName"]." ".$person["lastName"]).")");
+			$fileRefused=true;
+		}
+		else {
+			$personId=$person["personId"];
+		}
+
 		if (isset($transport) && trim($transport)!="") {
 			if (!is_numeric($transport) || $transport<0 || $transport>4 ) {
 				$consoleTxt.=consoleMessage("error", "Transport field is supposed to be a number between 1 and 4, instead of : ".$transport);
@@ -309,8 +428,8 @@ foreach($listFilesOk as $file) {
 			$fileRefused=true;
 		}
 
-		if (!isset($datum) || trim($datum)=="" || (strlen($datum)!=6)) {
-			$consoleTxt.=consoleMessage("error", "Wrong format for datum (YYMMDD) : ".$datum);
+		if (!isset($datum) || trim($datum)=="" || (strlen($datum)!=strlen($datumExpectedFormat))) {
+			$consoleTxt.=consoleMessage("error", "Wrong format for datum (".$datumExpectedFormat.") : ".$datum);
 			$fileRefused=true;
 		}
 
@@ -318,7 +437,6 @@ foreach($listFilesOk as $file) {
 			$consoleTxt.=consoleMessage("error", "Filename site id (".$siteKeyFilename.") and site id in the file (".$siteKey.") don't match ");
 			$fileRefused=true;
 		}
-		$consoleTxt.=consoleMessage("info", "Inventerare : ".$inventerare); 
 
 		// in case of a 6 digit date, we add 20
 		if (strlen($datum)==6) $datum="20".$datum;
@@ -329,196 +447,11 @@ foreach($listFilesOk as $file) {
 
 		if (isset($array_sites[$siteKey])) {
 
-			// check if this person exists
-			$explInv=explode("-", $inventerare);
-			if (!isset($explInv[0]) || strlen($explInv[0])!=6) {
-				$consoleTxt.=consoleMessage("error", "Birthdate not valid ".$inventerare);
-				$fileRefused=true;
-			}
-			else {
-				$birthdate=$explInv[0];
-				$year=substr($birthdate, 0, 2);
-
-				$birthdate_format=($year<=20 ? "20".$year : "19".$year)."-".substr($birthdate, 2, 2)."-".substr($birthdate, 4, 2);
-			}
 			
-			$filter = ['internalPersonId' => $inventerare];
-			//$filter = [];
-			$options = [];
-			$query = new MongoDB\Driver\Query($filter, $options); 
-			//db.site.find({"projects":"dab767a5-929e-4733-b8eb-c9113194201f"}, {"projects":1, "name":1}).pretty()
-			// 
-		    $mng = new MongoDB\Driver\Manager($mongoConnection[$server]); // Driver Object created
-
-			$rows = $mng->executeQuery("ecodata.person", $query);
-
-			$rowsToArray=$rows->toArray();
-
-			if (count($rowsToArray)!=0) {
-				$userId = (isset($rowsToArray[0]->userId) ? $rowsToArray[0]->userId : $commonFields["userId"]);
-				$personId = $rowsToArray[0]->personId;
-				$consoleTxt.=consoleMessage("info", "Person exists in database: ".$personId);
-			}
-			else {
-
-
-				$consoleTxt.=consoleMessage("error", "Person does not exist in the database : ".$inventerare);
-				$fileRefused=true;
-
-				/*
-				$userId = $commonFields["userId"];
-				$personId = generate_uniqId_format("xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx");
-				$explFN=explode(" ", $recorder_name);
-
-				$arr_json_person[]=array(
-					"dateCreated" => $nowISODate,
-					"lastUpdated" => $nowISODate,
-					"personId" => $personId,
-					"firstName" => $explFN[0],
-					"lastName" => $explFN[1],
-					"birthdate" => $birthdate_format,
-					"email" => $email,
-					"phoneNum" => $tel,
-					"mobileNum" => $mobile,
-					"address1" => $address1,
-					"address2" => $address2,
-					"postCode" => $post,
-					"town" => $city,
-					"projects"=> array($commonFields[$protocol]["projectId"]),
-					"internalPersonId" => $inventerare
-				);
-				$consoleTxt.=consoleMessage("info", "Person to be created with personid: ".$personId);
-
-				*/
-			}
-
-
-
 			if ($protocol=="vinter" || $protocol=="sommar") {
 				$start_time=$startTime;
 				$finish_time=$endTime;
 			}
-			else {
-				// find the start time and finish time
-				$start_time=2359;
-				$finish_time=0;
-
-				$minutesSpentObserving=array();
-				$timeOfObservation=array();
-
-
-				/*$minutesSpentObserving='"minutesSpentObserving" : [
-						{';
-				$timeOfObservation='"timeOfObservation" : [
-						{';*/
-
-				$colStartTime="B";
-				$colStartMin="K";
-
-				for ($i=1; $i<=$nbPts; $i++) {
-					$timeofObs=$worksheet->getCell($colStartTime++.$rowStartTime)->getValue();
-					$minSpentObs=$worksheet->getCell($colStartMin++.$rowStartTime)->getValue();
-
-					switch($protocol) {
-						case "std":
-							$ind="p".$i;
-							
-							if ($timeofObs!="") {
-								$timeOfObservation["TidP".str_pad($i, 2, '0', STR_PAD_LEFT)]=$timeofObs;
-
-								//$timeOfObservation.='
-								//"TidP'.str_pad($i, 2, '0', STR_PAD_LEFT).'" : "'.$timeofObs.'",';
-							}
-							if ($minSpentObs!="") {
-								$minutesSpentObserving["TidL".str_pad($i, 2, '0', STR_PAD_LEFT)]=$minSpentObs;
-
-								//$minutesSpentObserving.='
-								//"TidL'.str_pad($i, 2, '0', STR_PAD_LEFT).'" : "'.$minSpentObs.'",';
-							}
-							break;
-						case "natt":
-
-							$ind="p".str_pad($i, 2, '0', STR_PAD_LEFT);
-
-							$timeOfObservation["TidP".str_pad($i, 2, '0', STR_PAD_LEFT)]=$timeofObs;
-
-							//$timeOfObservation.='
-							//"TidP'.str_pad($i, 2, '0', STR_PAD_LEFT).'" : "'.$timeofObs.'",';
-
-							break;
-					}
-					
-					if ($timeofObs!="") {
-						$timeofObs=intval($timeofObs);
-
-						if ($timeofObs>2400) {
-							$consoleTxt.=consoleMessage("error", "ERROR time value ".$timeofObs." for P".$i);
-							$fileRefused=true;
-						}
-						if ($timeofObs<$start_time)
-							$start_time=$timeofObs;
-
-						// add 24 hours to the night tmes, to help comparing
-						if ($timeofObs<1200)
-							$timeofObs+=2400;
-
-						if ($timeofObs>$finish_time)
-							$finish_time=$timeofObs;
-
-						if ($timeofObs>2400) $timeofObs-=2400;
-					}
-				}
-
-
-				if ($start_time>2400) $start_time-=2400;
-				if ($finish_time>2400) $finish_time-=2400;
-
-				$start_time_brut=$start_time;
-
-
-				// add 5 minutes 
-				$finish_time_5min=str_pad($finish_time, 4, '0', STR_PAD_LEFT);
-				$hours=intval(substr($finish_time_5min, 0, 2));
-				$minutes=intval(substr($finish_time_5min, 2, 2));
-				if ($minutes>=55) {
-					$minutes=str_pad(($minutes+5)-60, 2, '0', STR_PAD_LEFT);
-
-					if ($hours==23) $hours=0;
-					else $hours++;
-				}
-				else {
-					$minutes+=5;
-				}
-				$finish_time=intval($hours.$minutes);
-
-
-				$distanceCovered=array();
-
-				//$distanceCovered='"distanceCovered" : [
-				//		{
-				//			';
-
-				$iL="B";
-				for ($i=1; $i<=$nbPts; $i++) {
-					$distanceCovered["distanceOnL".str_pad($i, 2, '0', STR_PAD_LEFT)]=$worksheet->getCell($iL."27")->getValue();
-
-					//$distanceCovered.='
-					//"distanceOnL'.str_pad($i, 2, '0', STR_PAD_LEFT).'" : "'.$worksheet->getCell($iL."27")->getValue().'",';
-					$iL++;
-				}
-
-				//$distanceCovered[strlen($distanceCovered)-1]=' ';
-				//$distanceCovered.='}],';
-
-				
-				
-				//$minutesSpentObserving[strlen($minutesSpentObserving)-1]=' ';
-				//$minutesSpentObserving.='}],';
-				//$timeOfObservation[strlen($timeOfObservation)-1]=' ';
-				//$timeOfObservation.='}],';
-
-			}
-
 
 			if ($start_time!="N/A" && $start_time!="") {
 				$start_time=convertTime($start_time, "24H");
@@ -534,8 +467,7 @@ foreach($listFilesOk as $file) {
 
 			//$eventTime=date("H:i", strtotime($rtEvents["datum"]));
 
-			
-			
+					
 			$activityId=generate_uniqId_format("xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx");
 			$eventID=$activityId;
 
@@ -548,6 +480,7 @@ foreach($listFilesOk as $file) {
 			foreach ($list_id as $animals => $listId) {
 				//$data_field[$animals]="";
 				$data_field[$animals]=array();
+				$recordReadyAdded[$animals]=0;
 			}
 			//$data_field["mammalsOnRoad"]="";
 			$data_field["mammalsOnRoad"]=array();
@@ -814,44 +747,7 @@ foreach($listFilesOk as $file) {
 						"projectId" => $commonFields[$protocol]["projectId"],
 						"userId" => strval($commonFields["userId"])
 					);
-					$recordReadyAdded++;
-					/*
-					$arr_json_record.='{
-						"dateCreated" : ISODate("'.$date_now_tz.'"),
-						"lastUpdated" : ISODate("'.$date_now_tz.'"),
-						"occurrenceID" : "'.$occurenceID.'",
-						"status" : "active",
-						"recordedBy" : "'.$recorder_name.'",
-						"rightsHolder" : "'.$commonFields["rightsHolder"].'",
-						"institutionID" : "'.$commonFields["institutionID"].'",
-						"institutionCode" : "'.$commonFields["institutionCode"].'",
-						"basisOfRecord" : "'.$commonFields["basisOfRecord"].'",
-						"datasetID" : "'.$commonFields[$protocol]["projectActivityId"].'",
-						"datasetName" : "'.$commonFields[$protocol]["datasetName"].'",
-						"licence" : "'.$commonFields["licence"].'",
-						"locationID" : "'.$array_sites[$siteKey]["locationID"].'",
-						"locationName" : "'.$array_sites[$siteKey]["locationName"].'",
-						"locationRemarks" : "",
-						"eventID" : "'.$eventID.'",
-						"eventTime" : "'.$start_time.'",
-						"eventRemarks" : "'.$eventRemarks.'",
-						"notes" : "'.$notes.'",
-						"guid" : "'.$guid.'",
-						"name" : "'.$name.'",
-						"scientificName" : "'.$sn.'",
-						"multimedia" : [ ],
-						"activityId" : "'.$activityId.'",
-						"decimalLatitude" : '.$array_sites[$siteKey]["decimalLatitude"].',
-						"decimalLongitude" : '.$array_sites[$siteKey]["decimalLongitude"].',
-						"eventDate" : "'.$eventDate.'",
-						"individualCount" : '.$IC.',
-						"outputId" : "'.$outputId.'",
-						"outputSpeciesId" : "'.$outputSpeciesId.'",
-						"projectActivityId" : "'.$commonFields[$protocol]["projectActivityId"].'",
-						"projectId" : "'.$commonFields[$protocol]["projectId"].'",
-						"userId" : "'.$commonFields["userId"].'"
-					},';
-					*/
+					$recordReadyAdded[$animals]++;
 
 					$data_field[$animals][]=$dataAnimal;
 				}
@@ -860,43 +756,47 @@ foreach($listFilesOk as $file) {
 			}
 
 
-			// at the end of the loop for processing the species rows, we try to find the "Antal arter totalt" to verify the number of rows expected
-			// we check 200 rows max, should me more than enough
-			$textNumberSpeciesFound="Antal arter totalt";
-			$columnTextNumberSpeciesFound='A';
-			$columnValueNumberSpeciesFound='D';
-			$lineNumberSpeciesFound=false;
-			$valueCheckNumberSpecies=0;
-			for ($iCheckNumberRows=$iRowSpecies; $iCheckNumberRows<=$iRowSpecies+200; $iCheckNumberRows++) {
+			foreach($checkTotalData as $iCTD => $CTD) {
+				// at the end of the loop for processing the species rows, we try to find the "Antal arter totalt" to verify the number of rows expected
+				// we check 200 rows max, should me more than enough
+				$lineNumberSpeciesFound=false;
+				$valueCheckNumberSpecies=0;
+				for ($iCheckNumberRows=$iRowSpecies; $iCheckNumberRows<=$iRowSpecies+200; $iCheckNumberRows++) {
 
-				if ($worksheet->getCell($columnTextNumberSpeciesFound.$iCheckNumberRows)->getValue() == $textNumberSpeciesFound) {
-					
-					if (is_numeric($worksheet->getCell($columnValueNumberSpeciesFound.$iCheckNumberRows)->getOldCalculatedValue())) {
+					if ($worksheet->getCell($CTD["columnTextNumberSpeciesFound"].$iCheckNumberRows)->getValue() == $CTD["textNumberSpeciesFound"]) {
+						
+						if (is_numeric($worksheet->getCell($CTD["columnValueNumberSpeciesFound"].$iCheckNumberRows)->getOldCalculatedValue())) {
 
-						$valueCheckNumberSpecies=$worksheet->getCell($columnValueNumberSpeciesFound.$iCheckNumberRows)->getOldCalculatedValue();
-						$lineNumberSpeciesFound=true;
-						$iCheckNumberRows=$iRowSpecies+200;
+							$valueCheckNumberSpecies=$worksheet->getCell($CTD["columnValueNumberSpeciesFound"].$iCheckNumberRows)->getOldCalculatedValue();
+							$lineNumberSpeciesFound=true;
+							$iCheckNumberRows=$iRowSpecies+200;
 
-					}
-					elseif (is_numeric($worksheet->getCell($columnValueNumberSpeciesFound.$iCheckNumberRows)->getValue())) {
+						}
+						elseif (is_numeric($worksheet->getCell($CTD["columnValueNumberSpeciesFound"].$iCheckNumberRows)->getValue())) {
 
-						$valueCheckNumberSpecies=$worksheet->getCell($columnValueNumberSpeciesFound.$iCheckNumberRows)->getValue();
-						$lineNumberSpeciesFound=true;
-						$iCheckNumberRows=$iRowSpecies+200;
+							$valueCheckNumberSpecies=$worksheet->getCell($CTD["columnValueNumberSpeciesFound"].$iCheckNumberRows)->getValue();
+							$lineNumberSpeciesFound=true;
+							$iCheckNumberRows=$iRowSpecies+200;
 
+						}
 					}
 				}
-			}
-			if (!$lineNumberSpeciesFound || trim($valueCheckNumberSpecies)=="") {
-				$consoleTxt.=consoleMessage("error", "Something is wrong with the text/value for '".$textNumberSpeciesFound."' (numeric value ?)");
-				$fileRefused=true;
-			}
-			else {
-				if ($recordReadyAdded != $valueCheckNumberSpecies) {
-					$consoleTxt.=consoleMessage("error", "Missing records ! ".$valueCheckNumberSpecies." rows expected according to '".$textNumberSpeciesFound."' but ".$recordReadyAdded." ready to be added");
+				if (!$lineNumberSpeciesFound || trim($valueCheckNumberSpecies)=="") {
+					$consoleTxt.=consoleMessage("error", "Something is wrong with the text/value for '".$CTD["textNumberSpeciesFound"]."' (numeric value ?)");
 					$fileRefused=true;
 				}
+				else {
+					if ($recordReadyAdded[$CTD["animals"]] != $valueCheckNumberSpecies) {
+						$consoleTxt.=consoleMessage("error", "Missing records ! ".$valueCheckNumberSpecies." rows expected according to '".$CTD["textNumberSpeciesFound"]."' but ".$recordReadyAdded[$CTD["animals"]]." ready to be added");
+						$fileRefused=true;
+					}
+					else {
+						$consoleTxt.=consoleMessage("info", $recordReadyAdded[$CTD["animals"]]." records ready to be added for '".$CTD["animals"]."'. The control value is ".$valueCheckNumberSpecies." => OK");
+					}
+				}
 			}
+
+			
 
 			/*
 			// replace last comma by 
@@ -921,6 +821,7 @@ foreach($listFilesOk as $file) {
 					$specific_fields["minutesSpentObserving"]=$minutesSpentObserving;
 					$specific_fields["minutesSpentObserving"]=$minutesSpentObserving;
 					$specific_fields["mammalObservations"]=$data_field["mammals"];
+					$specific_fields["isGpsUsed"]=$isGpsUsed;
 
 					/*$specific_fields.='
 					'.$timeOfObservation.'
@@ -1020,27 +921,6 @@ foreach($listFilesOk as $file) {
 				"excelFile" => $file
 			);
 
-			/*
-			$arr_json_activity.='{
-				"activityId" : "'.$activityId.'",
-				"assessment" : false,
-				"dateCreated" : ISODate("'.$date_now_tz.'"),
-				"lastUpdated" : ISODate("'.$date_now_tz.'"),
-				"progress" : "planned",
-				"projectActivityId" : "'.$commonFields[$protocol]["projectActivityId"].'",
-				"projectId" : "'.$commonFields[$protocol]["projectId"].'",
-				"projectStage" : "",
-				"siteId" : "'.$array_sites[$siteKey]["locationID"].'",
-				"status" : "active",
-				"type" : "'.$commonFields[$protocol]["type"].'",
-				"userId" : "'.$commonFields["userId"].'",
-				"personId" : "'.$personId.'",
-				"mainTheme" : "",
-				"verificationStatus" : "not verified",
-				"excelFile" : "'.$file.'"
-			},';
-			*/
-
 			$data_array=array (
 				"eventRemarks" => $eventRemarks,
 				"surveyFinishTime" => $finish_time,
@@ -1081,53 +961,6 @@ foreach($listFilesOk as $file) {
 				"name" => $commonFields[$protocol]["name"],
 				"dataOrigin" => $dataOrigin
 			);
-
-			/*
-			$arr_json_output.='{
-				"activityId" : "'.$activityId.'",
-				"dateCreated" : ISODate("'.$date_now_tz.'"),
-				"lastUpdated" : ISODate("'.$date_now_tz.'"),
-				"outputId" : "'.$outputId.'",
-				"status" : "active",
-				"outputNotCompleted" : false,
-				"data" : {
-					"eventRemarks" : "'.$eventRemarks.'",
-					"surveyFinishTime" : "'.$finish_time.'",
-					"locationAccuracy" : 50,
-					"comments" : "'.$comments.'",
-					"surveyDate" : "'.$date_survey.'",
-					'.$specific_fields.'
-					"locationHiddenLatitude" : '.$array_sites[$siteKey]["decimalLatitude"].',
-					"locationLatitude" : '.$array_sites[$siteKey]["decimalLatitude"].',
-					"locationSource" : "Google maps",
-					"recordedBy" : "'.$recorder_name.'",
-					"helpers" : '.$helpers.',
-					"surveyStartTime" : "'.$start_time.'",
-					"locationCentroidLongitude" : null,
-					"observations" : [
-						'.$data_field["birds"].'
-					],
-					"location" : "'.$array_sites[$siteKey]["locationID"].'",
-					"locationLongitude" : '.$array_sites[$siteKey]["decimalLongitude"].',
-					"locationHiddenLongitude" : '.$array_sites[$siteKey]["decimalLongitude"].',
-					"locationCentroidLatitude" : null
-				},
-				"selectFromSitesOnly" : true,
-				"_callbacks" : {
-					"sitechanged" : [
-						null
-					]
-				},
-				"mapElementId" : "locationMap",
-				"checkMapInfo" : {
-					"validation" : true
-				},
-				"name" : "'.$commonFields[$protocol]["name"].'",
-				"dataOrigin" : "'.$dataOrigin.'"
-			},';
-			*/
-
-
 
 
 		}

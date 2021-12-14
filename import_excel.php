@@ -24,7 +24,7 @@ $listHiddenOkFiles="";
 $listFiles=array();
 $protocol="sommar";
 
-
+$mng = new MongoDB\Driver\Manager($mongoConnection[$server]);
 
 $activityIdCreated=array();
 
@@ -57,6 +57,13 @@ if (isset($_POST["execFormListFiles"]) && $_POST["execFormListFiles"]=="OK") {
 
 	$templatePath="";
 	switch($protocol) {
+		case "std":
+			$templateFileName="KARTA-YYYY.xls";
+			if (file_exists(PATH_INPUT_EXCEL.$database."/".$protocol."/"."Template/".$templateFileName)) {
+				$templateUrl=URL_WEBSITE_SURVEYS.$database."/".$protocol."/"."Template/".str_replace("#", "%23", $templateFileName);
+			}
+			break;
+
 		case "sommar":
 			$templateFileName="SomYY-YYMMDD-X-#XX.xls";
 			if (file_exists(PATH_INPUT_EXCEL.$database."/".$protocol."/"."Template/".$templateFileName)) {

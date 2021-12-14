@@ -22,7 +22,19 @@ foreach($filesSurveys as $file) {
 
         switch($protocol) {
             case "std":
+                $explodeFilename=explode("-", $filename);
+
+                $karta=$explodeFilename[0];
+                $year=$explodeFilename[1];
+
+                $siteIdFN=$karta;
+                $checkPeriodInd=$explodeFilename[1];
+
+                // no prefix expected
+                $expectedFileName="";
+                $prefixFN="";
                 break;
+
             case "sommar":
 
                 $explodeFilename=explode("-", $filename);
@@ -78,6 +90,10 @@ foreach($filesSurveys as $file) {
             $infoFile["period"]=$periodFN;
 
 
+        if($protocol=="std" && count($explodeFilename)!=2) {
+            $consoleTxt.=consoleMessage("error", $file. " can't be processed, filename with wrong format. Must be KARTA-YEAR");
+            $infoFile["status"]="NO => filename with wrong format.";
+        }
         if ($prefixFN!=$expectedFileName) {
             $consoleTxt.=consoleMessage("error", $file. " can't be processed, wrong prefix. Must start with '".$expectedFileName. "'. '".$prefixFN."' instead");
             $infoFile["status"]="NO => wrong filename, does not start with correct template.";
