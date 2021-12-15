@@ -321,7 +321,7 @@ foreach($listFilesOk as $file) {
 				}
 				
 
-				$checkTotalData[0]["textNumberSpeciesFound"]="Antal fågelarter totalt";
+				$checkTotalData[0]["textNumberSpeciesFound"]="Antal arter totalt";
 				$checkTotalData[0]["columnTextNumberSpeciesFound"]='A';
 				$checkTotalData[0]["columnValueNumberSpeciesFound"]='D';
 
