@@ -321,6 +321,7 @@ foreach($listFilesOk as $file) {
 				}
 				
 
+				$checkTotalData[0]["animals"]='birds';
 				$checkTotalData[0]["textNumberSpeciesFound"]="Antal arter totalt";
 				$checkTotalData[0]["columnTextNumberSpeciesFound"]='A';
 				$checkTotalData[0]["columnValueNumberSpeciesFound"]='D';
@@ -756,7 +757,6 @@ foreach($listFilesOk as $file) {
 
 				$iRowSpecies++;
 			}
-
 
 			foreach($checkTotalData as $iCTD => $CTD) {
 				// at the end of the loop for processing the species rows, we try to find the "Antal arter totalt" to verify the number of rows expected
