@@ -238,16 +238,24 @@ foreach($listFilesOk as $file) {
 				}
 				else {
 					$iInd=1;
+					$disturbancesSum=0;
 					for ($iCol="B";$iCol<="U";$iCol++) {
 						$val=$worksheet->getCell($iCol.$rowDisturbance)->getValue();
 						if ($val!="" && $val!=1) {
 							$consoleTxt.=consoleMessage("error", "STÖRNINGAR/disturbances only '1' allowed in cell ".$iCol.$rowDisturbance);
 							$fileRefused=true;
 						}
+						else $disturbancesSum+=$val;
 						if ($val=="") $val=0;
 						$disturbances["P".str_pad($iInd, 2, '0', STR_PAD_LEFT)]=strval($val);
 						$iInd++;
 					}
+					if (!$fileRefused) {
+						$consoleTxt.=consoleMessage("info", "STÖRNINGAR/disturbances sum is ".$disturbancesSum);
+						echo "YEAAAAAAAAAAAAAAAAAAA";
+
+					}
+					
 				}
 
 				$checkTotalData[0]["animals"]='birds';
