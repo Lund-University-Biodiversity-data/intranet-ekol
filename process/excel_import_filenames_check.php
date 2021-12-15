@@ -25,7 +25,7 @@ foreach($filesSurveys as $file) {
                 $explodeFilename=explode(" ", $filename);
 
                 $karta=$explodeFilename[0];
-                $year=$explodeFilename[1];
+                $yearFull=$explodeFilename[1];
 
                 $siteIdFN=$karta;
                 $checkPeriodInd=$explodeFilename[1];
@@ -91,7 +91,7 @@ foreach($filesSurveys as $file) {
 
 
         if($protocol=="std" && count($explodeFilename)!=2) {
-            $consoleTxt.=consoleMessage("error", $file. " can't be processed, filename with wrong format. Must be KARTA-YEAR");
+            $consoleTxt.=consoleMessage("error", $file. " can't be processed, filename with wrong format. Must be 'KARTA YEAR'");
             $infoFile["status"]="NO => filename with wrong format.";
         }
         if ($prefixFN!=$expectedFileName) {
