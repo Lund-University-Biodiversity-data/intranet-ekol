@@ -54,7 +54,7 @@ else {
 if (!$debug) {
 	// move files to OK folder
 	foreach ($listFilesOk as $fil) {
-		$cmdMv='mv '.$path_excel.$fil.' '.$path_excel."OK/";
+		$cmdMv="mv '".$path_excel.$fil."' ".$path_excel."OK/";
 		exec($cmdMv, $outputMv, $retVal);
 		if ($retVal) {
 			$consoleTxt.=consoleMessage("error", "Can't move files : ".$cmdMv);
