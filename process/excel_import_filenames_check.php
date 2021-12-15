@@ -22,7 +22,7 @@ foreach($filesSurveys as $file) {
 
         switch($protocol) {
             case "std":
-                $explodeFilename=explode("-", $filename);
+                $explodeFilename=explode(" ", $filename);
 
                 $karta=$explodeFilename[0];
                 $year=$explodeFilename[1];
