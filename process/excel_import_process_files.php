@@ -252,8 +252,6 @@ foreach($listFilesOk as $file) {
 					}
 					if (!$fileRefused) {
 						$consoleTxt.=consoleMessage("info", "STÖRNINGAR/disturbances sum is ".$disturbancesSum);
-						echo "YEAAAAAAAAAAAAAAAAAAA";
-
 					}
 					
 				}
@@ -946,7 +944,6 @@ foreach($listFilesOk as $file) {
 
 				case "std":
 
-					$specific_fields["disturbances"]=array($disturbances);
 					$specific_fields["timeOfObservation"]=array($timeOfObservation);
 					$specific_fields["distanceCovered"]=array($distanceCovered);
 					$specific_fields["minutesSpentObserving"]=array($minutesSpentObserving);
@@ -992,13 +989,14 @@ foreach($listFilesOk as $file) {
 					$specific_fields["windEnd"]=$windEnd;
 					$specific_fields["precipitationEnd"]=$precipEnd;
 					$specific_fields["period"]=$per;
-					$specific_fields["timeOfObservation"]=$timeOfObservation;
+					$specific_fields["timeOfObservation"]=array($timeOfObservation);
 					$specific_fields["mammalsCounted"]=$mammalsCounted;
 					$specific_fields["mammalObservations"]=$data_field["mammals"];
 					$specific_fields["mammalObservationsOnRoad"]=$data_field["mammalsOnRoad"];
 					$specific_fields["youngOwlObservations"]=$data_field["owls"];
 					$specific_fields["amphibianObservations"]=$data_field["amphibians"];
 					$specific_fields["amphibiansCounted"]=$amphibiansCounted;
+					$specific_fields["disturbances"]=array($disturbances);
 					/*
 					$specific_fields.=
 					'"cloudsStart" : "'. $cloudStart.'",
