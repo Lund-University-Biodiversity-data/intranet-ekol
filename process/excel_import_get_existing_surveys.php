@@ -68,7 +68,7 @@ if ($okCon) {
     foreach ($response as $document) {
 
         $year=substr($document->data->surveyDate, 0, 4);
-        
+
         // specific for the year in punkturutter
         if ($protocol=="sommar" || $protocol=="vinter") {
             // year -1 if before june
@@ -82,8 +82,8 @@ if ($okCon) {
         $siteId=$document->siteID->adminProperties->internalSiteId;
         //var_dump($document);
 
-        if ($protocol=="vinter")
-            $tabSitesPeriod[$siteId][$year."-".$periodDoc]=$document->activityId;
+        if ($protocol=="vinter" || $protocol=="natt")
+            $tabSitesPeriod[$siteId][$year."-".intval($periodDoc)]=$document->activityId;
         elseif ($protocol=="sommar" || $protocol=="std")
             $tabSitesPeriod[$siteId][$year]=$document->activityId;
 

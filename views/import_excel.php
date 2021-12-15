@@ -24,10 +24,10 @@
       <div class="col-sm-10">
         <select class="form-control" id="inputProtocol" name="inputProtocol" placeholder="protocol">
         	<!--
-        	<option value="natt" <?= ($protocol=="natt" ? "selected" : "") ?>>Nattrutterna</option>
           <option value="kust" <?= ($protocol=="kust" ? "selected" : "") ?>>Kustfågelrutterna</option>-->
-          <option value="std" <?= ($protocol=="std" ? "selected" : "") ?>>Standardrutterna</option>
+          <option value="natt" <?= ($protocol=="natt" ? "selected" : "") ?>>Nattrutterna</option>
           <option value="sommar" <?= ($protocol=="sommar" ? "selected" : "") ?>>Sommarrutterna</option>
+          <option value="std" <?= ($protocol=="std" ? "selected" : "") ?>>Standardrutterna</option>
           <option value="vinter" <?= ($protocol=="vinter" ? "selected" : "") ?>>Vinterrutterna</option>
         </select>	
       </div>

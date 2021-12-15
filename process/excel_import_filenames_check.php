@@ -21,6 +21,24 @@ foreach($filesSurveys as $file) {
 
 
         switch($protocol) {
+            case "natt":
+                $explodeFilename=explode(" ", $filename);
+
+                $kartaPeriod=$explodeFilename[0];
+                $yearFull=$explodeFilename[1];
+
+                $explodeKP=explode("-", $kartaPeriod);
+                $kartaTx=$explodeKP[0];
+                $periodFN=$explodeKP[1];
+
+                $siteIdFN=$kartaTx;
+                $checkPeriodInd=$yearFull."-".$periodFN;
+
+                // no prefix expected
+                $expectedFileName="";
+                $prefixFN="";
+                break;
+
             case "std":
                 $explodeFilename=explode(" ", $filename);
 
@@ -28,7 +46,7 @@ foreach($filesSurveys as $file) {
                 $yearFull=$explodeFilename[1];
 
                 $siteIdFN=$karta;
-                $checkPeriodInd=$explodeFilename[1];
+                $checkPeriodInd=$yearFull;
 
                 // no prefix expected
                 $expectedFileName="";
@@ -44,7 +62,6 @@ foreach($filesSurveys as $file) {
                 $siteIdFN3=str_replace("#", "", $explodeFilename[3]);//rnr
                 $siteIdFN=$siteIdFN1."-".$siteIdFN2."-".$siteIdFN3;
 
-                $internalSiteId=$siteIdFN;
                 $templateFileName="Som";
                 $yearStudied=substr($prefixFN, strlen($templateFileName), 2);
                 $yearFull="20".$yearStudied;
@@ -65,7 +82,6 @@ foreach($filesSurveys as $file) {
                 $siteIdFN=$siteIdFN1."-".$siteIdFN2."-".$siteIdFN3;
                 $periodFN=str_replace("P", "", $explodeFilename[4]);
 
-                $internalSiteId=$siteIdFN;
                 $templateFileName="Vin";
                 $yearStudied=substr($prefixFN, strlen($templateFileName), 2);
                 $yearFull="20".$yearStudied;
@@ -75,25 +91,28 @@ foreach($filesSurveys as $file) {
                 $checkPeriodInd=$yearFull."-".$periodFN;
 
                 break;
-            case "natt":
-                break;
             case "kust":
                 break;
         }
 
         $infoFile=array();
         $infoFile["filename"]=$file;
-        $infoFile["internalSiteId"]=$internalSiteId;
+        $infoFile["internalSiteId"]=$siteIdFN;
         $infoFile["period"]="-";
 
-        if ($protocol=="vinter")
+        if ($protocol=="vinter" || $protocol=="natt")
             $infoFile["period"]=$periodFN;
 
 
         if($protocol=="std" && count($explodeFilename)!=2) {
             $consoleTxt.=consoleMessage("error", $file. " can't be processed, filename with wrong format. Must be 'KARTA YEAR'");
-            $infoFile["status"]="NO => filename with wrong format.";
+            $infoFile["status"]="NO => filename with wrong format. Must be 'KARTA YEAR'";
         }
+        elseif($protocol=="natt" && (count($explodeFilename)!=2 || count($explodeKP)!=2)) {
+            $consoleTxt.=consoleMessage("error", $file. " can't be processed, filename with wrong format. Must be 'KARTATX-PERIOD YEAR'");
+            $infoFile["status"]="NO => filename with wrong format. Must be 'KARTATX-PERIOD YEAR'";
+        }
+
         if ($prefixFN!=$expectedFileName) {
             $consoleTxt.=consoleMessage("error", $file. " can't be processed, wrong prefix. Must start with '".$expectedFileName. "'. '".$prefixFN."' instead");
             $infoFile["status"]="NO => wrong filename, does not start with correct template.";

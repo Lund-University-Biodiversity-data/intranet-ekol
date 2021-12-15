@@ -114,6 +114,166 @@ foreach($listFilesOk as $file) {
 		//$lastRow = $worksheet->getHighestRow();
 
 		switch($protocol) {
+			case "natt":
+
+				$datumExpectedFormat="YYYYMMDD";
+
+				$kartakod=$worksheet->getCell('A9')->getValue();
+				$ruttname=$worksheet->getCell('D9')->getValue(); // not used
+				$datum=$worksheet->getCell('L9')->getValue();
+				$inventerare = $worksheet->getCell('C13')->getValue();
+				$per = $worksheet->getCell('L13')->getValue();
+
+				if (trim($worksheet->getCell('U10')->getValue())=="X" || trim($worksheet->getCell('U10')->getValue())=="x")
+					$mammalsCounted="ja";
+				else $mammalsCounted="nej";
+				if (trim($worksheet->getCell('U11')->getValue())=="X" || trim($worksheet->getCell('U11')->getValue())=="x")
+					$amphibiansCounted="ja";
+				else $amphibiansCounted="nej";
+
+				$recorder_name=$worksheet->getCell('B15')->getValue();
+				$adress=$worksheet->getCell('B16')->getValue(); // not used
+				$post=$worksheet->getCell('B17')->getValue(); // not used
+				$city=$worksheet->getCell('F17')->getValue(); // not used
+				$email=$worksheet->getCell('M15')->getValue(); // not used
+				$address1=$recorder_name; // not used
+				$address2=$worksheet->getCell('B16')->getValue(); // not used
+				$tel=$worksheet->getCell('M16')->getValue(); // not used
+				$mobile=$worksheet->getCell('M17')->getValue(); // not used
+
+				$cloudStart=$worksheet->getCell('B21')->getValue();
+				$tempStart=$worksheet->getCell('C21')->getValue();
+				$windStart=$worksheet->getCell('D21')->getValue();
+				$precipStart=$worksheet->getCell('E21')->getValue();
+
+				$cloudEnd=$worksheet->getCell('F21')->getValue();
+				$tempEnd=$worksheet->getCell('G21')->getValue();
+				$windEnd=$worksheet->getCell('H21')->getValue();
+				$precipEnd=$worksheet->getCell('I21')->getValue();
+
+				$eventRemarks=str_replace('"', "'", $worksheet->getCell('A164')->getValue());
+				$notes="";
+				$comments=$notes;
+
+				$rowStartTime=25;
+				$iRowSpecies=30;
+				$colSpeciesCode="V";
+				$colTotObs="Z";
+
+				$siteKey=$kartakod;
+
+
+
+				$rowStartTime=25;
+
+				// get the start_time/finish_time + timeOfObservation
+
+				// find the start time and finish time
+				$start_time=2359;
+				$finish_time=0;
+				$timeOfObservation=array();
+
+				$iInd=1;
+				for ($iCol="B";$iCol<="U";$iCol++) {
+					$val=$worksheet->getCell($iCol.$rowStartTime)->getValue();
+
+					if ($val!="" && !is_numeric($val)) {
+						$consoleTxt.=consoleMessage("error", "TimeOfObservation: wrong format for cell ".$iCol.$rowStartTime);
+						$fileRefused=true;
+					}
+
+					$timeOfObservation["TidP".str_pad($iInd, 2, '0', STR_PAD_LEFT)]=strval($val);
+					
+					if ($val!="") {
+						$val=intval($val);
+
+						if ($val<0 || $val>2400) {
+							$consoleTxt.=consoleMessage("error", "ERROR time value ".$val." for P".$i);
+							$fileRefused=true;
+						}
+						if ($val<$start_time)
+							$start_time=$val;
+
+						// add 24 hours to the night tmes, to help comparing
+						if ($val<1200)
+							$val+=2400;
+
+						if ($val>$finish_time)
+							$finish_time=$val;
+
+						if ($val>2400) $val-=2400;
+					}
+
+					$iInd++;
+				}
+
+
+				if ($start_time>2400) $start_time-=2400;
+				if ($finish_time>2400) $finish_time-=2400;
+
+				$start_time_brut=$start_time;
+
+
+				// add 5 minutes 
+				$finish_time_5min=str_pad($finish_time, 4, '0', STR_PAD_LEFT);
+				$hours=intval(substr($finish_time_5min, 0, 2));
+				$minutes=intval(substr($finish_time_5min, 2, 2));
+				if ($minutes>=55) {
+					$minutes=str_pad(($minutes+5)-60, 2, '0', STR_PAD_LEFT);
+
+					if ($hours==23) $hours=0;
+					else $hours++;
+				}
+				else {
+					$minutes+=5;
+				}
+				$finish_time=intval($hours.$minutes);
+
+				$rowDisturbance=145;
+				$disturbances=array();
+				// check the header, because it has to be in that line
+				if ($worksheet->getCell("A144")->getValue()!="STÖRNINGAR"){
+					$consoleTxt.=consoleMessage("error", "Can't find the data for STÖRNINGAR in expected cell (A144)");
+					$fileRefused=true;
+				}
+				else {
+					$iInd=1;
+					for ($iCol="B";$iCol<="U";$iCol++) {
+						$val=$worksheet->getCell($iCol.$rowDisturbance)->getValue();
+						if ($val!="" && $val!=1) {
+							$consoleTxt.=consoleMessage("error", "STÖRNINGAR/disturbances only '1' allowed in cell ".$iCol.$rowDisturbance);
+							$fileRefused=true;
+						}
+						if ($val=="") $val=0;
+						$disturbances["P".str_pad($iInd, 2, '0', STR_PAD_LEFT)]=strval($val);
+						$iInd++;
+					}
+				}
+
+				$checkTotalData[0]["animals"]='birds';
+				$checkTotalData[0]["textNumberSpeciesFound"]="Antal fågelarter totalt";
+				$checkTotalData[0]["columnTextNumberSpeciesFound"]='A';
+				$checkTotalData[0]["columnValueNumberSpeciesFound"]='K';
+
+				$checkTotalData[1]["animals"]='mammals';
+				$checkTotalData[1]["textNumberSpeciesFound"]="Antal däggdjursarter totalt på punkter";
+				$checkTotalData[1]["columnTextNumberSpeciesFound"]='A';
+				$checkTotalData[1]["columnValueNumberSpeciesFound"]='K';
+
+				$checkTotalData[2]["animals"]='mammalsOnRoad';
+				$checkTotalData[2]["textNumberSpeciesFound"]="Antal däggdjursarter totalt på transportsträckor";
+				$checkTotalData[2]["columnTextNumberSpeciesFound"]='A';
+				$checkTotalData[2]["columnValueNumberSpeciesFound"]='K';
+
+				$checkTotalData[3]["animals"]='amphibians';
+				$checkTotalData[3]["textNumberSpeciesFound"]="Antal groddjursarter totalt på punkter";
+				$checkTotalData[3]["columnTextNumberSpeciesFound"]='A';
+				$checkTotalData[3]["columnValueNumberSpeciesFound"]='K';
+
+
+				break;
+
+
 			case "std":
 
 				$datumExpectedFormat="YYYYMMDD";
@@ -229,6 +389,7 @@ foreach($listFilesOk as $file) {
 					$distanceCovered["distanceOnL".str_pad($iInd, 2, '0', STR_PAD_LEFT)]=strval($val);
 					$iInd++;
 				}
+				
 
 				$iRowSpecies=39;
 				$colSpeciesCode="R";
@@ -238,6 +399,7 @@ foreach($listFilesOk as $file) {
 				$isGpsUsed=(in_array($worksheet->getCell('T31')->getValue(), $arrJaGps)  ? "ja" : "nej");
 
 				$siteKey=$kartakod;				
+				
 				
 				$checkTotalData[0]["animals"]='birds';
 				$checkTotalData[0]["textNumberSpeciesFound"]="Antal fågelarter totalt";
@@ -328,56 +490,7 @@ foreach($listFilesOk as $file) {
 
 				break;
 				
-			case "natt":
-
-
-				$datumExpectedFormat="YYMMDD";
-
-				$kartakod=$worksheet->getCell('A9')->getValue();
-				$ruttname=$worksheet->getCell('D9')->getValue();
-				$datum=$worksheet->getCell('L9')->getValue();
-				$inventerare = $worksheet->getCell('C13')->getValue();
-				$per = $worksheet->getCell('L13')->getValue();
-
-				if (trim($worksheet->getCell('U10')->getValue())=="X" || trim($worksheet->getCell('U10')->getValue())=="x")
-					$mammalsCounted="ja";
-				else $mammalsCounted="nej";
-				if (trim($worksheet->getCell('U11')->getValue())=="X" || trim($worksheet->getCell('U11')->getValue())=="x")
-					$amphibiansCounted="ja";
-				else $amphibiansCounted="nej";
-
-				$recorder_name=$worksheet->getCell('B15')->getValue();
-				$adress=$worksheet->getCell('B16')->getValue();
-				$post=$worksheet->getCell('B17')->getValue();
-				$city=$worksheet->getCell('F17')->getValue();
-				$email=$worksheet->getCell('M15')->getValue();
-				$address1=$recorder_name;
-				$address2=$worksheet->getCell('B16')->getValue();
-				$tel=$worksheet->getCell('M16')->getValue();
-				$mobile=$worksheet->getCell('M17')->getValue();
-
-				$cloudStart=$worksheet->getCell('B21')->getValue();
-				$tempStart=$worksheet->getCell('C21')->getValue();
-				$windStart=$worksheet->getCell('D21')->getValue();
-				$precipStart=$worksheet->getCell('E21')->getValue();
-
-				$cloudEnd=$worksheet->getCell('F21')->getValue();
-				$tempEnd=$worksheet->getCell('G21')->getValue();
-				$windEnd=$worksheet->getCell('H21')->getValue();
-				$precipEnd=$worksheet->getCell('I21')->getValue();
-
-				$eventRemarks=str_replace('"', "'", $worksheet->getCell('A164')->getValue());
-				$notes="";
-				$comments=$notes;
-
-				$rowStartTime=25;
-				$iRowSpecies=30;
-				$colSpeciesCode="V";
-				$colTotObs="Z";
-
-				$siteKey=$kartakod;
-
-				break;
+			
 			case "kust":
 				$nbPts=1;
 				break;
@@ -594,6 +707,10 @@ foreach($listFilesOk as $file) {
 
 						$arrP[$iP]=($worksheet->getCell($colP.$iRowSpecies)->getValue()!="" ? $worksheet->getCell($colP.$iRowSpecies)->getValue() : 0);
 
+						if (!is_numeric($arrP[$iP])) {
+							$consoleTxt.=consoleMessage("error", "Non-numeric value in cell ".$colP.$iRowSpecies);
+							$fileRefused=true;
+						}
 						$dataAnimal["P".str_pad($iP, 2, '0', STR_PAD_LEFT)]=$arrP[$iP];
 
 						//$data_field[$animalsDataField].='"P'.str_pad($iP, 2, '0', STR_PAD_LEFT).'": "'.$arrP[$iP].'",
@@ -604,8 +721,13 @@ foreach($listFilesOk as $file) {
 							$nbSpP++;
 						}
 
-						if ($protocol!="vinter" && $protocol!="sommar") {
+						if ($protocol=="std") {
 							$arrL[$iP]=($worksheet->getCell($colL.$iRowSpecies)->getValue()!="" ? $worksheet->getCell($colL.$iRowSpecies)->getValue() : 0);
+
+							if (!is_numeric($arrL[$iP])) {
+								$consoleTxt.=consoleMessage("error", "Non-numeric value in cell ".$colL.$iRowSpecies);
+								$fileRefused=true;
+							}
 
 							$dataAnimal["L".str_pad($iP, 2, '0', STR_PAD_LEFT)]=$arrL[$iP];
 
@@ -750,9 +872,9 @@ foreach($listFilesOk as $file) {
 						"projectId" => $commonFields[$protocol]["projectId"],
 						"userId" => strval($userId)
 					);
-					$recordReadyAdded[$animals]++;
+					$recordReadyAdded[$animalsDataField]++;
 
-					$data_field[$animals][]=$dataAnimal;
+					$data_field[$animalsDataField][]=$dataAnimal;
 				}
 
 				$iRowSpecies++;
@@ -798,8 +920,6 @@ foreach($listFilesOk as $file) {
 				}
 			}
 
-			
-
 			/*
 			// replace last comma by 
 			foreach ($list_id as $animals => $listId) {
@@ -818,6 +938,7 @@ foreach($listFilesOk as $file) {
 
 				case "std":
 
+					$specific_fields["disturbances"]=array($disturbances);
 					$specific_fields["timeOfObservation"]=array($timeOfObservation);
 					$specific_fields["distanceCovered"]=array($distanceCovered);
 					$specific_fields["minutesSpentObserving"]=array($minutesSpentObserving);
@@ -854,22 +975,22 @@ foreach($listFilesOk as $file) {
 
 				case "natt":
 
-					$specific_fields["cloudsStart"]=$cloudsStart;
+					$specific_fields["cloudsStart"]=$cloudStart;
 					$specific_fields["temperatureStart"]=$tempStart;
 					$specific_fields["windStart"]=$windStart;
 					$specific_fields["precipitationStart"]=$precipStart;
-					$specific_fields["cloudsEnd"]=$cloudsEnd;
+					$specific_fields["cloudsEnd"]=$cloudEnd;
 					$specific_fields["temperatureEnd"]=$tempEnd;
 					$specific_fields["windEnd"]=$windEnd;
 					$specific_fields["precipitationEnd"]=$precipEnd;
 					$specific_fields["period"]=$per;
 					$specific_fields["timeOfObservation"]=$timeOfObservation;
-					$specific_fields["mammalsCounted"]="ja";
+					$specific_fields["mammalsCounted"]=$mammalsCounted;
 					$specific_fields["mammalObservations"]=$data_field["mammals"];
 					$specific_fields["mammalObservationsOnRoad"]=$data_field["mammalsOnRoad"];
 					$specific_fields["youngOwlObservations"]=$data_field["owls"];
 					$specific_fields["amphibianObservations"]=$data_field["amphibians"];
-					$specific_fields["amphibiansCounted"]="ja";
+					$specific_fields["amphibiansCounted"]=$amphibiansCounted;
 					/*
 					$specific_fields.=
 					'"cloudsStart" : "'. $cloudStart.'",
