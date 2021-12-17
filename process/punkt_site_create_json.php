@@ -36,7 +36,7 @@ else {
 				"siteId" => $siteId,
 				"dateCreated" => $nowISODate,
 				"lastUpdated" => $nowISODate,
-				"name" => $siteName,
+				"name" => $internalSiteId." - ".$siteName,
 				"status" => "active",
 				"type" => "",
 				"area" => "0",
