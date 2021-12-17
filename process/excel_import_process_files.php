@@ -188,7 +188,7 @@ foreach($listFilesOk as $file) {
 						$val=intval($val);
 
 						if ($val<0 || $val>2400) {
-							$consoleTxt.=consoleMessage("error", "ERROR time value ".$val." for P".$i);
+							$consoleTxt.=consoleMessage("error", "time value in cell ".$iCol.$rowStartTime." (".$val.") must be between 0 and 2400");
 							$fileRefused=true;
 						}
 						if ($val<$start_time)
@@ -229,11 +229,11 @@ foreach($listFilesOk as $file) {
 				}
 				$finish_time=intval($hours.$minutes);
 
-				$rowDisturbance=145;
+				$rowDisturbance=146;
 				$disturbances=array();
 				// check the header, because it has to be in that line
-				if ($worksheet->getCell("A144")->getValue()!="STÖRNINGAR"){
-					$consoleTxt.=consoleMessage("error", "Can't find the data for STÖRNINGAR in expected cell (A144)");
+				if ($worksheet->getCell("A".($rowDisturbance-1))->getValue()!="STÖRNINGAR"){
+					$consoleTxt.=consoleMessage("error", "Can't find the data for STÖRNINGAR in expected cell (A".($rowDisturbance-1).")");
 					$fileRefused=true;
 				}
 				else {
@@ -606,6 +606,7 @@ foreach($listFilesOk as $file) {
 			}
 			//$data_field["mammalsOnRoad"]="";
 			$data_field["mammalsOnRoad"]=array();
+			$recordReadyAdded["mammalsOnRoad"]=0;
 
 
 			$listId = $list_id["birds"];
@@ -916,12 +917,18 @@ foreach($listFilesOk as $file) {
 					$fileRefused=true;
 				}
 				else {
-					if ($recordReadyAdded[$CTD["animals"]] != $valueCheckNumberSpecies) {
-						$consoleTxt.=consoleMessage("error", "Missing records ! ".$valueCheckNumberSpecies." rows expected according to '".$CTD["textNumberSpeciesFound"]."' but ".$recordReadyAdded[$CTD["animals"]]." ready to be added");
+
+					if ($protocol=="natt" && $CTD["animals"]=="birds") {
+						$recordCounted=$recordReadyAdded[$CTD["animals"]]+$recordReadyAdded["owls"];
+					} 	
+					else $recordCounted=$recordReadyAdded[$CTD["animals"]];
+
+					if ($recordCounted != $valueCheckNumberSpecies) {
+						$consoleTxt.=consoleMessage("error", "Missing records ! ".$valueCheckNumberSpecies." rows expected according to '".$CTD["textNumberSpeciesFound"]."' but ".$recordCounted." ready to be added");
 						$fileRefused=true;
 					}
 					else {
-						$consoleTxt.=consoleMessage("info", $recordReadyAdded[$CTD["animals"]]." records ready to be added for '".$CTD["animals"]."'. The control value is ".$valueCheckNumberSpecies." => OK");
+						$consoleTxt.=consoleMessage("info", $recordCounted." records ready to be added for '".$CTD["animals"]."'. The control value is ".$valueCheckNumberSpecies." => OK");
 					}
 				}
 			}
