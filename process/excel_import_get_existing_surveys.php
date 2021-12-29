@@ -16,8 +16,8 @@ $commands = [
         ]],
         ['$unwind'=> '$activityId'],
         ['$match'=>[
-        	'actID.projectActivityId'=> $commonFields[$protocol]["projectActivityId"]/*,
-        	"actID.verificationStatus" => "approved"*/
+        	'actID.projectActivityId'=> $commonFields[$protocol]["projectActivityId"],
+            'actID.status' => [ '$ne' => 'deleted' ]
         ]],
         ['$project'=>[
         	"data.period" => 1,
