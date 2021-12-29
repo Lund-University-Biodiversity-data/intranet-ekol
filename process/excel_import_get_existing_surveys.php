@@ -69,8 +69,8 @@ if ($okCon) {
 
         $year=substr($document->data->surveyDate, 0, 4);
 
-        // specific for the year in punkturutter
-        if ($protocol=="sommar" || $protocol=="vinter") {
+        // specific for the year in VINTER ONLY
+        if ($protocol=="vinter") {
             // year -1 if before june
             if (substr($document->data->surveyDate, 5, 2)<6) {
                 $year=substr($document->data->surveyDate, 0, 4)-1;
