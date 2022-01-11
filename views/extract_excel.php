@@ -27,7 +27,7 @@
       <label for="inputDataObject" class="col-sm-2 col-form-label">Protocol</label>
       <div class="col-sm-10">
         <select class="form-control" id="inputDataObject" name="inputDataObject" placeholder="inputDataObject">
-          <option value="data" <?= ($inputDataObject=="data" ? "selected" : "") ?>>Records</option>
+          <option value="data" <?= ($inputDataObject=="data" ? "selected" : "") ?>>Records (approved + under review)</option>
           <option value="persons" <?= ($inputDataObject=="persons" ? "selected" : "") ?>>Persons</option>
           <option value="sites" <?= ($inputDataObject=="sites" ? "selected" : "") ?>>Sites</option>
         </select> 
