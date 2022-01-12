@@ -82,6 +82,22 @@ else {
 			$result = $mng->executeBulkWrite('ecodata.site', $bulk);
 
 			$consoleTxt.=consoleMessage("info", "Site created in MongoDb with siteId ".$siteId);
+
+
+			// need to update the person with the ownedSites field
+
+
+			$bulkP = new MongoDB\Driver\BulkWrite;
+		    //$filter = [];
+		    $filter = ['personId' => $person["personId"]];
+		    $options =  ['$push' => ['ownedSites' => $siteId]];
+		    $updateOptions = [];
+		    $bulkP->update($filter, $options, $updateOptions); 
+		    $result = $mng->executeBulkWrite('ecodata.person', $bulkP);
+
+
+		    $consoleTxt.=consoleMessage("info", "Site added t the person ownedSites");
+
 		}
 
 	}
