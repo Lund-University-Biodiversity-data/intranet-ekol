@@ -18,7 +18,8 @@ $mng = new MongoDB\Driver\Manager($mongoConnection[$server]);
 
 $consoleTxt.=consoleMessage("info", "Connection to ".$mongoConnection[$server]);
 
-$activityIdToFix="07ddb07e-1c8d-f87e-1a7a-1ee826e40318";
+//$activityIdToFix="07ddb07e-1c8d-f87e-1a7a-1ee826e40318";
+$activityIdToFix="";
 $activityDetails="";
 $siteNewCorrectId="";
 

@@ -31,6 +31,8 @@ if ($okAct) {
     if ($okSite) {
 
         $sitesMongo = getArraySitesFromMongo ($activityDetails->projectId, $server);
+        // sort by internalsiteid
+        ksort($sitesMongo);
 
         $consoleTxt.=consoleMessage("info", count($sitesMongo)." site(s) found in database for project ".$activityDetails->projectId);
 
