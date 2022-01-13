@@ -1,7 +1,7 @@
 <?php
 
 
-$arrSitesDetails=getArraySitesFromMongo($protocol, $commonFields[$protocol]["projectId"], $server);
+$arrSitesDetails=getArraySitesFromMongo($commonFields[$protocol]["projectId"], $server);
 if ($arrSitesDetails=== false) {
     $consoleTxt.=consoleMessage("error", "Can't connect to MongoDb");
 }

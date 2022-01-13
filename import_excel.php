@@ -82,7 +82,7 @@ if (isset($_POST["execFormListFiles"]) && $_POST["execFormListFiles"]=="OK") {
 	}
 
 
-	$array_sites=getArraySitesFromMongo($protocol, $commonFields[$protocol]["projectId"], $server);
+	$array_sites=getArraySitesFromMongo($commonFields[$protocol]["projectId"], $server);
 	if ($array_sites=== false) {
 	    $consoleTxt.=consoleMessage("error", "Can't connect to MongoDb");
 	}
@@ -111,7 +111,7 @@ if (isset($_POST["execFormProcessFiles"]) && $_POST["execFormProcessFiles"]=="OK
 
 	$path_excel=PATH_INPUT_EXCEL.$database."/".$protocol."/";
 
-	$array_sites=getArraySitesFromMongo($protocol, $commonFields[$protocol]["projectId"], $server);
+	$array_sites=getArraySitesFromMongo($commonFields[$protocol]["projectId"], $server);
 	if ($array_sites=== false) {
 	    $consoleTxt.=consoleMessage("error", "Can't connect to MongoDb");
 	}
