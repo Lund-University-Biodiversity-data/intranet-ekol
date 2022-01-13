@@ -68,8 +68,6 @@ if (isset($_POST["getNewCorrectSiteId"]) && $_POST["getNewCorrectSiteId"]=="OK")
 		$finalOk=false;
 	}
 	else {
-		$server=$_POST["inputServer"];
-
 		include "process/activity_move_route_change_database.php";
 	}
 
