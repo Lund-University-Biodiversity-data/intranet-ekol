@@ -151,7 +151,7 @@ foreach($listFilesOk as $file) {
 				$windEnd=$worksheet->getCell('H21')->getValue();
 				$precipEnd=$worksheet->getCell('I21')->getValue();
 
-				$eventRemarks=str_replace('"', "'", $worksheet->getCell('A164')->getValue());
+				$eventRemarks=str_replace('"', "'", $worksheet->getCell('A165')->getValue());
 				$notes="";
 				$comments=$notes;
 
