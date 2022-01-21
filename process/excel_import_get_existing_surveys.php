@@ -55,6 +55,7 @@ catch(Exception $e){
     $okCon=false;
 }
 
+
 if ($okCon) {
 
     $consoleTxt.=consoleMessage("info","MongoDB ok to ".$mongoConnection[$server]);

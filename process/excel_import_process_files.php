@@ -113,6 +113,8 @@ foreach($listFilesOk as $file) {
 		//$recordReadyAdded=0;
 		//$lastRow = $worksheet->getHighestRow();
 
+		$arrAntiDoublonArt=array();
+
 		switch($protocol) {
 			case "natt":
 
@@ -776,8 +778,15 @@ foreach($listFilesOk as $file) {
 							break;
 					}
 
+					// if the art has already been found in the file => error
+					if (isset($arrAntiDoublonArt[$art]) && is_numeric($arrAntiDoublonArt[$art])) {
+						$consoleTxt.=consoleMessage("error", "The species number ".$art. ", line#$iRowSpecies, has already been found in the file at line#".$arrAntiDoublonArt[$art].". Doublon !");
+						$fileRefused=true;
+					}
+					elseif (isset($array_species_art[$art])) {
+						// store the line where the species were found
+						$arrAntiDoublonArt[$art]=$iRowSpecies;
 
-					if (isset($array_species_art[$art])) {
 						$speciesFound++;
 						$listId=$list_id[$animals];
 						$sn=$array_species_art[$art]["sn"];
