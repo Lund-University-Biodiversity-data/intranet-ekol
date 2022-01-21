@@ -639,6 +639,9 @@ foreach($listFilesOk as $file) {
 
 					$art=$worksheet->getCell($colSpeciesCode.$iRowSpecies)->getValue();
 
+					// store the uncut art to avoid doublons in files
+					$artUncut=$art;
+
 					switch($protocol) {
 						case "std":
 							if ($art>="700" && $art<="799") {
@@ -779,13 +782,13 @@ foreach($listFilesOk as $file) {
 					}
 
 					// if the art has already been found in the file => error
-					if (isset($arrAntiDoublonArt[$art]) && is_numeric($arrAntiDoublonArt[$art])) {
-						$consoleTxt.=consoleMessage("error", "The species number ".$art. ", line#$iRowSpecies, has already been found in the file at line#".$arrAntiDoublonArt[$art].". Doublon !");
+					if (isset($arrAntiDoublonArt[$artUncut]) && is_numeric($arrAntiDoublonArt[$artUncut])) {
+						$consoleTxt.=consoleMessage("error", "The species number ".$artUncut. ", line#$iRowSpecies, has already been found in the file at line#".$arrAntiDoublonArt[$artUncut].". Doublon !");
 						$fileRefused=true;
 					}
 					elseif (isset($array_species_art[$art])) {
-						// store the line where the species were found
-						$arrAntiDoublonArt[$art]=$iRowSpecies;
+						// store the line where the species were found. Te be done now and before the cut of "xxxP" eller "xxxT"
+						$arrAntiDoublonArt[$artUncut]=$iRowSpecies;
 
 						$speciesFound++;
 						$listId=$list_id[$animals];
