@@ -35,7 +35,7 @@ $mng = new MongoDB\Driver\Manager($mongoConnection[$server]);
 
 $command = new MongoDB\Driver\Command($commands);
 
-$cursor = $mng->executeCommand("ecodata", $command);
+$cursor = $mng->executeCommand(MONGO_DBNAME, $command);
 $response = $cursor->toArray();
 
 foreach ($response[0]->result as $document) {

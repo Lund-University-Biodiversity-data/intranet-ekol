@@ -50,6 +50,8 @@ $list_id["owls"]="dr630";
 
 $database="SFT";
 
+define("MONGO_DBNAME", "ecodata");
+
 $mongoConnection["TEST"]="mongodb://localhost";
 $mongoConnection["DEV"]="mongodb://canmove-dev.ekol.lu.se";
 $mongoConnection["PROD"]="mongodb://IP";
