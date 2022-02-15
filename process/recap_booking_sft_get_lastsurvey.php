@@ -28,7 +28,8 @@ $commands = [
             "activityId" => 1
         ]],
         /*['$limit'=> 20],*/
-    ]
+    ],
+    'cursor' => new stdClass,
 ];
 
 $mng = new MongoDB\Driver\Manager($mongoConnection[$server]);
