@@ -1,3 +1,25 @@
+<script>
+$(document).ready(function (){
+  //alert("ready");
+
+  var objectToDisplay=$("#inputDataObject" ).val();
+  $("#div-filters-"+objectToDisplay ).css("display", "");
+  
+
+  $("#inputDataObject" ).change(function () {
+
+      $("#div-filters-data").css("display", "none");
+      $("#div-filters-persons").css("display", "none");
+      $("#div-filters-sites").css("display", "none");
+
+      var divId="#div-filters-" + $( this ).val();
+      $(divId).css("display", "");
+
+  });
+});
+
+</script>
+
 <div class="container">
   <div class="float-right">Hi <?= $current_user->display_name ?> ! <a href="<?= URL_LOGOUT ?>">logout</a></div><br>
   
@@ -33,6 +55,17 @@
         </select> 
       </div>
     </div>
+
+    <div class="form-group row" id="div-filters-persons" style="display:none">
+      <label class="col-sm-2 col-form-label">Years</label>
+      <div class="col-sm-10">
+        From <input type="text" maxlength=4 class="form-control" id="inputYearStart" name="inputYearStart" placeholder="YYYY" value="<?= $inputYearStart ?>">
+        To <input type="text" maxlength=4 class="form-control" id="inputYearEnd" name="inputYearEnd" placeholder="YYYY" value="<?= $inputYearEnd ?>">
+      </div>
+
+    </div>
+
+
     <div class="form-group row">
       <div class="offset-sm-2 col-sm-10">
         <input type="submit" value="GO" name="submit" class="btn btn-primary"/>
@@ -52,3 +85,6 @@
   </div>
 
 </div>
+
+
+ 

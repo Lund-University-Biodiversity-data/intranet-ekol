@@ -12,6 +12,9 @@ $file_download="";
 $protocol="std";
 $inputDataObject="data";
 
+$inputYearStart="";
+$inputYearEnd="";
+
 if (isset($_POST["execFormExtract"]) && $_POST["execFormExtract"]=="OK") {
 
 	$protocol = (isset($_POST["inputProtocol"]) ? $_POST["inputProtocol"] : "");
@@ -23,6 +26,19 @@ if (isset($_POST["execFormExtract"]) && $_POST["execFormExtract"]=="OK") {
 
 		switch ($inputDataObject) {
 			case "persons":
+
+				$rangeYear="_";
+				if (isset($_POST["inputYearStart"]) && is_numeric($_POST["inputYearStart"])) {
+					$rangeYear.=$_POST["inputYearStart"];
+				}
+				$rangeYear.="_";
+				if (isset($_POST["inputYearEnd"]) && is_numeric($_POST["inputYearEnd"])) {
+					$rangeYear.=$_POST["inputYearEnd"];
+				}
+				$rangeYear.="_";
+
+				$cmd=PATH_PHP." ".PATH_CONVERT_DATA."create_extract_excel_".$inputDataObject.".php ".$protocol." ".$rangeYear;
+				break;
 			case "sites":
 				$cmd=PATH_PHP." ".PATH_CONVERT_DATA."create_extract_excel_".$inputDataObject.".php ".$protocol;
 				break;
