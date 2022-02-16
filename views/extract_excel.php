@@ -2,9 +2,45 @@
 $(document).ready(function (){
   //alert("ready");
 
+
+
   var objectToDisplay=$("#inputDataObject" ).val();
   $("#div-filters-"+objectToDisplay ).css("display", "");
-  
+
+  $("#inputProtocol" ).change(function () {
+
+      if ($( this ).val()=="all") {
+
+        $("#inputDataObject option[value=data]").hide();
+        $("#inputDataObject option[value=sites]").hide();
+        $("#inputDataObject").val("persons").change();
+
+        $('#div-input-object').css("display", "");
+
+      }
+
+      else if ($( this ).val()=="") {
+
+        $('#div-input-object').css("display", "none");
+
+        $("#div-filters-data").css("display", "none");
+        $("#div-filters-persons").css("display", "none");
+        $("#div-filters-sites").css("display", "none");
+      }
+      else {
+
+        $('#div-input-object').css("display", "");
+
+        $("#inputDataObject option[value=data]").show();
+        $("#inputDataObject option[value=sites]").show();
+        $("#inputDataObject option[value=persons]").show();
+      }
+
+      var divId="#div-filters-" + $( this ).val();
+      $(divId).css("display", "");
+
+  });
+
 
   $("#inputDataObject" ).change(function () {
 
@@ -16,6 +52,8 @@ $(document).ready(function (){
       $(divId).css("display", "");
 
   });
+
+
 });
 
 </script>
@@ -36,16 +74,18 @@ $(document).ready(function (){
       <label for="inputProtocol" class="col-sm-2 col-form-label">Protocol</label>
       <div class="col-sm-10">
         <select class="form-control" id="inputProtocol" name="inputProtocol" placeholder="inputProtocol">
+          <option value="" <?= ($protocol=="" ? "selected" : "") ?>>---Please choose a protocol---</option>
           <option value="kust" <?= ($protocol=="kust" ? "selected" : "") ?>>Kustfågelrutterna</option>
           <option value="natt" <?= ($protocol=="natt" ? "selected" : "") ?>>Nattrutterna</option>
           <option value="iwc" <?= ($protocol=="iwc" ? "selected" : "") ?>>Sjöfågelrutterna</option>
           <option value="sommar" <?= ($protocol=="sommar" ? "selected" : "") ?>>Sommarrutterna</option>
         	<option value="std" <?= ($protocol=="std" ? "selected" : "") ?>>Standardrutterna</option>
           <option value="vinter" <?= ($protocol=="vinter" ? "selected" : "") ?>>Vinterrutterna</option>
+          <option value="all" <?= ($protocol=="all" ? "selected" : "") ?>>ALL PROTOCOLS</option>
         </select>	
       </div>
     </div>
-    <div class="form-group row">
+    <div class="form-group row" id="div-input-object" style="display:none">
       <label for="inputDataObject" class="col-sm-2 col-form-label">Protocol</label>
       <div class="col-sm-10">
         <select class="form-control" id="inputDataObject" name="inputDataObject" placeholder="inputDataObject">
@@ -59,8 +99,8 @@ $(document).ready(function (){
     <div class="form-group row" id="div-filters-persons" style="display:none">
       <label class="col-sm-2 col-form-label">Years</label>
       <div class="col-sm-10">
-        From <input type="text" maxlength=4 class="form-control" id="inputYearStart" name="inputYearStart" placeholder="YYYY" value="<?= $inputYearStart ?>">
-        To <input type="text" maxlength=4 class="form-control" id="inputYearEnd" name="inputYearEnd" placeholder="YYYY" value="<?= $inputYearEnd ?>">
+        From (included) <input type="text" maxlength=4 class="form-control" id="inputYearStart" name="inputYearStart" placeholder="YYYY" value="<?= $inputYearStart ?>">
+        To (included) <input type="text" maxlength=4 class="form-control" id="inputYearEnd" name="inputYearEnd" placeholder="YYYY" value="<?= $inputYearEnd ?>">
       </div>
 
     </div>

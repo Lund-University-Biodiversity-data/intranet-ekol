@@ -9,7 +9,7 @@ if (!$okConWordPress) exit;
 
 $result="";
 $file_download="";
-$protocol="std";
+$protocol="";
 $inputDataObject="data";
 
 $inputYearStart="";
@@ -30,14 +30,17 @@ if (isset($_POST["execFormExtract"]) && $_POST["execFormExtract"]=="OK") {
 				$rangeYear="_";
 				if (isset($_POST["inputYearStart"]) && is_numeric($_POST["inputYearStart"])) {
 					$rangeYear.=$_POST["inputYearStart"];
+					$inputYearStart=$_POST["inputYearStart"];
 				}
 				$rangeYear.="_";
 				if (isset($_POST["inputYearEnd"]) && is_numeric($_POST["inputYearEnd"])) {
 					$rangeYear.=$_POST["inputYearEnd"];
+					$inputYearEnd=$_POST["inputYearEnd"];
 				}
 				$rangeYear.="_";
 
 				$cmd=PATH_PHP." ".PATH_CONVERT_DATA."create_extract_excel_".$inputDataObject.".php ".$protocol." ".$rangeYear;
+				//echo $cmd;
 				break;
 			case "sites":
 				$cmd=PATH_PHP." ".PATH_CONVERT_DATA."create_extract_excel_".$inputDataObject.".php ".$protocol;
