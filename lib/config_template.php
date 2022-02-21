@@ -20,6 +20,8 @@ define("PATH_OUTPUT_JSON", PATH_WEBSERVER_ROOT."intranet-ekol/json/");
 
 define ("PATH_INPUT_EXCEL", PATH_WEBSERVER_ROOT."intranet-ekol/excel-surveys/");
 
+define("PATH_SAVE_BOOKINGS", PATH_WEBSERVER_ROOT."intranet-ekol/bookings-save/");
+
 define("DEFAULT_SERVER", "PROD");
 define("ENVIRONMENT", "PROD");
 

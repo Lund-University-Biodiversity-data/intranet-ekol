@@ -1,6 +1,6 @@
 <?php
 
-$consoleTxt.=consoleMessage("info", "1) Get number of booked sites for each protocol");
+$consoleTxt.=consoleMessage("info", "**Get number of booked sites for each protocol**");
 
 $mng = new MongoDB\Driver\Manager($mongoConnection[$server]);
 
@@ -11,7 +11,7 @@ foreach ($arrProtocol as $protocol) {
 
 	$filter = [
 		'status' => 'active', 
-		'bookedBy' => [ '$exists' => true, '$ne' => null ],
+		'bookedBy' => [ '$exists' => true, '$ne' => null, '$ne' => "" ],
 		'projects' => $projectId
 	];
 	$options = [];

@@ -29,7 +29,7 @@ $(document).ready(function (){
     <div class="form-group row">
       <label for="inputProtocol" class="col-sm-2 col-form-label">Protocol</label>
       <div class="col-sm-10">
-        <select class="form-control" id="inputProtocol" name="protocol" placeholder="protocol">
+        <select class="form-control" id="inputProtocol" name="inputProtocol" placeholder="protocol">
         	<option value="std" <?= ($protocol=="sft" ? "selected" : "") ?>>Standardrutterna (<?= $recapBookedSites["std"] ?> booked)</option>
         	<option value="natt" <?= ($protocol=="natt" ? "selected" : "") ?>>Nattrutterna (<?= $recapBookedSites["natt"] ?> booked)</option>
           <option value="kust" <?= ($protocol=="kust" ? "selected" : "") ?>>Kustfågelrutterna (<?= $recapBookedSites["kust"] ?> booked)</option>

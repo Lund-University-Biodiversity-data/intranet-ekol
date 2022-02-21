@@ -22,7 +22,7 @@ $lan="";
 $siteName="";
 
 $listFiles=array();
-$protocol="sommar";
+$protocol="";
 
 $activityIdCreated=array();
 
@@ -41,16 +41,25 @@ $final_result="";
 
 $arrProtocol=array("kust", "iwc", "natt", "std");
 
-require "process/clean_bookings_get_bookings.php";
 
 if (isset($_POST["execCleanBookings"]) && $_POST["execCleanBookings"]=="OK") {
 
 	$protocol=$_POST["inputProtocol"];
 	
-
 	if (in_array($protocol, $arrProtocol)) {
 
-		//require "process/clean_bookings_exec.php";
+		$okSave=false;
+		require "process/clean_bookings_save.php";
+
+		if ($okSave) {
+			require "process/clean_bookings_exec.php";
+
+			if ($okUpdate)
+				$final_result.="<p><b>SUCCESS</b></p>";
+			else
+				$final_result.="<p><b>Something wrong happened. Please check the console, and warn ".EMAIL_PROBLEM." if needed</b></p>";
+
+		}
 
 	}
 	else {
@@ -62,6 +71,8 @@ if (isset($_POST["execCleanBookings"]) && $_POST["execCleanBookings"]=="OK") {
 } // FIN IF $_POST["formPunktSite"] OK
 
 
+
+require "process/clean_bookings_get_bookings.php";
 
 
 include ("views/header.html");
