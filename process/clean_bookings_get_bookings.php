@@ -12,7 +12,7 @@ foreach ($arrProtocol as $protocol) {
 	$filter = [
 		'status' => 'active', 
 		'bookedBy' => [ '$exists' => true, '$ne' => null ],
-		'projectId' => $projectId
+		'projects' => $projectId
 	];
 	$options = [];
 	$query = new MongoDB\Driver\Query($filter, $options); 
