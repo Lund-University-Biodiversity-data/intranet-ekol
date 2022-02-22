@@ -43,7 +43,7 @@ if ($handle=fopen($pathSave, "w")) {
 		if ($result) {
 			$nbPModified+=$result->getModifiedCount();
 			if ($result->getModifiedCount()!=1)
-				$consoleTxt.=consoleMessage("warn", $result->getModifiedCount()." person(s) modified instead of 1 for person ".$row->bookedBy);
+				$consoleTxt.=consoleMessage("warn", $result->getModifiedCount()." person(s) modified instead of 1 for person ".str_replace("\n", "", $row->bookedBy));
 		}
 		else {
 			$okSaveUpdatePersons=false;
