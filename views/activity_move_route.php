@@ -50,25 +50,33 @@
   </p>
   <?php } ?>
 
-  <?php if (isset($activityDetails) && count($activityDetails)>0 && isset($siteOldWrongDetails)) { ?>
+  <?php if (isset($activityDetails) && count($activityDetails)>0 && isset($siteOldWrongDetails) && isset($outputDetails)) { ?>
+
 
 
     <div class="form-group row">
-      <label for="activityIdToFix" class="col-sm-2 col-form-label">Site Id</label>
+      <label class="col-sm-2 col-form-label">Survey Date</label>
+      <div class="col-sm-10">
+        <input type=text class="form-control" disabled value="<?= $outputDetails->data->surveyDate ?>">
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label">Site Id</label>
       <div class="col-sm-10">
         <input type=text class="form-control" disabled value="<?= $siteOldWrongId ?>">
       </div>
     </div>
 
     <div class="form-group row">
-      <label for="activityIdToFix" class="col-sm-2 col-form-label">Site Name</label>
+      <label class="col-sm-2 col-form-label">Site Name</label>
       <div class="col-sm-10">
         <input type=text class="form-control" disabled value="<?= $siteOldWrongDetails->name ?>">
       </div>
     </div>
 
     <div class="form-group row">
-      <label for="activityIdToFix" class="col-sm-2 col-form-label">Site status</label>
+      <label class="col-sm-2 col-form-label">Site status</label>
       <div class="col-sm-10">
         <input type=text class="form-control" disabled value="<?= $siteOldWrongDetails->status ?>">
       </div>
