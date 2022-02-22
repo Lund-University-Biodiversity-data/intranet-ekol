@@ -40,7 +40,7 @@ $(document).ready(function (){
 
     <div class="form-group row">
       <div class="offset-sm-2 col-sm-10">
-        <input type="submit" value="Search" name="submit" class="btn btn-primary"/>
+        <input type="submit" value="Clean" name="submit" class="btn btn-primary"/>
       </div>
     </div>
   </form>

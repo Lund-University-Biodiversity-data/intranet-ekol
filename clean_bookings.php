@@ -48,14 +48,14 @@ if (isset($_POST["execCleanBookings"]) && $_POST["execCleanBookings"]=="OK") {
 	
 	if (in_array($protocol, $arrProtocol)) {
 
-		$okSave=false;
-		require "process/clean_bookings_save.php";
+		$okSaveUpdatePersons=true;
+		require "process/clean_bookings_save_and_update_persons.php";
 
-		if ($okSave) {
-			require "process/clean_bookings_exec.php";
+		if ($okSaveUpdatePersons) {
+			require "process/clean_bookings_update_sites.php";
 
 			if ($okUpdate)
-				$final_result.="<p><b>SUCCESS</b></p>";
+				$final_result.="<p><b>SUCCESS !</b> Database is updated, but it will be visible visible in BioCollect (map with white dots) after the next reindexing</p>";
 			else
 				$final_result.="<p><b>Something wrong happened. Please check the console, and warn ".EMAIL_PROBLEM." if needed</b></p>";
 

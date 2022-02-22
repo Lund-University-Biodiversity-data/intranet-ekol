@@ -27,4 +27,21 @@ foreach ($arrProtocol as $protocol) {
 }
 
 
+
+/*
+
+> db.site.find({name:"12HNV - NATT"},{siteId:1})
+{ "_id" : ObjectId("6062ee581c5c6e492d087bd1"), "siteId" : "c7f4ec3d-7670-9cbb-5197-700a429b0417" }
+> db.person.find({bookedSites:"c7f4ec3d-7670-9cbb-5197-700a429b0417"}).count()
+1
+> db.person.find({bookedSites:"c7f4ec3d-7670-9cbb-5197-700a429b0417"},{personId:1})
+{ "_id" : ObjectId("5f77502a4f0ccf943f8de57f"), "personId" : "aab3345e-efb6-45bc-97e5-559d3982864c" }
+
+
+
+
+db.person.update({"personId" : "aab3345e-efb6-45bc-97e5-559d3982864c"},
+{'$pull' : {bookedSites:"c7f4ec3d-7670-9cbb-5197-700a429b0417"}})
+*/
+
 ?>
