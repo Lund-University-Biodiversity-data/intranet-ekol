@@ -6,6 +6,8 @@ include "lib/check_login.php";
 if (!$okConWordPress) exit;
 // END CHECK LOGIN
 
+require PATH_SHARED_FUNCTIONS."generic-functions.php";
+
 
 $result="";
 $file_download="";
@@ -15,7 +17,10 @@ $inputDataObject="data";
 $inputYearStart="";
 $inputYearEnd="";
 
+
 if (isset($_POST["execFormExtract"]) && $_POST["execFormExtract"]=="OK") {
+
+	$timeStart=time();
 
 	$protocol = (isset($_POST["inputProtocol"]) ? $_POST["inputProtocol"] : "");
 	$inputDataObject = (isset($_POST["inputDataObject"]) ? $_POST["inputDataObject"] : "");
@@ -79,6 +84,10 @@ if (isset($_POST["execFormExtract"]) && $_POST["execFormExtract"]=="OK") {
 		echo $rt;
 	}
 	
+	$timeEnd=time();
+
+	$processTime=$timeEnd-$timeStart;
+	$result.=consoleMessage("info", "Processed in ".$processTime." second(s)");
 
 }
 
