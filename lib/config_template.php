@@ -5,6 +5,7 @@ define("PATH_PHP", "/usr/bin/php");
 define ("URL_WEBSITE", "http://localhost/");
 define ("URL_WEBSITE_EXTRACTMONGO", URL_WEBSITE."extractmongo/");
 define ("URL_WEBSITE_SURVEYS", URL_WEBSITE."intranet/excel-surveys/");
+define ("URL_WEBSITE_CSV", URL_WEBSITE."url/csv/");
 
 define ("URL_LOGOUT", "wp-login.php?action=logout");
 

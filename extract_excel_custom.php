@@ -45,7 +45,9 @@ if (isset($_POST["execFormExtract"]) && $_POST["execFormExtract"]=="OK") {
 		}
 
 		if (file_exists($file_download)) {
-			$file_download='<a href="'.str_replace(PATH_CONVERT_DATA."extract/", URL_WEBSITE_EXTRACTMONGO, $file_download).'">DOWNLOADABLE FILE</a>';
+			echo "PATH_OUTPUT_CSV".PATH_OUTPUT_CSV."<br>";
+			echo "URL_WEBSITE_CSV".URL_WEBSITE_CSV."<br>";
+			$file_download='<a href="'.str_replace(PATH_OUTPUT_CSV, URL_WEBSITE_CSV, $file_download).'">DOWNLOADABLE FILE</a>';
 		}
 		else {
 

@@ -2,7 +2,8 @@
 
 $consoleTxt.=consoleMessage("info", "Get the recap of sites/comments/years");
 
-$mng = new MongoDB\Driver\Manager($mongoConnection[$server]);
+$mng = new MongoDB\Driver\Manager($mongoConnection[ENVIRONMENT]);
+
 $okCon=true;
 
 $commands = [ 
