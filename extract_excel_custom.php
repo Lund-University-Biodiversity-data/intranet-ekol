@@ -45,8 +45,6 @@ if (isset($_POST["execFormExtract"]) && $_POST["execFormExtract"]=="OK") {
 		}
 
 		if (file_exists($file_download)) {
-			echo "PATH_OUTPUT_CSV".PATH_OUTPUT_CSV."<br>";
-			echo "URL_WEBSITE_CSV".URL_WEBSITE_CSV."<br>";
 			$file_download='<a href="'.str_replace(PATH_OUTPUT_CSV, URL_WEBSITE_CSV, $file_download).'">DOWNLOADABLE FILE</a>';
 		}
 		else {
