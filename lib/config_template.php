@@ -17,6 +17,7 @@ define("PATH_SHARED_FUNCTIONS", "/XXXXX/repos/shared-functions");
 define("PATH_WEBSERVER_ROOT", "/home/XXXXX/");
 define("PATH_CONVERT_DATA", PATH_WEBSERVER_ROOT."intranet-ekol/extract/");
 define("PATH_OUTPUT_JSON", PATH_WEBSERVER_ROOT."intranet-ekol/json/");
+define("PATH_OUTPUT_JSON", PATH_WEBSERVER_ROOT."intranet-ekol/csv/");
 
 define ("PATH_INPUT_EXCEL", PATH_WEBSERVER_ROOT."intranet-ekol/excel-surveys/");
 

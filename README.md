@@ -31,9 +31,9 @@ sudo pecl install mongodb
 ****
 
 create directories
-json/SFT/vinter
+json/SFT/vinter (with writing rights)
 excel-surveys/SFT
-
+csv/stdRecapComments (with writing rights)
 
 ** generate a ssh key for apache user **
 sudo -u www-data ssh-keygen -t rsa
