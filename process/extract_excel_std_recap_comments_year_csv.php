@@ -4,7 +4,7 @@
 $filename=date("Ymd-His")."_extract_stdRecapComments.csv";
 $path_extract=PATH_OUTPUT_CSV."stdRecapComments/";
 
-$headers=array("karta", "yr", "gps", "Kommentarer - Noteringar om avvikelser, överhoppningar, pauser, svåra passager, annat rent", "Kommentarer - specifikt om observationer av fåglar och däggdjur");
+$headers=array("karta", "yr", "gps", "Birdinfo", "Praktisk info", "activityId");
 
 if ($fp = fopen($path_extract.$filename, 'w')) {
 
@@ -19,6 +19,7 @@ if ($fp = fopen($path_extract.$filename, 'w')) {
 	    	$line["gps"]=$dataYear["isGpsUsed"];
 	    	$line["events"]=$dataYear["eventRemarks"];
 	    	$line["comments"]=$dataYear["comments"];
+	    	$line["activityId"]=$dataYear["activityId"];
 	    	fputcsv($fp, $line, ";");
 	    }
     }
