@@ -4,7 +4,7 @@
 $filename=date("Ymd-His")."_extract_stdRecapComments.csv";
 $path_extract=PATH_OUTPUT_CSV."stdRecapComments/";
 
-$headers=array("karta", "yr", "gps", "Birdinfo", "Praktisk info", "activityId");
+$headers=array("karta", "yr", "gps", "Praktisk info", "Birdinfo", "activityId");
 
 if ($fp = fopen($path_extract.$filename, 'w')) {
 
