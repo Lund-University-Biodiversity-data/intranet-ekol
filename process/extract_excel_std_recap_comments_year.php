@@ -44,8 +44,8 @@ $commands = [
             "actID.siteId" => 1,
             "siteID.adminProperties.internalSiteId" => 1,
             "activityId" => 1
-        ]],
-        ['$limit'=> 20]
+        ]]
+        /*,['$limit'=> 20]*/
     ],
     'cursor' => new stdClass,
 ];
@@ -79,8 +79,9 @@ if ($okCon) {
         $siteId=$document->siteID->adminProperties->internalSiteId;
 
         $tabSitesPeriod[$siteId][$year]["activityId"]=$document->activityId;
+        // practical information
         $tabSitesPeriod[$siteId][$year]["eventRemarks"]=$document->data->eventRemarks;
-        $tabSitesPeriod[$siteId][$year]["eventRemarks"]=$document->data->eventRemarks;
+        // comments on observations 
         $tabSitesPeriod[$siteId][$year]["comments"]=$document->data->comments;
         $tabSitesPeriod[$siteId][$year]["isGpsUsed"]=$document->data->isGpsUsed;
 
