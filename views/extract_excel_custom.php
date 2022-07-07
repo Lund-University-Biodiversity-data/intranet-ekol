@@ -16,6 +16,7 @@
       <div class="col-sm-10">
         <select class="form-control" id="queryExtract" name="queryExtract" placeholder="queryExtract">
           <option value="stdRecpaComments" <?= ($queryExtract=="stdRecpaComments" ? "selected" : "") ?>>Comments recap for STD sites + Years</option>
+          <option value="sftCentroidTopokartan" <?= ($queryExtract=="sftCentroidTopokartan" ? "selected" : "") ?>>Mongo version of koordinater_mittpunkt_topokartan</option>
         </select> 
       </div>
     </div>

@@ -30,7 +30,7 @@ if (isset($_POST["execFormExtract"]) && $_POST["execFormExtract"]=="OK") {
 		switch ($queryExtract) {
 			case "stdRecpaComments":
 
-				$consoleTxt.=consoleMessage("info", "2) Get list sites/year");
+				$consoleTxt.=consoleMessage("info", "1) Get list sites/year");
 
 				include "process/extract_excel_std_recap_comments_year.php";
 
@@ -38,6 +38,20 @@ if (isset($_POST["execFormExtract"]) && $_POST["execFormExtract"]=="OK") {
 					$consoleTxt.=consoleMessage("info", "2) Create csv");
 					
 					include "process/extract_excel_std_recap_comments_year_csv.php";
+
+					$consoleTxt.=consoleMessage("info", "file created : ".$file_download);
+				}
+				break;
+			case "sftCentroidTopokartan":
+
+				$consoleTxt.=consoleMessage("info", "1) Get centroid_topokartan objects");
+
+				include "process/extract_excel_std_centroidtopokartan.php";
+
+				if (count($arrTopo)>0){
+					$consoleTxt.=consoleMessage("info", "2) Create csv");
+					
+					include "process/extract_excel_std_centroidtopokartan_csv.php";
 
 					$consoleTxt.=consoleMessage("info", "file created : ".$file_download);
 				}
