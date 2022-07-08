@@ -21,6 +21,7 @@ if (isset($_POST["execFormExtract"]) && $_POST["execFormExtract"]=="OK") {
 
 	$timeStart=time();
 
+	$consoleTxt="";
 	$queryExtract = (isset($_POST["queryExtract"]) ? $_POST["queryExtract"] : "");
 
 	if ($queryExtract) {
@@ -52,6 +53,20 @@ if (isset($_POST["execFormExtract"]) && $_POST["execFormExtract"]=="OK") {
 					$consoleTxt.=consoleMessage("info", "2) Create csv");
 					
 					include "process/extract_excel_std_centroidtopokartan_csv.php";
+
+					$consoleTxt.=consoleMessage("info", "file created : ".$file_download);
+				}
+				break;
+			case "sftCentroidStdCoord":
+
+				$consoleTxt.=consoleMessage("info", "1) Get centroid_std_coord objects");
+
+				include "process/extract_excel_std_centroidcoord.php";
+
+				if (count($arrTopo)>0){
+					$consoleTxt.=consoleMessage("info", "2) Create csv");
+					
+					include "process/extract_excel_std_centroidcoord_csv.php";
 
 					$consoleTxt.=consoleMessage("info", "file created : ".$file_download);
 				}

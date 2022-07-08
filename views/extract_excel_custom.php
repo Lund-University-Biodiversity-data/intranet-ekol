@@ -17,6 +17,7 @@
         <select class="form-control" id="queryExtract" name="queryExtract" placeholder="queryExtract">
           <option value="stdRecpaComments" <?= ($queryExtract=="stdRecpaComments" ? "selected" : "") ?>>Comments recap for STD sites + Years</option>
           <option value="sftCentroidTopokartan" <?= ($queryExtract=="sftCentroidTopokartan" ? "selected" : "") ?>>Mongo version of koordinater_mittpunkt_topokartan</option>
+          <option value="sftCentroidStdCoord" <?= ($queryExtract=="sftCentroidStdCoord" ? "selected" : "") ?>>Mongo version of standardrutter_koordinater</option>
         </select> 
       </div>
     </div>
