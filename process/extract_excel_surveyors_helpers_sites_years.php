@@ -22,9 +22,9 @@ for ($iLoop=1;$iLoop<=2;$iLoop++) {
                 'as'=>'act'
             ]],
             ['$match'=>[
-                "data.surveyDate" => [
+                /*"data.surveyDate" => [
                     '$regex' => "2015"
-                ],
+                ],*/
                 "act.projectActivityId" => $commonFields[$protocol]["projectActivityId"], // can be removed later if protocol = all
                 "act.status" => [
                     '$in' => ["active"]
@@ -52,7 +52,6 @@ for ($iLoop=1;$iLoop<=2;$iLoop++) {
             ]],
             ['$unwind'=> '$siteID'],
             ['$project'=>[
-                "activityId" => 1,
                 "data.surveyDate" => 1,
                 "data.observedFrom" => 1,
                 "data.period" => 1,
