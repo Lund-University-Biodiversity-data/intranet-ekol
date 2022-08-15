@@ -80,10 +80,10 @@ if ($okCon) {
 
         $tabSitesPeriod[$siteId][$year]["activityId"]=$document->activityId;
         // practical information
-        $tabSitesPeriod[$siteId][$year]["eventRemarks"]=$document->data->eventRemarks;
+        $tabSitesPeriod[$siteId][$year]["eventRemarks"]=(isset($document->data->eventRemarks) ? $document->data->eventRemarks : "");
         // comments on observations 
-        $tabSitesPeriod[$siteId][$year]["comments"]=$document->data->comments;
-        $tabSitesPeriod[$siteId][$year]["isGpsUsed"]=$document->data->isGpsUsed;
+        $tabSitesPeriod[$siteId][$year]["comments"]=(isset($document->data->comments) ? $document->data->comments : "");
+        $tabSitesPeriod[$siteId][$year]["isGpsUsed"]=(isset($document->data->isGpsUsed) ? $document->data->isGpsUsed : "");
 
     }
 

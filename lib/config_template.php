@@ -122,6 +122,14 @@ switch ($database) {
 		$commonFields["kust"]["type"]="Kustfagelrutor"; // NO å
 		$commonFields["kust"]["name"]="Kustfagelrutor"; // NO å
 
+		// SJÖFÅGLAR januari/september
+		$commonFields["iwc"]["projectId"]="50b1cb29-cf33-4d43-a805-b07ae4de1750";
+		$commonFields["iwc"]["projectActivityId"]="60c68058-425a-483f-a934-9675c28fb3c5";
+		$commonFields["iwc"]["datasetId"]=$commonFields["iwc"]["projectActivityId"];
+		$commonFields["iwc"]["datasetName"]="Sjöfåglar, januari/september";
+		$commonFields["iwc"]["type"]="Sjofagel"; // NO ö
+		$commonFields["iwc"]["name"]="Sjofagel"; // NO ö
+		
 		break;
 
 	case "SEBMS":

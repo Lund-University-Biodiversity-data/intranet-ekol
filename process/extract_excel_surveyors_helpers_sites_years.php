@@ -22,7 +22,7 @@ for ($iLoop=1;$iLoop<=2;$iLoop++) {
                 'as'=>'act'
             ]],
             ['$match'=>[
-                "act.projectActivityId" => $commonFields["std"]["projectActivityId"], // can be removed later if protocol = all
+                "act.projectActivityId" => $commonFields[$protocol]["projectActivityId"], // can be removed later if protocol = all
                 "act.status" => [
                     '$in' => ["active"]
                 ],
@@ -51,13 +51,10 @@ for ($iLoop=1;$iLoop<=2;$iLoop++) {
             ['$project'=>[
                 "activityId" => 1,
                 "data.surveyDate" => 1,
+                "data.observedFrom" => 1,
+                "data.period" => 1,
                 "siteID.adminProperties.internalSiteId" => 1,
-                "pers.personId" => 1,
-                "name" => 1,
                 "pers.internalPersonId" => 1,
-                "pers.firstName" => 1,
-                "pers.lastName" => 1,
-                "pers.userId" => 1,
             ]]
         ],
         'cursor' => new stdClass,
@@ -97,23 +94,20 @@ for ($iLoop=1;$iLoop<=2;$iLoop++) {
 
             // get the year and fix it based on the protocol
             $year=getYearFromSurveyDateAndProtocol($eventDate, $protocol);
+            $month=getMonthFromSurveyDate($eventDate);
 
-            $okOutput=true;
-            if (is_numeric($yrStart) && $yrStart>$year) $okOutput=false;
-            if (is_numeric($yrEnd) && $yrEnd<$year) $okOutput=false;
+            $row=array();
 
+            $row["person"]=$document->pers->internalPersonId;
+            $row["site"]=$document->siteID->adminProperties->internalSiteId;
+            $row["year"]=$year;
+            $row["month"]=$month;
+            $row["period"]=(isset($document->data->period) ? $document->data->period : "");
+            $row["metod"]=(isset($document->data->observedFrom) ? $document->data->observedFrom : "");
+            $row["huvud"]=($iLoop==1 ? "ja" :"");
+            $row["med"]=($iLoop==2 ? "ja" :"");
 
-            if ($okOutput) {
-                $row=array();
-
-                $row["person"]=$document->pers->internalPersonId;
-                $row["site"]=$document->siteID->adminProperties->internalSiteId;
-                $row["year"]=$year;
-                $row["huvud"]=($iLoop==1 ? "ja" :"");
-                $row["med"]=($iLoop==2 ? "ja" :"");
-
-                $tabSurveyorsYears[]=$row;
-            }
+            $tabSurveyorsYears[]=$row;
 
         }
 

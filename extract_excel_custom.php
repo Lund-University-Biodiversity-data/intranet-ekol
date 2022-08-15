@@ -44,13 +44,13 @@ if (isset($_POST["execFormExtract"]) && $_POST["execFormExtract"]=="OK") {
 				}
 				break;
 
-			case "stdSurveyorsHelpersSitesYears":
+			case "iwcSurveyorsHelpersSitesYears":
+			case "kustSurveyorsHelpersSitesYears":
 
-				$yrStart=2015;
-				$yrEnd=date("Y");
-				$protocol="kust";
+				if ($queryExtract=="kustSurveyorsHelpersSitesYears") $protocol="kust";
+				else $protocol="iwc";
 
-				$consoleTxt.=consoleMessage("info", "1) Get list persons/sites/year ".$yrStart."/".$yrEnd);
+				$consoleTxt.=consoleMessage("info", "1) Get list persons/sites/year for protocol ".$protocol);
 
 				include "process/extract_excel_surveyors_helpers_sites_years.php";
 

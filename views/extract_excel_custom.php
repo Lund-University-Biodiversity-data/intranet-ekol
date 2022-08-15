@@ -16,9 +16,10 @@
       <div class="col-sm-10">
         <select class="form-control" id="queryExtract" name="queryExtract" placeholder="queryExtract">
           <option value="stdRecapComments" <?= ($queryExtract=="stdRecapComments" ? "selected" : "") ?>>Comments recap for STD sites + Years</option>
-          <option value="stdSurveyorsHelpersSitesYears" <?= ($queryExtract=="stdSurveyorsHelpersSitesYears" ? "selected" : "") ?>>Mongo version of medobs (internalPersonId / internalSiteId / year)</option>
-          <option value="sftCentroidTopokartan" <?= ($queryExtract=="sftCentroidTopokartan" ? "selected" : "") ?>>Mongo version of koordinater_mittpunkt_topokartan</option>
-          <option value="sftCentroidStdCoord" <?= ($queryExtract=="sftCentroidStdCoord" ? "selected" : "") ?>>Mongo version of standardrutter_koordinater</option>
+          <option value="kustSurveyorsHelpersSitesYears" <?= ($queryExtract=="kustSurveyorsHelpersSitesYears" ? "selected" : "") ?>>MongoDB version of KUST medobs (internalPersonId / internalSiteId / year)</option>
+          <option value="iwcSurveyorsHelpersSitesYears" <?= ($queryExtract=="iwcSurveyorsHelpersSitesYears" ? "selected" : "") ?>>MongoDB version of IWC medobs (internalPersonId / internalSiteId / year / month / period / method)</option>
+          <option value="sftCentroidTopokartan" <?= ($queryExtract=="sftCentroidTopokartan" ? "selected" : "") ?>>MongoDB version of koordinater_mittpunkt_topokartan</option>
+          <option value="sftCentroidStdCoord" <?= ($queryExtract=="sftCentroidStdCoord" ? "selected" : "") ?>>MongoDB version of standardrutter_koordinater</option>
         </select> 
       </div>
     </div>

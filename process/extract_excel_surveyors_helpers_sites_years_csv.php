@@ -1,10 +1,10 @@
 <?php
 
 
-$filename=date("Ymd-His")."_extract_surveyorsYears.csv";
+$filename=date("Ymd-His")."_".$protocol."_extract_surveyorsYears.csv";
 $path_extract=PATH_OUTPUT_CSV."surveyorsYears/";
 
-$headers=array("site", "yr", "person", "huvud", "med");
+$headers=array("person", "site", "yr", "month", "period", "method", "huvud", "med");
 
 if ($fp = fopen($path_extract.$filename, 'w')) {
 
@@ -13,7 +13,6 @@ if ($fp = fopen($path_extract.$filename, 'w')) {
     foreach($tabSurveyorsYears as $data ) {
     	fputcsv($fp, $data, ";");
     }
-
 
     $file_download=$path_extract.$filename;
 }
