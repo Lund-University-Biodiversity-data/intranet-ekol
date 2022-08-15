@@ -22,9 +22,6 @@ for ($iLoop=1;$iLoop<=2;$iLoop++) {
                 'as'=>'act'
             ]],
             ['$match'=>[
-                "data.surveyDate" => [
-                    '$regex' => "20"
-                ],
                 "act.projectActivityId" => $commonFields[$protocol]["projectActivityId"], // can be removed later if protocol = all
                 "act.status" => [
                     '$in' => ["active"]
