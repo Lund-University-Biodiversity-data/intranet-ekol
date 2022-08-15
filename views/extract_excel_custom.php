@@ -15,7 +15,8 @@
       <label for="queryExtract" class="col-sm-2 col-form-label">Query</label>
       <div class="col-sm-10">
         <select class="form-control" id="queryExtract" name="queryExtract" placeholder="queryExtract">
-          <option value="stdRecpaComments" <?= ($queryExtract=="stdRecpaComments" ? "selected" : "") ?>>Comments recap for STD sites + Years</option>
+          <option value="stdRecapComments" <?= ($queryExtract=="stdRecapComments" ? "selected" : "") ?>>Comments recap for STD sites + Years</option>
+          <option value="stdSurveyorsHelpersSitesYears" <?= ($queryExtract=="stdSurveyorsHelpersSitesYears" ? "selected" : "") ?>>Mongo version of medobs (internalPersonId / internalSiteId / year)</option>
           <option value="sftCentroidTopokartan" <?= ($queryExtract=="sftCentroidTopokartan" ? "selected" : "") ?>>Mongo version of koordinater_mittpunkt_topokartan</option>
           <option value="sftCentroidStdCoord" <?= ($queryExtract=="sftCentroidStdCoord" ? "selected" : "") ?>>Mongo version of standardrutter_koordinater</option>
         </select> 

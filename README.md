@@ -34,6 +34,9 @@ create directories
 json/SFT/vinter (with writing rights)
 excel-surveys/SFT
 csv/stdRecapComments (with writing rights)
+csv/stdCentroidStdCoord (with writing rights)
+csv/stdCentroidTopokartan (with writing rights)
+csv/surveyorsYears (with writing rights)
 
 ** generate a ssh key for apache user **
 sudo -u www-data ssh-keygen -t rsa

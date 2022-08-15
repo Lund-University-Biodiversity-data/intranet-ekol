@@ -29,7 +29,7 @@ if (isset($_POST["execFormExtract"]) && $_POST["execFormExtract"]=="OK") {
 		$rtFile="";
 
 		switch ($queryExtract) {
-			case "stdRecpaComments":
+			case "stdRecapComments":
 
 				$consoleTxt.=consoleMessage("info", "1) Get list sites/year");
 
@@ -43,6 +43,26 @@ if (isset($_POST["execFormExtract"]) && $_POST["execFormExtract"]=="OK") {
 					$consoleTxt.=consoleMessage("info", "file created : ".$file_download);
 				}
 				break;
+
+			case "stdSurveyorsHelpersSitesYears":
+
+				$yrStart=2015;
+				$yrEnd=date("Y");
+				$protocol="kust";
+
+				$consoleTxt.=consoleMessage("info", "1) Get list persons/sites/year ".$yrStart."/".$yrEnd);
+
+				include "process/extract_excel_surveyors_helpers_sites_years.php";
+
+				if (count($tabSurveyorsYears)>0){
+					$consoleTxt.=consoleMessage("info", "2) Create csv");
+					
+					include "process/extract_excel_surveyors_helpers_sites_years_csv.php";
+
+					$consoleTxt.=consoleMessage("info", "file created : ".$file_download);
+				}
+				break;
+
 			case "sftCentroidTopokartan":
 
 				$consoleTxt.=consoleMessage("info", "1) Get centroid_topokartan objects");
@@ -57,6 +77,7 @@ if (isset($_POST["execFormExtract"]) && $_POST["execFormExtract"]=="OK") {
 					$consoleTxt.=consoleMessage("info", "file created : ".$file_download);
 				}
 				break;
+
 			case "sftCentroidStdCoord":
 
 				$consoleTxt.=consoleMessage("info", "1) Get centroid_std_coord objects");
