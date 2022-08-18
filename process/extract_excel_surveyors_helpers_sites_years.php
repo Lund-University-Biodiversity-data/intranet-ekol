@@ -22,10 +22,11 @@ for ($iLoop=1;$iLoop<=2;$iLoop++) {
                 'as'=>'act'
             ]],
             ['$match'=>[
+                // only 2000+
                 "data.surveyDate" => [
                     '$regex' => "20"
                 ],
-                "act.projectActivityId" => $commonFields[$protocol]["projectActivityId"], // can be removed later if protocol = all
+                "act.projectActivityId" => $commonFields[$protocol]["projectActivityId"],
                 "act.status" => [
                     '$in' => ["active"]
                 ],
@@ -64,9 +65,8 @@ for ($iLoop=1;$iLoop<=2;$iLoop++) {
 
     // for the 2nd round, remove the link to activity based on 
     if ($iLoop==2) {
-        $aggregate["pipeline"][2]['$lookup']['localField']='act.helperIds';
+        $commands["pipeline"][2]['$lookup']['localField']='act.helperIds';
     }
-
     $command = new MongoDB\Driver\Command($commands);
 
     try{
