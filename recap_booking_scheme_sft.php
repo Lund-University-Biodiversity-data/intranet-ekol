@@ -101,7 +101,7 @@ if (isset($_POST["execFormRecapBookingScheme"]) && $_POST["execFormRecapBookingS
 
 				if (
 					(is_numeric($dataSite["lastYearSurveyed"]) && $dataSite["lastYearSurveyed"]==date("Y"))
-					|| (is_numeric($dataSite["excelReceived"])  && $dataSite["excelReceived"]==date("Y"))
+					|| (is_numeric($dataSite["excelReceived"])  && $dataSite["excelReceivedYear"]==date("Y"))
 					|| (is_numeric($dataSite["paperSurveySubmitted"])  && $dataSite["paperSurveySubmitted"]==date("Y") )
 				) {
 					$line[]="Ja";
