@@ -39,7 +39,7 @@ $command = new MongoDB\Driver\Command($commands);
 $cursor = $mng->executeCommand(MONGO_DBNAME, $command);
 $response = $cursor->toArray();
 
-foreach ($response[0]->result as $document) {
+foreach ($response as $document) {
 
 	if (trim($document->data->surveyDate)!="") {
 		$yr=substr($document->data->surveyDate, 0, 4);
