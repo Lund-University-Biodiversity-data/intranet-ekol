@@ -543,12 +543,12 @@ foreach($listFilesOk as $file) {
 			}
 		}
 
-		if (isset($startTime) &&!is_numeric($startTime)) {
-			$consoleTxt.=consoleMessage("error", "Start time not numeric : ".$startTime);
+		if (isset($startTime) && (!is_numeric($startTime) || strpos($startTime, ".")!==false)) {
+			$consoleTxt.=consoleMessage("error", "Expected format for startTime : HHMM. Obtained : ".$startTime);
 			$fileRefused=true;
 		}
-		if (isset($endTime) &&!is_numeric($endTime)) {
-			$consoleTxt.=consoleMessage("error", "End time not numeric : ".$endTime);
+		if (isset($endTime) && (!is_numeric($endTime)  || strpos($endTime, ".")!==false)) {
+			$consoleTxt.=consoleMessage("error", "Expected format for endTime : HHMM. Obtained : ".$endTime);
 			$fileRefused=true;
 		}
 

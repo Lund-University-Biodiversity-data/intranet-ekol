@@ -51,7 +51,7 @@ else {
 	}
 }
 
-if (!$debug) {
+if ($finalOk && !$debug) {
 	// move files to OK folder
 	foreach ($listFilesOk as $fil) {
 		$cmdMv="mv '".$path_excel.$fil."' ".$path_excel."OK/";
