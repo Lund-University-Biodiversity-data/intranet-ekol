@@ -22,7 +22,7 @@ $userId=$commonFields["userId"];
 try {
 
 	$inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($uploadFilePath);
-	$consoleTxt.=consoleMessage("info", "Excel type ".$inputFileType);
+	//$consoleTxt.=consoleMessage("info", "Excel type ".$inputFileType);
 	$excelObj = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
 	$excelObj->setReadDataOnly(true);
 	$spreadsheet = $excelObj->load($uploadFilePath);
@@ -231,7 +231,7 @@ if (!$fileRefused) {
 				}
 				else {
 					$arrAntiDoublonArt[]=$art;
-					
+
 					$occurenceID=generate_uniqId_format("xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx");
 					$outputSpeciesId=generate_uniqId_format("xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx");
 
