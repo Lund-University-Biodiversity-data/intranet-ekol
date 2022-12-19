@@ -40,6 +40,7 @@ catch (\Exception $exception) {
 if (!$fileRefused) {
 
 	$arrAntiDoublon=array();
+	$arrAntiDoublonArt=array();
 
 	$iRow=2;
 
@@ -83,7 +84,7 @@ if (!$fileRefused) {
 			$consoleTxt.=consoleMessage("error", "missing individualCount column E, row #".$iRow." : ".$antal);
 		}
 
-		// check if the art number exists in the list module
+		// check if the site exists in MongoDb
 		if (!isset($array_sites[$internalSiteId]) || trim($internalSiteId) == "") {
 			$fileRefused=true;
 			$consoleTxt.=consoleMessage("error", "unknown site in MongoDb, row #".$iRow." : ".$internalSiteId);
@@ -111,7 +112,7 @@ if (!$fileRefused) {
 
 
 		// check if ice is among the accepted list
-		$validIce=array("", "0-10%", "10-50%", "50-99%", "100%");
+		$validIce=array("", "0-10", "10-50", "50-99", "100");
 		if (!in_array($ice, $validIce)) {
 			$fileRefused=true;
 			$consoleTxt.=consoleMessage("error", "unknown ice, row #".$iRow." : ".$ice);			
@@ -125,6 +126,8 @@ if (!$fileRefused) {
 		if ($art=="000") {
 
 			$checkDoublons=$persnr."#".$internalSiteId."#".$method."#".$year;
+			// reinit the list of species
+			$arrAntiDoublonArt=array();
 
 			if (!in_array($checkDoublons, $arrAntiDoublon)) {
 				$activityId=generate_uniqId_format("xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx");
@@ -222,77 +225,85 @@ if (!$fileRefused) {
 					 ($oldPeriod==$period && $oldInternalSiteId==$internalSiteId && $oldPersnr==$persnr && $oldDatum==$datum && $oldMethod==$method )
 					) {
 
-
-				$occurenceID=generate_uniqId_format("xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx");
-				$outputSpeciesId=generate_uniqId_format("xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx");
-
-				$notes="";
-
-				$speciesFound++;
-				$listId=$list_id[$animals];
-				$sn=$array_species_art[$art]["sn"];
-				$guid=$array_species_art[$art]["lsid"];
-				$name=$array_species_art[$art]["nameSWE"];
-				$rank=$array_species_art[$art]["rank"];
-
-				if ($name!=$arthela){
+				if (in_array($art, $arrAntiDoublonArt)) {
 					$fileRefused=true;
-					$consoleTxt.=consoleMessage("error", "Different species name in the list moodule and in the excel file at row #".$iRow." : ".$name." (module list) / ".$arthela." (excel file)");			
+					$consoleTxt.=consoleMessage("error", "Species doubon : art is already listed for this survey, at row #".$iRow.", art=".$art);	
 				}
+				else {
+					$arrAntiDoublonArt[]=$art;
+					
+					$occurenceID=generate_uniqId_format("xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx");
+					$outputSpeciesId=generate_uniqId_format("xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx");
 
-				$dataAnimal=array();
+					$notes="";
 
-				$dataAnimal["swedishRank"]=$rank;
-				$dataAnimal["individualCount"]=$antal;
-				$dataAnimal["species"]=array(
-					"listId" => $listId,
-					"commonName" => "",
-					"outputSpeciesId" => $outputSpeciesId,
-					"scientificName" => $sn,
-					"name" => $name,
-					"guid" => $guid
-				);
+					$speciesFound++;
+					$listId=$list_id[$animals];
+					$sn=$array_species_art[$art]["sn"];
+					$guid=$array_species_art[$art]["lsid"];
+					$name=$array_species_art[$art]["nameSWE"];
+					$rank=$array_species_art[$art]["rank"];
 
-				if (!isset($arr_json_obs_for_output[$outputId])) {
-					$arr_json_obs_for_output[$outputId]=array();
+					if ($name!=$arthela){
+						$fileRefused=true;
+						$consoleTxt.=consoleMessage("error", "Different species name in the list moodule and in the excel file at row #".$iRow." : ".$name." (module list) / ".$arthela." (excel file)");			
+					}
+
+					$dataAnimal=array();
+
+					$dataAnimal["swedishRank"]=$rank;
+					$dataAnimal["individualCount"]=$antal;
+					$dataAnimal["species"]=array(
+						"listId" => $listId,
+						"commonName" => "",
+						"outputSpeciesId" => $outputSpeciesId,
+						"scientificName" => $sn,
+						"name" => $name,
+						"guid" => $guid
+					);
+
+					if (!isset($arr_json_obs_for_output[$outputId])) {
+						$arr_json_obs_for_output[$outputId]=array();
+					}
+					$arr_json_obs_for_output[$outputId][]=$dataAnimal;
+
+					$arr_json_record[]=array(
+						"dateCreated" => $nowISODate,
+						"lastUpdated" => $nowISODate,
+						"occurrenceID" => $occurenceID,
+						"status" => "active",
+						"recordedBy" => $recorder_name,
+						"rightsHolder" => $commonFields["rightsHolder"],
+						"institutionID" => $commonFields["institutionID"],
+						"institutionCode" => $commonFields["institutionCode"],
+						"basisOfRecord" => $commonFields["basisOfRecord"],
+						"datasetID" => $commonFields[$protocol]["projectActivityId"],
+						"datasetName" => $commonFields[$protocol]["datasetName"],
+						"licence" => $commonFields["licence"],
+						"locationID" => $array_sites[$internalSiteId]["locationID"],
+						"locationName" => $array_sites[$internalSiteId]["locationName"],
+						"locationRemarks" => "",
+						"eventID" => $activityId,
+						"eventTime" => $start_time,
+						"eventRemarks" => "",
+						"notes" => $notes,
+						"guid" => $guid,
+						"name" => $name,
+						"scientificName" => $sn,
+						"multimedia" => array(),
+						"activityId" => $activityId,
+						"decimalLatitude" => $array_sites[$internalSiteId]["decimalLatitude"],
+						"decimalLongitude" => $array_sites[$internalSiteId]["decimalLongitude"],
+						"eventDate" => $eventDate,
+						"individualCount" => strval($antal),
+						"outputId" => $outputId,
+						"outputSpeciesId" => $outputSpeciesId,
+						"projectActivityId" => $commonFields[$protocol]["projectActivityId"],
+						"projectId" => $commonFields[$protocol]["projectId"],
+						"userId" => strval($userId)
+					);
 				}
-				$arr_json_obs_for_output[$outputId][]=$dataAnimal;
-
-				$arr_json_record[]=array(
-					"dateCreated" => $nowISODate,
-					"lastUpdated" => $nowISODate,
-					"occurrenceID" => $occurenceID,
-					"status" => "active",
-					"recordedBy" => $recorder_name,
-					"rightsHolder" => $commonFields["rightsHolder"],
-					"institutionID" => $commonFields["institutionID"],
-					"institutionCode" => $commonFields["institutionCode"],
-					"basisOfRecord" => $commonFields["basisOfRecord"],
-					"datasetID" => $commonFields[$protocol]["projectActivityId"],
-					"datasetName" => $commonFields[$protocol]["datasetName"],
-					"licence" => $commonFields["licence"],
-					"locationID" => $array_sites[$internalSiteId]["locationID"],
-					"locationName" => $array_sites[$internalSiteId]["locationName"],
-					"locationRemarks" => "",
-					"eventID" => $activityId,
-					"eventTime" => $start_time,
-					"eventRemarks" => "",
-					"notes" => $notes,
-					"guid" => $guid,
-					"name" => $name,
-					"scientificName" => $sn,
-					"multimedia" => array(),
-					"activityId" => $activityId,
-					"decimalLatitude" => $array_sites[$internalSiteId]["decimalLatitude"],
-					"decimalLongitude" => $array_sites[$internalSiteId]["decimalLongitude"],
-					"eventDate" => $eventDate,
-					"individualCount" => strval($antal),
-					"outputId" => $outputId,
-					"outputSpeciesId" => $outputSpeciesId,
-					"projectActivityId" => $commonFields[$protocol]["projectActivityId"],
-					"projectId" => $commonFields[$protocol]["projectId"],
-					"userId" => strval($userId)
-				);
+				
 
 			}
 			else {

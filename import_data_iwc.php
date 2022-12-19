@@ -21,11 +21,8 @@ $consoleTxt="";
 $server=DEFAULT_SERVER;
 $listHiddenOkFiles="";
 $listFiles=array();
-$protocol="sommar";
 
 $mng = new MongoDB\Driver\Manager($mongoConnection[$server]);
-
-$activityIdCreated=array();
 
 $protocol="iwc";
 $dataOrigin="scriptImportIWC";
@@ -62,7 +59,7 @@ if (isset($_POST["execFormImportDataIWC"]) && $_POST["execFormImportDataIWC"]=="
 			if ($okList) {
 
 				$consoleTxt.=consoleMessage("info", "3) Read the excel file");
-
+				$fileRefused=true;
 				include "process/excel_import_data_iwc_read_file.php";
 
 				if (!$fileRefused) {

@@ -21,7 +21,7 @@
     	<li>Column E : antal (integer). *mandatory when art!=000</li>
     	<li>Column F : internalSiteID (XXXX). *mandatory</li>
     	<li>Column G : year. *optional, not used by the script !</li>
-    	<li>Column H : metod (båt/land)</li>
+    	<li>Column H : metod (båt/land). *mandatory</li>
     	<li>Column I : datum. *mandatory</li>
     	<li>Column J : period (Januari/September). *mandatory</li>
     	<li>Column K : ice. *optional</li>
@@ -59,13 +59,8 @@
     </div>
   </form>
 
-  <?php if (isset($final_result) &&  $final_result!="") { ?>
-  <p class="lead">
-    <b><?= $final_result ?></b>
-  </p>
-  <?php } ?>
 
-  <?php if (count($surveysAdded)>0) { ?>
+  <?php if (isset($surveysAdded) && count($surveysAdded)>0) { ?>
 
     <div class="form-group row">
       <label class="col-sm-2 col-form-label">List of surveys</label>

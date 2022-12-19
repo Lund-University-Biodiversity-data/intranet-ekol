@@ -38,12 +38,12 @@ for ($i=1;$i<=3;$i++) {
 		}
 
 		if ($inputAddInDb=="YES") {
-			/*
+			
 			$bulk = new MongoDB\Driver\BulkWrite;
 			$_id1 = $bulk->insert($document);
 
 			$result = $mng->executeBulkWrite('ecodata.'.$typeO, $bulk);
-			*/			
+						
 			$nbRows[$typeO]++;
 		}
 
