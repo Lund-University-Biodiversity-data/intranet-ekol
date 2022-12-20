@@ -117,6 +117,10 @@ if (!$fileRefused) {
 			$fileRefused=true;
 			$consoleTxt.=consoleMessage("error", "unknown ice, row #".$iRow." : ".$ice);			
 		}
+		else {
+			// add the % to fit  BioCollect enum
+			if ($ice != "") $ice.="%";
+		}
 
 
 
