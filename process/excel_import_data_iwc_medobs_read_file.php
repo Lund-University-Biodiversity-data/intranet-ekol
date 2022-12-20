@@ -89,7 +89,9 @@ if (!$fileRefused) {
 
 			if (substr($output->data->surveyDate, 0, 4)==$year) {
 				$nbAdd++;
-				$arr_medobs[$output->activityId]["helpers"][]=$array_persons[$persnr]["personId"];
+
+				$arr_medobs[$output->activityId]["helperIds"][]=$array_persons[$persnr]["personId"];
+				$arr_medobs[$output->activityId]["helperNames"][]=array("helper" => $array_persons[$persnr]["firstName"]." ".$array_persons[$persnr]["lastName"]);
 
 				if ($output->data->helpers!="") {
 					$consoleTxt.=consoleMessage("error", "Helpers already set in MongoDb for row #".$iRow." (period ".$period."/ method ".$method." / year ".$year." / site ".$internalSiteId."). ActivityId : ".$output->activityId);
