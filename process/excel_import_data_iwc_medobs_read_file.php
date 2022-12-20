@@ -76,28 +76,24 @@ if (!$fileRefused) {
 			"data.period" => $period,
 			"data.observedFrom" => $method,
 			"data.location" => $array_sites[$internalSiteId]["locationID"],
-			"status" => "active"
+			"status" => "active",
+			"data.surveyDate" => array('$regex'=>'^'.$year)
 		];
 		$query = new MongoDB\Driver\Query($filter, $options); 
 
 		$rows = $mng->executeQuery("ecodata.output", $query);
 		$nbAdd=0;
 		foreach ($rows as $output){
-			//var_dump($output);exit();
-			//echo $output->outputId." => ".$array_persons[$persnr]." / ".$output->data->surveyDate."<br>";
-			// check the date
+			$nbAdd++;
 
-			if (substr($output->data->surveyDate, 0, 4)==$year) {
-				$nbAdd++;
+			$arr_medobs[$output->activityId]["helperIds"][]=$array_persons[$persnr]["personId"];
+			$arr_medobs[$output->activityId]["helperNames"][]=array("helper" => $array_persons[$persnr]["firstName"]." ".$array_persons[$persnr]["lastName"]);
 
-				$arr_medobs[$output->activityId]["helperIds"][]=$array_persons[$persnr]["personId"];
-				$arr_medobs[$output->activityId]["helperNames"][]=array("helper" => $array_persons[$persnr]["firstName"]." ".$array_persons[$persnr]["lastName"]);
-
-				if ($output->data->helpers!="") {
-					$consoleTxt.=consoleMessage("warn", "Helpers already set in MongoDb for row #".$iRow." (period ".$period."/ method ".$method." / year ".$year." / site ".$internalSiteId."). ActivityId : ".$output->activityId);
-					//$fileRefused=true;					
-				}
+			if ($output->data->helpers!="") {
+				$consoleTxt.=consoleMessage("warn", "Helpers already set in MongoDb for row #".$iRow." (period ".$period."/ method ".$method." / year ".$year." / site ".$internalSiteId."). ActivityId : ".$linkBioActivity[$server].$output->activityId);
+				//$fileRefused=true;					
 			}
+			
 			
 		}
 

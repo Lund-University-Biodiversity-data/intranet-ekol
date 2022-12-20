@@ -129,85 +129,110 @@ if (!$fileRefused) {
 		// create the activity/event based on the art=000 line
 		if ($art=="000") {
 
-			$checkDoublons=$persnr."#".$internalSiteId."#".$method."#".$year;
+			$checkDoublons=$internalSiteId."#".$method."#".$year;
 			// reinit the list of species
 			$arrAntiDoublonArt=array();
 
 			if (!in_array($checkDoublons, $arrAntiDoublon)) {
-				$activityId=generate_uniqId_format("xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx");
-				$outputId=generate_uniqId_format("xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx");
 
-				$date_survey=date("Y-m-d", strtotime($datum))."T00:00:00Z";
-				$recorder_name=$array_persons[$persnr]["firstName"]." ".$array_persons[$persnr]["lastName"];
 
-				$start_time=convertTime("0000", "24H");
-				$eventDate=date("Y-m-d", strtotime($datum))."T".$start_time.":00Z";
-
-				$arr_json_activity[]=array(
-					"activityId" => $activityId,
-					"assessment" => false,
-					"dateCreated" => $nowISODate,
-					"lastUpdated" => $nowISODate,
-					"progress" => "planned",
-					"projectActivityId" => $commonFields[$protocol]["projectActivityId"],
-					"projectId" => $commonFields[$protocol]["projectId"],
-					"projectStage" => "",
-					"siteId" => $array_sites[$internalSiteId]["locationID"],
+				// check if such an output exist (siteId + period + method + year(date))
+				// check if the output exists ()
+				$options = [];
+				$filter = [
+					"data.period" => $period,
+					"data.observedFrom" => $method,
+					"data.location" => $array_sites[$internalSiteId]["locationID"],
 					"status" => "active",
-					"type" => $commonFields[$protocol]["type"],
-					"userId" => strval($userId),
-					"personId" => $array_persons[$persnr]["personId"],
-					"mainTheme" => "",
-					"verificationStatus" => "approved",
-					"excelFile" => $uploadFile
-				);			
+					"data.surveyDate" => array('$regex'=>'^'.$year)
+				];
+				$query = new MongoDB\Driver\Query($filter, $options); 
 
-				$arrAntiDoublon[]=$checkDoublons;
+				$rows = $mng->executeQuery("ecodata.output", $query);
+				$nbActAlready=array();
+				foreach ($rows as $row){
+					$nbActAlready[]=$row->activityId;
+				}
+				if (count($nbActAlready)>0) {
+					$fileRefused=true;
+					$consoleTxt.=consoleMessage("error", "Already ".count($nbActAlready)." activity in MongoDb for site ".$internalSiteId." method ".$method." year ".$year." and period ".$period.". ActivityId : ".$linkBioActivity[$server].$nbActAlready[0]);
+				}
+				else {
+					$activityId=generate_uniqId_format("xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx");
+					$outputId=generate_uniqId_format("xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx");
 
-				// use the outputId as key to be able to add the observations later
-				$arr_json_output[$outputId]=array(
-					"activityId" => $activityId,
-					"dateCreated" => $nowISODate,
-					"lastUpdated" => $nowISODate,
-					"outputId" => $outputId,
-					"status" => "active",
-					"outputNotCompleted" => false,
-					"data" => array (
-						"eventRemarks" => "",
-						"surveyFinishTime" => $start_time,
-						"locationAccuracy" => 50,
-						"comments" => "",
-						"surveyDate" => $date_survey,
-						"observedFrom" => $method,
-						"period" => $period,
-						"istäcke" => $ice,
-						"windSpeedKmPerHourCategorical" => "",
-						"windDirectionCategorical" => "",
-						"noSpecies" => "ja",
-						"locationHiddenLatitude" => $array_sites[$internalSiteId]["decimalLatitude"],
-						"locationLatitude" => $array_sites[$internalSiteId]["decimalLatitude"],
-						"locationSource" => "Google maps",
-						"recordedBy" => $recorder_name,
-						"helpers" => "",
-						"surveyStartTime" => $start_time,
-						"locationCentroidLongitude" => null,
-						"observations" => null,
-						"location" => $array_sites[$internalSiteId]["locationID"],
-						"locationLongitude" => $array_sites[$internalSiteId]["decimalLongitude"],
-						"locationHiddenLongitude" => $array_sites[$internalSiteId]["decimalLongitude"],
-						"locationCentroidLatitude" => null
-					),
-					"selectFromSitesOnly" => true,
-					"_callbacks" => array(
-						"sitechanged" => array(null)
-					),
-					"mapElementId" => "locationMap",
-					"checkMapInfo" => array(
-						"validation" => true
-					),
-					"name" => $commonFields[$protocol]["name"],
-					"dataOrigin" => $dataOrigin
-				);
+					$date_survey=date("Y-m-d", strtotime($datum))."T00:00:00Z";
+					$recorder_name=$array_persons[$persnr]["firstName"]." ".$array_persons[$persnr]["lastName"];
+
+					$start_time=convertTime("0000", "24H");
+					$eventDate=date("Y-m-d", strtotime($datum))."T".$start_time.":00Z";
+
+					$arr_json_activity[]=array(
+						"activityId" => $activityId,
+						"assessment" => false,
+						"dateCreated" => $nowISODate,
+						"lastUpdated" => $nowISODate,
+						"progress" => "planned",
+						"projectActivityId" => $commonFields[$protocol]["projectActivityId"],
+						"projectId" => $commonFields[$protocol]["projectId"],
+						"projectStage" => "",
+						"siteId" => $array_sites[$internalSiteId]["locationID"],
+						"status" => "active",
+						"type" => $commonFields[$protocol]["type"],
+						"userId" => strval($userId),
+						"personId" => $array_persons[$persnr]["personId"],
+						"mainTheme" => "",
+						"verificationStatus" => "approved",
+						"excelFile" => $uploadFile
+					);			
+
+					$arrAntiDoublon[]=$checkDoublons;
+
+					// use the outputId as key to be able to add the observations later
+					$arr_json_output[$outputId]=array(
+						"activityId" => $activityId,
+						"dateCreated" => $nowISODate,
+						"lastUpdated" => $nowISODate,
+						"outputId" => $outputId,
+						"status" => "active",
+						"outputNotCompleted" => false,
+						"data" => array (
+							"eventRemarks" => "",
+							"surveyFinishTime" => $start_time,
+							"locationAccuracy" => 50,
+							"comments" => "",
+							"surveyDate" => $date_survey,
+							"observedFrom" => $method,
+							"period" => $period,
+							"istäcke" => $ice,
+							"windSpeedKmPerHourCategorical" => "",
+							"windDirectionCategorical" => "",
+							"noSpecies" => "ja",
+							"locationHiddenLatitude" => $array_sites[$internalSiteId]["decimalLatitude"],
+							"locationLatitude" => $array_sites[$internalSiteId]["decimalLatitude"],
+							"locationSource" => "Google maps",
+							"recordedBy" => $recorder_name,
+							"helpers" => "",
+							"surveyStartTime" => $start_time,
+							"locationCentroidLongitude" => null,
+							"observations" => null,
+							"location" => $array_sites[$internalSiteId]["locationID"],
+							"locationLongitude" => $array_sites[$internalSiteId]["decimalLongitude"],
+							"locationHiddenLongitude" => $array_sites[$internalSiteId]["decimalLongitude"],
+							"locationCentroidLatitude" => null
+						),
+						"selectFromSitesOnly" => true,
+						"_callbacks" => array(
+							"sitechanged" => array(null)
+						),
+						"mapElementId" => "locationMap",
+						"checkMapInfo" => array(
+							"validation" => true
+						),
+						"name" => $commonFields[$protocol]["name"],
+						"dataOrigin" => $dataOrigin
+					);
+				}
 			}
 			else {
 				$fileRefused=true;
