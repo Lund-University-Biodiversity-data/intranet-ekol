@@ -94,8 +94,8 @@ if (!$fileRefused) {
 				$arr_medobs[$output->activityId]["helperNames"][]=array("helper" => $array_persons[$persnr]["firstName"]." ".$array_persons[$persnr]["lastName"]);
 
 				if ($output->data->helpers!="") {
-					$consoleTxt.=consoleMessage("error", "Helpers already set in MongoDb for row #".$iRow." (period ".$period."/ method ".$method." / year ".$year." / site ".$internalSiteId."). ActivityId : ".$output->activityId);
-					$fileRefused=true;					
+					$consoleTxt.=consoleMessage("warn", "Helpers already set in MongoDb for row #".$iRow." (period ".$period."/ method ".$method." / year ".$year." / site ".$internalSiteId."). ActivityId : ".$output->activityId);
+					//$fileRefused=true;					
 				}
 			}
 			
