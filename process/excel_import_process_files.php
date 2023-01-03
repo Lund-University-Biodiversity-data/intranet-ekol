@@ -465,8 +465,10 @@ foreach($listFilesOk as $file) {
 
 				if ($protocol=="vinter") 
 					$iRowSpecies=30;
-				elseif ($protocol=="sommar") 
-					$iRowSpecies=41;
+				elseif ($protocol=="sommar")  {
+					//$iRowSpecies=41;
+					$iRowSpecies=30;
+				}
 				
 				$colSpeciesCode="V";
 				$colTotObs="X";
