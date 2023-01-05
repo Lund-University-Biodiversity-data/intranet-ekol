@@ -234,8 +234,8 @@ foreach($listFilesOk as $file) {
 				$rowDisturbance=146;
 				$disturbances=array();
 				// check the header, because it has to be in that line
-				if ($worksheet->getCell("A".($rowDisturbance-1))->getValue()!="STÖRNINGAR"){
-					$consoleTxt.=consoleMessage("error", "Can't find the data for STÖRNINGAR in expected cell (A".($rowDisturbance-1).")");
+				if ($worksheet->getCell("A".($rowDisturbance-1))->getValue()!="LJUDFÖRORENINGAR"){
+					$consoleTxt.=consoleMessage("error", "Can't find the data for LJUDFÖRORENINGAR in expected cell (A".($rowDisturbance-1).")");
 					$fileRefused=true;
 				}
 				else {
@@ -244,7 +244,7 @@ foreach($listFilesOk as $file) {
 					for ($iCol="B";$iCol<="U";$iCol++) {
 						$val=$worksheet->getCell($iCol.$rowDisturbance)->getValue();
 						if ($val!="" && $val!=1) {
-							$consoleTxt.=consoleMessage("error", "STÖRNINGAR/disturbances only '1' allowed in cell ".$iCol.$rowDisturbance);
+							$consoleTxt.=consoleMessage("error", "LJUDFÖRORENINGAR/disturbances only '1' allowed in cell ".$iCol.$rowDisturbance);
 							$fileRefused=true;
 						}
 						else $disturbancesSum+=$val;
@@ -253,7 +253,7 @@ foreach($listFilesOk as $file) {
 						$iInd++;
 					}
 					if (!$fileRefused) {
-						$consoleTxt.=consoleMessage("info", "STÖRNINGAR/disturbances sum is ".$disturbancesSum);
+						$consoleTxt.=consoleMessage("info", "LJUDFÖRORENINGAR/disturbances sum is ".$disturbancesSum);
 					}
 					
 				}
