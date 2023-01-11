@@ -17,14 +17,15 @@ if ($okSite) {
 
     $consoleTxt.=consoleMessage("info", "Ready to change the data with $siteNewCorrectId");
 
-    if (!isset($siteNewDetails->geoIndex->coordinates[0]) || !is_numeric($siteNewDetails->geoIndex->coordinates[0])  || !isset($siteNewDetails->geoIndex->coordinates[1]) || !is_numeric($siteNewDetails->geoIndex->coordinates[1]) ) {
-        $consoleTxt.=consoleMessage("info", "No coordinates found in geoIndex.coordinates for the new site");
+    //if (!isset($siteNewDetails->geoIndex->coordinates[0]) || !is_numeric($siteNewDetails->geoIndex->coordinates[0])  || !isset($siteNewDetails->geoIndex->coordinates[1]) || !is_numeric($siteNewDetails->geoIndex->coordinates[1]) ) {
+    if (!isset($siteNewDetails->extent->geometry->coordinates[0]) || !is_numeric($siteNewDetails->extent->geometry->coordinates[0])  || !isset($siteNewDetails->extent->geometry->coordinates[1]) || !is_numeric($siteNewDetails->extent->geometry->coordinates[1]) ) {
+        $consoleTxt.=consoleMessage("info", "No coordinates found in extent.geometry.coordinates for the new site");
     }
 
     else {
 
-        $longitude=$siteNewDetails->geoIndex->coordinates[0];
-        $latitude=$siteNewDetails->geoIndex->coordinates[1];
+        $longitude=$siteNewDetails->extent->geometry->coordinates[0];
+        $latitude=$siteNewDetails->extent->geometry->coordinates[1];
 
         $bulkP = new MongoDB\Driver\BulkWrite;
         //$filter = [];
@@ -40,7 +41,13 @@ if ($okSite) {
         $bulkP = new MongoDB\Driver\BulkWrite;
         //$filter = [];
         $filter = ['activityId' => $activityIdToFix];
-        $options =  ['$set' => ["data.location" => $siteNewCorrectId]];
+        $options =  ['$set' => [
+            "data.location" => $siteNewCorrectId,
+            "data.locationLongitude" => $longitude,
+            "data.locationHiddenLongitude" => $longitude,
+            "data.locationLatitude" => $latitude,
+            "data.locationHiddenLatitude" => $latitude,
+        ]];
         $updateOptions = [];
         $bulkP->update($filter, $options, $updateOptions); 
         $result = $mng->executeBulkWrite('ecodata.output', $bulkP);
