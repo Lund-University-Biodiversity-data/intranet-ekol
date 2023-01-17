@@ -39,7 +39,7 @@ $date_now_tz = date("Y-m-d",$date_array[1])."T".date("H:i:s",$date_array[1])."."
 
 $final_result="";
 
-require "process/punkt_site_get_param_data.php";
+require "process/site_punkt_get_param_data.php";
 
 if (isset($_POST["formPunktSite"]) && $_POST["formPunktSite"]=="OK") {
 
@@ -54,7 +54,7 @@ if (isset($_POST["formPunktSite"]) && $_POST["formPunktSite"]=="OK") {
 		$consoleTxt.=consoleMessage("error", "All the fields are mandatory.");
 	}
 	else {
-		require "process/punkt_site_create_json.php";
+		require "process/site_punkt_create_json.php";
 
 		if (isset($siteId) && $siteId!="") {
 			if ($server=="PROD") $link=$linkBioSite["PROD"];
@@ -75,7 +75,7 @@ if (isset($_POST["formPunktSite"]) && $_POST["formPunktSite"]=="OK") {
 
 include ("views/header.html");
 
-include ("views/punkt_site.php");
+include ("views/site_punkt.php");
 
 ?>
 
