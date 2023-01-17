@@ -1,6 +1,6 @@
 <?php
 $database="SFT";
-$dataOrigin="scriptSitePunktIntranet";
+$dataOrigin="scriptSiteNattIntranet";
 require "lib/config.php";
 
 // IMPORTANT CONTROL OF THE WORDPRESS LOGIN
@@ -22,7 +22,7 @@ $lan="";
 $siteName="";
 
 $listFiles=array();
-$protocol="sommar";
+$protocol="natt";
 
 $activityIdCreated=array();
 
@@ -41,20 +41,18 @@ $final_result="";
 
 require "process/site_get_param_data.php";
 
-if (isset($_POST["formPunktSite"]) && $_POST["formPunktSite"]=="OK") {
+if (isset($_POST["formNattSite"]) && $_POST["formNattSite"]=="OK") {
 
-	$internalSiteId=$_POST["inputInternalSiteId"];
 	$kartaTx=$_POST["inputKartaTx"];
 	$lan=$_POST["inputLan"];
-	$siteName=$_POST["inputSiteName"];
 
-	if (trim($_POST["inputLan"])=="" || trim($_POST["inputInternalSiteId"])=="" || trim($_POST["inputKartaTx"])=="" || trim($_POST["inputSiteName"])=="") {
+	if (trim($_POST["inputLan"])=="" || trim($_POST["inputKartaTx"])=="") {
 
 		$final_result.="<p><b>ERROR - All the fields are mandatory.</b></p>";
 		$consoleTxt.=consoleMessage("error", "All the fields are mandatory.");
 	}
 	else {
-		require "process/site_punkt_create_json.php";
+		require "process/site_natt_create_json.php";
 
 		if (isset($siteId) && $siteId!="") {
 			if ($server=="PROD") $link=$linkBioSite["PROD"];
@@ -68,14 +66,14 @@ if (isset($_POST["formPunktSite"]) && $_POST["formPunktSite"]=="OK") {
 	}
 	
 
-} // FIN IF $_POST["formPunktSite"] OK
+} // FIN IF $_POST["formNattSite"] OK
 
 
 
 
 include ("views/header.html");
 
-include ("views/site_punkt.php");
+include ("views/site_natt.php");
 
 ?>
 

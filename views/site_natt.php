@@ -2,15 +2,19 @@
 
   <div class="float-right">Hi <?= $current_user->display_name ?> ! <a href="<?= URL_LOGOUT ?>">logout</a></div><br>
 
-  <h2>Site creator for Punktrutter</h2>
+  <h2>Site creator for Nattrutter</h2>
 
   <p class="lead">
-  	Creating sites in Ecodata/BioCollect for Punktrutterna
+  	Creating sites in Ecodata/BioCollect for Nattrutterna
   </p>
-  <p>Coordinates data are coming from koordinater_mittpunkt_topokartan, SFT database
+  <p>
+    <i>internalSiteId</i> will be the Karta TX<br>
+    <i>siteName</i> will be "KartaTX - NATT"<br>
+    Coordinates data are coming from koordinater_mittpunkt_topokartan, SFT database
   </p>
+
   <form role="form" method="post">
-  	<input type="hidden" value="OK" id="formPunktSite" name="formPunktSite"/>
+  	<input type="hidden" value="OK" id="formNattSite" name="formNattSite"/>
 
     <div class="form-group row">
       <label for="inputKartaTx" class="col-sm-2 col-form-label">Karta TX</label>
@@ -37,20 +41,6 @@
           }
           ?>
         </select> 
-      </div>
-    </div>
-
-    <div class="form-group row">
-      <label for="inputInternalSiteId" class="col-sm-2 col-form-label">InternalSiteId</label>
-      <div class="col-sm-10">
-        <input type="text" maxlength=20 class="form-control" id="inputInternalSiteId" name="inputInternalSiteId" placeholder="YYMMDD-X-0Z" value="<?= $internalSiteId ?>">
-      </div>
-    </div>
-
-    <div class="form-group row">
-      <label for="inputSiteName" class="col-sm-2 col-form-label">Popular name</label>
-      <div class="col-sm-10">
-        <input type="text" class="form-control" id="inputSiteName" name="inputSiteName" placeholder="popular name WITHOUT internalId" value="<?= $siteName ?>">
       </div>
     </div>
 
