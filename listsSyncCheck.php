@@ -15,18 +15,8 @@ $debug=false;
 $consoleTxt="";
 $server=DEFAULT_SERVER;
 
-// TO BE DONE
-//require "process/list_get_available_lists.php";
-$listAvailable=array(
-	"dr627" => "Eurolist birds - for RTrim (backoffice)",
-	"dr158" => "Eurolist birds (BioCollect forms)",
-	"dr159" => "Eurolist mammals (BioCollect forms)",
-	"dr630" => "Eurolist Owls (BioCollect forms)",
-	"dr630" => "Eurolist amphibians (BioCollect forms)",
-	"dr642" => "IWC Birds V2 (BioCollect forms)",
-	"dr638" => "Coastal Birds - SE (BioCollect forms)",
-	"dr202" => "Nocturnal birds  (BioCollect forms)",
-);
+// get the lists avalable from the module
+require "process/list_get_available_lists.php";
 
 if (isset($_POST["formCompareLists"]) && $_POST["formCompareLists"]=="OK") {
 
