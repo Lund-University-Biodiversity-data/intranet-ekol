@@ -26,6 +26,8 @@ if (isset($_POST["formCompareLists"]) && $_POST["formCompareLists"]=="OK") {
 		require "process/list_sync_compare.php";
 	}	
 
+	$consoleTxt.=consoleMessage("info", "End check");
+
 } // FIN IF $_POST["formNattSite"] OK
 
 
