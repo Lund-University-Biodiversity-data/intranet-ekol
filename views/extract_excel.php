@@ -67,7 +67,13 @@ $(document).ready(function (){
   <h2>Excel generator</h2>
 
   <p class="lead">
-  	Extracting data from the Mongo database for one specific scheme, or specific objects
+  	Extracting data from the Mongo database for one specific scheme, or specific objects<br>
+    Specific rules for the surveys years :<br>
+    <ul>
+      <li><b>IWC</b> : if surveyDateMonth is december, the final year will be year +1 (survey the 15 dec 2021 = year 2022)</li>
+      <li><b>VinterPunktrutter</b> : </li>
+      <li>1) records : if surveyDateMonth earlier than june, year = year -1 (survey the 15 feb 2021 = year 2020)</li>
+      <li>2) persons : if surveyDateMonth later than june, year = year +1 (survey the 15 sep 2021 = year 2022)</li>
   </p>
 
   <form role="form" method="post">
