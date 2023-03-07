@@ -45,6 +45,15 @@ foreach($listFilesOk as $file) {
 		case "std":
 		case "natt":
 			$siteKeyFilename = substr($file, 0, 5);
+
+			// get period from filename
+			$explodeFilename=explode(" ", $file);
+			$kartaPeriod=$explodeFilename[0];
+			//$yearFull=$explodeFilename[1];
+			$explodeKP=explode("-", $kartaPeriod);
+			//$kartaTx=$explodeKP[0];
+			$periodFN=$explodeKP[1];
+			
 			break;
 		case "sommar":
 
@@ -164,7 +173,32 @@ foreach($listFilesOk as $file) {
 
 				$siteKey=$kartakod;
 
+				// check the period
+				if ($per!=$periodFN) {
+					$consoleTxt.=consoleMessage("error", "Not the same period in the filename and file content ! ".$per." VS ".$periodFN);
+					$fileRefused=true;
+				}
 
+				// compare the period format and the consistency with the month
+				if ($per>=1 && $per<=3) {
+					if (isset($datum[5])) {
+						$month=$datum[5];
+						if (
+							($month==4 && $per==2) ||
+							($month==4 && $per==2) ||
+							($month==4 && $per==2)
+						) {}
+						else {
+							$consoleTxt.=consoleMessage("error", "Period/Month inconsistent. Must be P1/M3 or P2/M4 or P3/M6 ! Got instead ".$per."/".$month);
+							$fileRefused=true;
+						}
+					}
+					
+				}
+				else {
+					$consoleTxt.=consoleMessage("error", "Wrong period, must be 1, 2, 3. Data in the file : ".$per);
+					$fileRefused=true;
+				}
 
 				$rowStartTime=25;
 
