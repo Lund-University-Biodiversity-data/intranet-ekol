@@ -2,27 +2,6 @@
 
 use MongoDB\BSON\UTCDateTime;
 
-
-function addTimeToFinish($finish_time, $minutesToAdd) {
-
-	// add minutes
-	$finish_time_extramin=str_pad($finish_time, 4, '0', STR_PAD_LEFT);
-	$hours=intval(substr($finish_time_extramin, 0, 2));
-	$minutes=intval(substr($finish_time_extramin, 2, 2));
-	if ($minutes>=(60 - $minutesToAdd)) {
-		$minutes=str_pad(($minutes+$minutesToAdd)-60, 2, '0', STR_PAD_LEFT);
-
-		if ($hours==23) $hours=0;
-		else $hours++;
-	}
-	else {
-		$minutes+=$minutesToAdd;
-	}
-	$finish_time=intval($hours.$minutes);
-
-	return $finish_time;
-}
-
 // 4** PROCESS FOR OK FILES
 
 switch($protocol) {
