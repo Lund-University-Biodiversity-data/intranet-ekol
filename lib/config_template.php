@@ -58,7 +58,8 @@ define("MONGO_DBNAME", "ecodata");
 
 $mongoConnection["TEST"]="mongodb://localhost";
 $mongoConnection["DEV"]="mongodb://canmove-dev.ekol.lu.se";
-$mongoConnection["PROD"]="mongodb://IP";
+$IP_PROD="XX.XX.XX.XX";
+$mongoConnection["PROD"]="mongodb://".$IP_PROD;
 
 $commonFields["userId"]=5;
 $commonFields["status"]="unverified";

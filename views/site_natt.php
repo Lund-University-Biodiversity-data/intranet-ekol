@@ -52,7 +52,7 @@
           <option value="TEST" <?= ($server=="TEST" ? "selected" : "") ?>>TEST - local</option>
           <?php } ?>
           <option value="DEV" <?= ($server=="DEV" ? "selected" : "") ?>>DEV - canmove-dev</option>
-          <option value="PROD" <?= ($server=="PROD" ? "selected" : "") ?>>PROD - ecodata.biodivesitydata.se [89.45.234.73]</option>
+          <option value="PROD" <?= ($server=="PROD" ? "selected" : "") ?>>PROD - ecodata.biodivesitydata.se [<?= $IP_PROD ?>]</option>
         </select> 
       </div>
     </div>
