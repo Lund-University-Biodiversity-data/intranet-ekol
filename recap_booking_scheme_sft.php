@@ -38,7 +38,8 @@ if (isset($_POST["execFormRecapBookingScheme"]) && $_POST["execFormRecapBookingS
 	if (isset($_POST["server"])) $server=$_POST["server"];
 
 	$mng = new MongoDB\Driver\Manager($mongoConnection[$server]);
-	if (count($mng->getServers())==1) {
+	if ($mng) {
+
 		$consoleTxt.=consoleMessage("info", "Connection to mongoDb ok");
     	
 		include "process/recap_booking_sft_get_sites.php";
@@ -52,8 +53,6 @@ if (isset($_POST["execFormRecapBookingScheme"]) && $_POST["execFormRecapBookingS
 		include "process/recap_booking_sft_get_excelreceived.php";
 
 		ksort($arrRecap);
-
-
 
 		$arrHeader=array();
 		$arrContent=array();

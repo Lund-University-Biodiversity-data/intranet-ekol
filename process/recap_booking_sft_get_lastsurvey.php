@@ -33,7 +33,7 @@ $commands = [
 ];
 
 $mng = new MongoDB\Driver\Manager($mongoConnection[$server]);
-if (count($mng->getServers())==1) $consoleTxt.=consoleMessage("info", "Connection to mongoDb ok");
+if ($mng) $consoleTxt.=consoleMessage("info", "Connection to mongoDb ok");
 else $consoleTxt.=consoleMessage("error", "No connection to mongoDb");
 
 $command = new MongoDB\Driver\Command($commands);

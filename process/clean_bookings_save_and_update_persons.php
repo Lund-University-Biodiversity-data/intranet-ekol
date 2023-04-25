@@ -3,7 +3,7 @@
 $consoleTxt.=consoleMessage("info", "1) Save the bookings and update the persons");
 
 $mng = new MongoDB\Driver\Manager($mongoConnection[$server]);
-if (count($mng->getServers())==1) $consoleTxt.=consoleMessage("info", "Connection to mongoDb ok");
+if ($mng) $consoleTxt.=consoleMessage("info", "Connection to mongoDb ok");
 else $consoleTxt.=consoleMessage("error", "No connection to mongoDb");
 
 $projectId=$commonFields[$protocol]["projectId"];

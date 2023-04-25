@@ -3,7 +3,7 @@
 $consoleTxt.=consoleMessage("info", "2) Get surveyors for protocol ".$protocol);
 
 $mng = new MongoDB\Driver\Manager($mongoConnection[$server]);
-if (count($mng->getServers())==1) $consoleTxt.=consoleMessage("info", "Connection to mongoDb ok");
+if ($mng) $consoleTxt.=consoleMessage("info", "Connection to mongoDb ok");
 else $consoleTxt.=consoleMessage("error", "No connection to mongoDb");
 
 $filter = ['personId' => ['$in' => $arrPersons]];
