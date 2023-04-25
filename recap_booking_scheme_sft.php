@@ -31,13 +31,16 @@ $arrExcelReceived=array();
 
 $pathInputFiles=PATH_INPUT_EXCEL.$database."/".$protocol."/received/";
 
-$mng = new MongoDB\Driver\Manager($mongoConnection[$server]);
 
 if (isset($_POST["execFormRecapBookingScheme"]) && $_POST["execFormRecapBookingScheme"]=="OK") {
 
 	if (isset($_POST["protocol"])) $protocol=$_POST["protocol"];
 	if (isset($_POST["server"])) $server=$_POST["server"];
 
+	$mng = new MongoDB\Driver\Manager($mongoConnection[$server]);
+    if (count($mng->getServers())==1) echo consoleMessage("info", "Connection to mongoDb ok");
+    else echo consoleMessage("error", "No connection to mongoDb");
+    	
 	include "process/recap_booking_sft_get_sites.php";
 
 	if (count($arrPersons)>0) {

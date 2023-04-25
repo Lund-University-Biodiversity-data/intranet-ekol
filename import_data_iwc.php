@@ -23,6 +23,8 @@ $listHiddenOkFiles="";
 $listFiles=array();
 
 $mng = new MongoDB\Driver\Manager($mongoConnection[$server]);
+if (count($mng->getServers())==1) $consoleTxt.=consoleMessage("info", "Connection to mongoDb ok");
+else $consoleTxt.=consoleMessage("error", "No connection to mongoDb");
 
 $protocol="iwc";
 $dataOrigin="scriptImportIWC";
