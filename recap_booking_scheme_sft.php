@@ -38,8 +38,9 @@ if (isset($_POST["execFormRecapBookingScheme"]) && $_POST["execFormRecapBookingS
 	if (isset($_POST["server"])) $server=$_POST["server"];
 
 	$mng = new MongoDB\Driver\Manager($mongoConnection[$server]);
-    if (count($mng->getServers())==1) echo consoleMessage("info", "Connection to mongoDb ok");
-    else echo consoleMessage("error", "No connection to mongoDb");
+	if (count($mng->getServers())==1) $consoleTxt.=consoleMessage("info", "Connection to mongoDb ok");
+	else $consoleTxt.=consoleMessage("error", "No connection to mongoDb");
+
     	
 	include "process/recap_booking_sft_get_sites.php";
 
