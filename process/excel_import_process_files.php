@@ -183,9 +183,9 @@ foreach($listFilesOk as $file) {
 					if (isset($datum[5])) {
 						$month=$datum[5];
 						if (
+							($month==3 && $per==1) ||
 							($month==4 && $per==2) ||
-							($month==4 && $per==2) ||
-							($month==4 && $per==2)
+							($month==6 && $per==3)
 						) {}
 						else {
 							$consoleTxt.=consoleMessage("error", "Period/Month inconsistent. Must be P1/M3 or P2/M4 or P3/M6 ! Got instead ".$per."/".$month);
@@ -226,12 +226,12 @@ foreach($listFilesOk as $file) {
 							$consoleTxt.=consoleMessage("error", "time value in cell ".$iCol.$rowStartTime." (".$val.") must be between 0 and 2400");
 							$fileRefused=true;
 						}
-						if ($val<$start_time)
-							$start_time=$val;
-
-						// add 24 hours to the night tmes, to help comparing
+						// add 24 hours to the night times, to help comparing
 						if ($val<1200)
 							$val+=2400;
+
+						if ($val<$start_time)
+							$start_time=$val;
 
 						if ($val>$finish_time)
 							$finish_time=$val;
@@ -247,7 +247,6 @@ foreach($listFilesOk as $file) {
 				if ($finish_time>2400) $finish_time-=2400;
 
 				$start_time_brut=$start_time;
-
 
 				// add extra minutes (natt : 5)
 				$finish_time=addTimeToFinish($finish_time, 5);
@@ -595,12 +594,21 @@ foreach($listFilesOk as $file) {
 				$eventDate=date("Y-m-d", strtotime($datum))."T00:00:00Z";
 
 			}
-			if ($finish_time!="N/A" && $finish_time!="")
+
+			// when finish_time == 0 ! (midnight)
+			// for some reason this test has to be split, if not, the finishtime=0 is considered as empty and N/A (WTF??????)
+			if (is_numeric($finish_time) && $finish_time==0)
 				$finish_time=convertTime($finish_time, "24H");
+			else {
+
+				if ($finish_time!="N/A" && $finish_time!="")
+					$finish_time=convertTime($finish_time, "24H");
+				else 
+					$consoleTxt.=consoleMessage("warn", "finish_time not specified :".$finish_time);
+			}
 
 
 			//$eventTime=date("H:i", strtotime($rtEvents["datum"]));
-
 					
 			$activityId=generate_uniqId_format("xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx");
 			$eventID=$activityId;
