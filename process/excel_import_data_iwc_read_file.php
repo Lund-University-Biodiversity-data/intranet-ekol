@@ -273,9 +273,9 @@ if (!$fileRefused) {
 					$name=$array_species_art[$art]["nameSWE"];
 					$rank=$array_species_art[$art]["rank"];
 
-					if ($name!=$arthela){
+					if (mb_strtoupper($name)!=mb_strtoupper($arthela)){
 						$fileRefused=true;
-						$consoleTxt.=consoleMessage("error", "Different species name in the list moodule and in the excel file at row #".$iRow." : ".$name." (module list) / ".$arthela." (excel file)");			
+						$consoleTxt.=consoleMessage("error", "Different species name in the list module and in the excel file at row #".$iRow." : ".$name." (module list) / ".$arthela." (excel file)");			
 					}
 
 					$dataAnimal=array();

@@ -15,7 +15,7 @@
     <ul>
     	<li>xlsx format</li>
     	<li>Column A : persnr (YYMMDD-X). *mandatory</li>
-    	<li>Column B : arthela. *optional, not used by the script !</li>
+    	<li>Column B : arthela. *mandatory</li>
     	<li>Column C : lat5. *optional, not used by the script !</li>
     	<li>Column D : art (XXX). *mandatory</li>
     	<li>Column E : antal (integer). *mandatory when art!=000</li>
