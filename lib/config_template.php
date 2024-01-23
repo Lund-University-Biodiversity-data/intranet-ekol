@@ -29,7 +29,7 @@ define("ENVIRONMENT", "PROD");
 
 define("URL_LISTS_WS", "https://lists.biodiversitydata.se/ws/");
 define("URL_LISTS_ITEMS", URL_LISTS_WS."speciesListItems/");
-define("URL_LISTS_INCLUDE_KBV", "?includeKVP=true");
+define("URL_LISTS_INCLUDE_KBV", "?includeKVP=true&max=1000");
 
 define("FILENAME_SEPARATOR", "|");
 
