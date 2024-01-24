@@ -12,7 +12,7 @@
 
   <div class="float-right">Hi <?= $current_user->display_name ?> ! <a href="<?= URL_LOGOUT ?>">logout</a></div><br>
 
-  <h2>Site creator for Punktrutter</h2>
+  <h2>Punktrutter coordinates list and import</h2>
 
   <p class="lead">
   	Listing/importing coordinates for punktrutterna from/in Ecodata/BioCollect
