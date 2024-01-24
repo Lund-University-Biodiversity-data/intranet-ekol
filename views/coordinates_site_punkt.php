@@ -17,7 +17,14 @@
   <p class="lead">
   	Listing/importing coordinates for punktrutterna from/in Ecodata/BioCollect
   </p>
+  <?php  if ($modeDisplay=="coord") { ?>
+    <p><a href="?display=default"><input type="button" value="Show all the sites" name="submit" class="btn btn-primary"/></a></p>
+  <?php } else { ?>
+    <p><a href="?display=coord"><input type="button" value="Show all the coordinates" name="submit" class="btn btn-primary"/></a></p>
+  <?php } ?>
+
   <form role="form" method="post">
+    <label>Import new coordinates from an excel file following the template :</label>
   	<input type="hidden" value="OK" id="formCoordPunktSite" name="formCoordPunktSite"/>
 
     <div class="form-group row">
@@ -47,7 +54,13 @@
             <th data-sortable="true" scope="col">#</th>
             <th data-sortable="true" scope="col">Internal Site Id</th>
             <th data-sortable="true" scope="col">kartaTx</th>
-            <th data-sortable="true" scope="col">Antal koordinater</th>
+            <?php  if ($modeDisplay=="coord") { ?>
+            <th data-sortable="true" scope="col">Name</th>
+            <th data-sortable="true" scope="col">Latitude</th>
+            <th data-sortable="true" scope="col">Longitude</th>
+            <?php } else { ?>
+            <th data-sortable="true" scope="col">Nb coordinates</th>
+            <?php } ?>
             <th data-sortable="true" scope="col">Biocollect link</th>
           </tr>
         </thead>
@@ -57,8 +70,14 @@
               <th scope="row"><?= ($idS+1) ?></th>
               <td><?= $coordSite["internalSiteID"] ?></td>
               <td><?= $coordSite["kartaTx"] ?></td>
+              <?php  if ($modeDisplay=="coord") { ?>
+              <td><?= $coordSite["name"] ?></td>
+              <td><?= $coordSite["latitude"] ?></td>
+              <td><?= $coordSite["longitude"] ?></td>
+              <?php } else { ?>
               <td><?= $coordSite["nbTransectParts"] ?></td>
-              <td><a href="<?= $coordSite["urlBioCollect"] ?>" target="_blank">biocollect länk</a></td>
+              <?php } ?>                
+              <td><a href="<?= $coordSite["urlBioCollect"] ?>" target="_blank">biocollect link</a></td>
             </tr>
           <?php } ?>
         </tbody>

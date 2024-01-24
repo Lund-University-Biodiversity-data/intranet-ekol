@@ -11,7 +11,9 @@ if (!$okConWordPress) exit;
 require PATH_SHARED_FUNCTIONS."generic-functions.php";
 require PATH_SHARED_FUNCTIONS."mongo-functions.php";
 
-$debug=false;
+if (isset($_GET["display"]) && $_GET["display"]=="coord")
+	$modeDisplay="coord";
+else $modeDisplay="default";
 
 $consoleTxt="";
 $server=DEFAULT_SERVER;
