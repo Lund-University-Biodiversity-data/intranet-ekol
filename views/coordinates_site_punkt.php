@@ -46,6 +46,7 @@
           <tr>
             <th data-sortable="true" scope="col">#</th>
             <th data-sortable="true" scope="col">Internal Site Id</th>
+            <th data-sortable="true" scope="col">kartaTx</th>
             <th data-sortable="true" scope="col">Antal koordinater</th>
             <th data-sortable="true" scope="col">Biocollect link</th>
           </tr>
@@ -55,8 +56,9 @@
             <tr>
               <th scope="row"><?= ($idS+1) ?></th>
               <td><?= $coordSite["internalSiteID"] ?></td>
+              <td><?= $coordSite["kartaTx"] ?></td>
               <td><?= $coordSite["nbTransectParts"] ?></td>
-              <td><a href="<?= $coordSite["urlBioCollect"] ?>" target="_blank">biocollect site</a></td>
+              <td><a href="<?= $coordSite["urlBioCollect"] ?>" target="_blank">biocollect länk</a></td>
             </tr>
           <?php } ?>
         </tbody>

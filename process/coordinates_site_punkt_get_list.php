@@ -22,14 +22,15 @@ else {
 		$lineSite["locationID"]=$dataSite["locationID"];
 		$lineSite["urlBioCollect"]=$linkBioSite[$server].$dataSite["locationID"];
 		$lineSite["nbTransectParts"]=$dataSite["nbTransectParts"];
+		$lineSite["kartaTx"]=$dataSite["kartaTx"];
 
 		if ($dataSite["nbTransectParts"]==0) $nb0++;
 		elseif ($dataSite["nbTransectParts"]==20) $nb20++;
 		$arrCoordSites[]=$lineSite;
 	}
 
-	$consoleTxt.=consoleMessage("info", $nb0." site(s) with 0 coordinates (".number_format(($nb0*100)/count($arrSitesDetails), 2)."%)");
-	$consoleTxt.=consoleMessage("info", $nb20." site(s) with 20 coordinates (".number_format(($nb20*100)/count($arrSitesDetails), 2)."%)");
+	$consoleTxt.=consoleMessage("info", $nb0." site(s) with 0 point coordinate (".number_format(($nb0*100)/count($arrSitesDetails), 2)."%)");
+	$consoleTxt.=consoleMessage("info", $nb20." site(s) with 20 point coordinates (".number_format(($nb20*100)/count($arrSitesDetails), 2)."%)");
 
 }
 
