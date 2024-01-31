@@ -97,7 +97,7 @@ if (isset($_POST["execFormListFiles"]) && $_POST["execFormListFiles"]=="OK") {
 		if ($okCon) {
 			$consoleTxt.=consoleMessage("info", "2) Check filenames");
 			
-			include "process/excel_import_filenames_check.php";
+			include "process/excel_import_surveys_filenames_check.php";
 
 		}
 	}
@@ -132,17 +132,19 @@ if (isset($_POST["execFormProcessFiles"]) && $_POST["execFormProcessFiles"]=="OK
 
 			$consoleTxt.=consoleMessage("info", "3) Check lists animals");
 
-			include "process/excel_import_list_animals.php";
+			include "process/excel_import_surveys_list_animals.php";
 
 			if ($okList) {
-				include "process/excel_import_process_files.php";
+				$consoleTxt.=consoleMessage("info", "4) Import files");
+
+				include "process/excel_import_surveys_process_files.php";
 
 				if ($fileRefused) {
 					$final_result.="<p><b>Something wrong happened with ".$file.". Please check the file template and the console.</b></p>";
 					$consoleTxt.=consoleMessage("error", "File could not be processed ".$file);
 				}
 				else {
-					include "process/excel_import_insert_mongo.php";
+					include "process/excel_import_surveys_insert_mongo.php";
 
 					if ($finalOk)
 						$final_result.="<p><b>SUCCESS</b></p>";
@@ -163,7 +165,7 @@ if (isset($_POST["execFormProcessFiles"]) && $_POST["execFormProcessFiles"]=="OK
 
 include ("views/header.html");
 
-include ("views/import_excel.php");
+include ("views/import_excel_surveys.php");
 
 ?>
 
