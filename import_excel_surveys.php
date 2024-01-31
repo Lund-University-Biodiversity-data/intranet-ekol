@@ -55,20 +55,20 @@ if (isset($_POST["execFormListFiles"]) && $_POST["execFormListFiles"]=="OK") {
 	$protocol = (isset($_POST["inputProtocol"]) ? $_POST["inputProtocol"] : "");
 	$server=$_POST["inputServer"];
 
-	$path_excel=PATH_INPUT_EXCEL.$database."/".$protocol."/";
+	$path_excel=PATH_INPUT_EXCEL_SURVEYS.$database."/".$protocol."/";
 
 	$templatePath="";
 	switch($protocol) {
 		case "std":
 			$templateFileName="KARTA-YYYY.xls";
-			if (file_exists(PATH_INPUT_EXCEL.$database."/".$protocol."/"."Template/".$templateFileName)) {
+			if (file_exists(PATH_INPUT_EXCEL_SURVEYS.$database."/".$protocol."/"."Template/".$templateFileName)) {
 				$templateUrl=URL_WEBSITE_SURVEYS.$database."/".$protocol."/"."Template/".str_replace("#", "%23", $templateFileName);
 			}
 			break;
 
 		case "sommar":
 			$templateFileName="SomYY-YYMMDD-X-#XX.xls";
-			if (file_exists(PATH_INPUT_EXCEL.$database."/".$protocol."/"."Template/".$templateFileName)) {
+			if (file_exists(PATH_INPUT_EXCEL_SURVEYS.$database."/".$protocol."/"."Template/".$templateFileName)) {
 				$templateUrl=URL_WEBSITE_SURVEYS.$database."/".$protocol."/"."Template/".str_replace("#", "%23", $templateFileName);
 			}
 			break;
@@ -76,7 +76,7 @@ if (isset($_POST["execFormListFiles"]) && $_POST["execFormListFiles"]=="OK") {
 		case "vinter":
 		default:
 			$templateFileName="VinYY-YYMMDD-X-#XX-PX.xls";
-			if (file_exists(PATH_INPUT_EXCEL.$database."/".$protocol."/"."Template/".$templateFileName)) {
+			if (file_exists(PATH_INPUT_EXCEL_SURVEYS.$database."/".$protocol."/"."Template/".$templateFileName)) {
 				$templateUrl=URL_WEBSITE_SURVEYS.$database."/".$protocol."/"."Template/".str_replace("#", "%23", $templateFileName);
 			}
 			break;
@@ -111,7 +111,7 @@ if (isset($_POST["execFormProcessFiles"]) && $_POST["execFormProcessFiles"]=="OK
 
 	$server=$_POST["serverHidden"];
 
-	$path_excel=PATH_INPUT_EXCEL.$database."/".$protocol."/";
+	$path_excel=PATH_INPUT_EXCEL_SURVEYS.$database."/".$protocol."/";
 
 	$array_sites=getArraySitesFromMongo($commonFields[$protocol]["projectId"], $server);
 	if ($array_sites=== false) {

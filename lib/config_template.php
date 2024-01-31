@@ -20,7 +20,7 @@ define("PATH_CONVERT_DATA", PATH_WEBSERVER_ROOT."intranet-ekol/extract/");
 define("PATH_OUTPUT_JSON", PATH_WEBSERVER_ROOT."intranet-ekol/json/");
 define("PATH_OUTPUT_JSON", PATH_WEBSERVER_ROOT."intranet-ekol/csv/");
 
-define ("PATH_INPUT_EXCEL", PATH_WEBSERVER_ROOT."intranet-ekol/excel-surveys/");
+define ("PATH_INPUT_EXCEL_SURVEYS", PATH_WEBSERVER_ROOT."intranet-ekol/excel-surveys/");
 
 define("PATH_SAVE_BOOKINGS", PATH_WEBSERVER_ROOT."intranet-ekol/bookings-save/");
 

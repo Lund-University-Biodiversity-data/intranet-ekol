@@ -36,7 +36,7 @@ $final_result="";
 
 if (isset($_POST["execFormImportDataIWC"]) && $_POST["execFormImportDataIWC"]=="OK" && count($_FILES)==1) {
 
-	$uploadDir=PATH_INPUT_EXCEL."SFT/IWC/";
+	$uploadDir=PATH_INPUT_EXCEL_SURVEYS."SFT/IWC/";
 
 	$nameFileOriginal=basename($_FILES['inputFile']['name']);
 	$extension = pathinfo($nameFileOriginal, PATHINFO_EXTENSION);

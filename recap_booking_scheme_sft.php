@@ -29,7 +29,7 @@ $arrSitesInternal=array();
 $arrSitesDetails=array();
 $arrExcelReceived=array();
 
-$pathInputFiles=PATH_INPUT_EXCEL.$database."/".$protocol."/received/";
+$pathInputFiles=PATH_INPUT_EXCEL_SURVEYS.$database."/".$protocol."/received/";
 
 
 if (isset($_POST["execFormRecapBookingScheme"]) && $_POST["execFormRecapBookingScheme"]=="OK") {

@@ -95,7 +95,7 @@ foreach($listFilesOk as $file) {
 			break;
 	}
 
-	$tmpfname = PATH_INPUT_EXCEL.$database."/".$protocol."/".$file;
+	$tmpfname = PATH_INPUT_EXCEL_SURVEYS.$database."/".$protocol."/".$file;
 	$consoleTxt.=consoleMessage("info", "Opens file ".$tmpfname);
 
 	try {
