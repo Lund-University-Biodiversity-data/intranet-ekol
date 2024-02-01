@@ -30,7 +30,7 @@ $final_result="";
 
 $arrCoordSites=array();
 $protocol="punkt";
-include "process/coordinates_site_punkt_get_list.php";
+include "process/coordinates_site_get_list.php";
 
 include ("views/header.html");
 

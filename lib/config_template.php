@@ -5,6 +5,7 @@ define("PATH_PHP", "/usr/bin/php");
 define ("URL_WEBSITE", "http://localhost/");
 define ("URL_WEBSITE_EXTRACTMONGO", URL_WEBSITE."extractmongo/");
 define ("URL_WEBSITE_SURVEYS", URL_WEBSITE."intranet/excel-surveys/");
+define ("URL_WEBSITE_COORDINATES", URL_WEBSITE."intranet/excel-coordinates/");
 define ("URL_WEBSITE_CSV", URL_WEBSITE."url/csv/");
 
 define ("URL_LOGOUT", "wp-login.php?action=logout");
@@ -21,6 +22,7 @@ define("PATH_OUTPUT_JSON", PATH_WEBSERVER_ROOT."intranet-ekol/json/");
 define("PATH_OUTPUT_JSON", PATH_WEBSERVER_ROOT."intranet-ekol/csv/");
 
 define ("PATH_INPUT_EXCEL_SURVEYS", PATH_WEBSERVER_ROOT."intranet-ekol/excel-surveys/");
+define ("PATH_INPUT_EXCEL_COORDINATES", PATH_WEBSERVER_ROOT."intranet-ekol/excel-coordinates/");
 
 define("PATH_SAVE_BOOKINGS", PATH_WEBSERVER_ROOT."intranet-ekol/bookings-save/");
 
