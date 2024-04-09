@@ -20,21 +20,16 @@ foreach($filesSurveys as $file) {
 
         switch($protocol) {
             case "natt":
-                $explodeFilename=explode(" ", $filename);
+                $explodeFilename=explode("-", $filename);
 
-                $kartaPeriod=$explodeFilename[0];
-                $yearFull=$explodeFilename[1];
-
-                $explodeKP=explode("-", $kartaPeriod);
-                $kartaTx=$explodeKP[0];
-                $periodFN=$explodeKP[1];
+                $prefixFN=$explodeFilename[0];
+                $kartaTx=(isset($explodeFilename[1]) ? $explodeFilename[1] :"");
 
                 $siteIdFN=$kartaTx;
-                $checkPeriodInd=$yearFull."-".$periodFN;
 
                 // no prefix expected
-                $expectedFileName="";
-                $prefixFN="";
+                $expectedFileName="koord";
+
                 break;
 
             case "punkt":
@@ -66,14 +61,14 @@ foreach($filesSurveys as $file) {
             $infoFile["period"]=$periodFN;
 
         $okTempFile=true;
-        if($protocol=="std" && count($explodeFilename)!=2) {
+        if($protocol=="punkt" && count($explodeFilename)!=2) {
             $consoleTxt.=consoleMessage("error", $file. " can't be processed, filename with wrong format. Must be 'KARTA YEAR'");
             $infoFile["status"]="NO => filename with wrong format. Must be 'KARTA YEAR'";
             $okTempFile=false;
         }
-        elseif($protocol=="natt" && (count($explodeFilename)!=2 || count($explodeKP)!=2)) {
-            $consoleTxt.=consoleMessage("error", $file. " can't be processed, filename with wrong format. Must be 'KARTATX-PERIOD YEAR'");
-            $infoFile["status"]="NO => filename with wrong format. Must be 'KARTATX-PERIOD YEAR'";
+        elseif($protocol=="natt" && (count($explodeFilename)!=2)) {
+            $consoleTxt.=consoleMessage("error", $file. " can't be processed, filename with wrong format. Must be 'koord-KARTATX'");
+            $infoFile["status"]="NO => filename with wrong format. Must be 'koord-KARTATX'";
             $okTempFile=false;
         }
 
@@ -84,15 +79,15 @@ foreach($filesSurveys as $file) {
             }
             elseif(isset($array_sites[$siteIdFN])) {   
     
-                if (isset($tabSitesPeriod[$siteIdFN][$checkPeriodInd])) {
+                if (count($array_sites[$siteIdFN]["transectParts"])!=0) {
                     
-                    if ($server=="PROD") $link=$linkBioActivity["PROD"];
-                    else $link=$linkBioActivity["DEV"];
+                    if ($server=="PROD") $link=$linkBioSite["PROD"];
+                    else $link=$linkBioSite["DEV"];
     
-                    $consoleTxt.=consoleMessage("error", $file. " can't be processed, activity already exists for these specific site (".$siteIdFN.") - year (".$yearFull.") and period (".(isset($periodFN) ? $periodFN : "none") .")");
+                    $consoleTxt.=consoleMessage("error", $file. " can't be processed, Transect data already exists for site ".$siteIdFN."");
     
                         //" '.$periodFN. "' already existing for site '".$siteIdFN."' and year ".$yearFull.' => activityId : '.$tabSitesPeriod[$siteIdFN][$checkPeriodInd]);
-                    $infoFile["status"]='NO => period <a href="'.$link.$tabSitesPeriod[$siteIdFN][$checkPeriodInd].'" target="_blank" >already exists in MongoDb</a>';
+                    $infoFile["status"]='NO => <a href="'.$link.$array_sites[$siteIdFN]["locationID"].'" target="_blank" >transectParts already exists in MongoDb</a>';
     
                 }
                 else {

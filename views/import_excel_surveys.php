@@ -2,10 +2,10 @@
 
   <div class="float-right">Hi <?= $current_user->display_name ?> ! <a href="<?= URL_LOGOUT ?>">logout</a></div><br>
 
-  <h2>Excel importer</h2>
+  <h2>Excel survey importer</h2>
 
   <p class="lead">
-  	Importing Excel files into Mongo database for SFT. 
+  	Importing survey in Excel format into Mongo database for SFT. 
   </p>
 
   <p>

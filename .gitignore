@@ -2,6 +2,7 @@
 lib/config.php
 json/
 excel-surveys/
+excel-coordinates/
 vendor/
 old/
 composer.lock

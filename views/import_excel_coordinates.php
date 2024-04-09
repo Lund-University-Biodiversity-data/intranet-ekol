@@ -2,7 +2,7 @@
 
   <div class="float-right">Hi <?= $current_user->display_name ?> ! <a href="<?= URL_LOGOUT ?>">logout</a></div><br>
 
-  <h2>Excel importer</h2>
+  <h2>Excel site/coordinates importer</h2>
 
   <p class="lead">
   	Importing coordinates files into Mongo database for SFT. 
@@ -87,7 +87,6 @@
             <th scope="col">#</th>
             <th scope="col">Filename</th>
             <th scope="col">Internal Site Id</th>
-            <th scope="col">Period</th>
             <th scope="col">STATUS</th>
           </tr>
         </thead>
@@ -97,7 +96,6 @@
               <th scope="row"><?= ($idF+1) ?></th>
               <td><?= $file["filename"] ?></td>
               <td><?= $file["internalSiteId"] ?></td>
-              <td><?= $file["period"] ?></td>
               <td><?= $file["status"] ?></td>
             </tr>
           <?php } ?>

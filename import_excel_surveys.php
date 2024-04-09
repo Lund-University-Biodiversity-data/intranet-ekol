@@ -2,6 +2,7 @@
 $database="SFT";
 $dataOrigin="scriptExcel";
 require "lib/config.php";
+require "lib/functions.php";
 
 // IMPORTANT CONTROL OF THE WORDPRESS LOGIN
 include "lib/check_login.php";

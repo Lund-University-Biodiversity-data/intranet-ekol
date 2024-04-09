@@ -23,16 +23,30 @@ sudo apt-get install php7.4-xml
 
 ** enable mongo to php **
 
+
+sudo apt-get install php8.2-mongodb
+
+
 sudo add-apt-repository ppa:ondrej/php
 sudo apt-get update
 
 sudo apt-get install php-pear
 sudo pecl install mongodb
+
+
+if 
+sh: 1: phpize: not found
+ERROR: `phpize' failed
+
+=> 
+sudo apt install php-dev
+
 ****
 
 create directories
 json/SFT/vinter (with writing rights)
 excel-surveys/SFT
+excel-coordinates/SFT
 csv/stdRecapComments (with writing rights)
 csv/stdCentroidStdCoord (with writing rights)
 csv/stdCentroidTopokartan (with writing rights)
