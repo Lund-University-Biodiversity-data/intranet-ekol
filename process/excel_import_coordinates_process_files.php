@@ -441,8 +441,8 @@ foreach($listFilesOk as $file) {
 						"name" => 'P'.($iP+1),
 						"geometry" => [
 							"type" => "Point",
-							"decimalLongitude" => $coord["lat"],
-							"decimalLatitude" => $coord["lon"],
+							"decimalLongitude" => $coord["lon"],
+							"decimalLatitude" => $coord["lat"],
 							"coordinates" => [$coord["lat"], $coord["lon"]]
 						]
 					];
