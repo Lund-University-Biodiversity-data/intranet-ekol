@@ -443,7 +443,7 @@ foreach($listFilesOk as $file) {
 							"type" => "Point",
 							"decimalLongitude" => $coord["lon"],
 							"decimalLatitude" => $coord["lat"],
-							"coordinates" => [$coord["lat"], $coord["lon"]]
+							"coordinates" => [$coord["lon"], $coord["lat"]]
 						]
 					];
 					if (isset($coord["RT90_lat"]) && isset($coord["RT90_lat"]) ) {
