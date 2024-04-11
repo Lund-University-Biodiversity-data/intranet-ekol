@@ -371,6 +371,8 @@ foreach($listFilesOk as $file) {
 			else {
 				$dataCoordPts=array();
 
+				$isWgs84=true;
+
 				for ($iP=0; $iP<$nbPts ; $iP++) {
 
 					$dataCoordPts[$iP]["lat"]=$worksheet->getCell("B".($lineFirstPoint+$iP))->getValue();
@@ -387,6 +389,15 @@ foreach($listFilesOk as $file) {
 						// RT90 if 1000000 < Y < 2000000
 						// conversion
 						if ($dataCoordPts[$iP]["lat"]>1000000 && $dataCoordPts[$iP]["lat"]<7000000 && $dataCoordPts[$iP]["lon"]>1000000 && $dataCoordPts[$iP]["lon"]<2000000) {
+
+							
+							// if it's not the first point and it was WGS84 before => error !
+							if ($iP!=0 && $isWgs84) {
+								$consoleTxt.=consoleMessage("error", "Coordinates is RT90 but was not before row ".($lineFirstPoint+$iP)." for ".$siteKey);
+								$fileRefused=true;
+							}
+
+							$isWgs84=false;
 
 							// store the RT90 data in a separate variable
 							$dataCoordPts[$iP]["RT90_lat"]=$dataCoordPts[$iP]["lat"];
@@ -408,7 +419,15 @@ foreach($listFilesOk as $file) {
 
 						}
 						else {
-							$consoleTxt.=consoleMessage("info", "WGS84 coordinates (".$dataCoordPts[$iP]["lat"]."/".$dataCoordPts[$iP]["lon"].") found  for row ".($lineFirstPoint+$iP)." for ".$siteKey);
+
+							// if it's not the first point and it was not WGS84 before => error !
+							if (!$isWgs84) {
+								$consoleTxt.=consoleMessage("error", "Coordinates is WGS84 but was not before row ".($lineFirstPoint+$iP)." for ".$siteKey);
+								$fileRefused=true;
+							}
+							
+							if ($iP==0)
+								$consoleTxt.=consoleMessage("info", "WGS84 coordinates (".$dataCoordPts[$iP]["lat"]."/".$dataCoordPts[$iP]["lon"].") found  for row ".($lineFirstPoint+$iP)." for ".$siteKey);
 						}
 
 
@@ -451,7 +470,8 @@ foreach($listFilesOk as $file) {
 					}
 					$allPointsJson[]=$json;
 				}
-				$arr_json_sites[$array_sites[$siteKey]["locationID"]]=$allPointsJson;
+				$arr_json_sites[$array_sites[$siteKey]["locationID"]]["data"]=$allPointsJson;
+				$arr_json_sites[$array_sites[$siteKey]["locationID"]]["siteInternal"]=$siteKey;
 			}
 			//echo "<pre>";
 			//print_r($arr_json_sites);

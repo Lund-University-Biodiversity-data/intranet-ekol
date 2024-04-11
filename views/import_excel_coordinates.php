@@ -69,9 +69,11 @@
   </form>
 
   <?php if (isset($final_result) &&  $final_result!="") { ?>
-  <p class="lead">
-    <b><?= $final_result ?></b>
-  </p>
+    <hr>
+    <div id="finalResult" class="card">
+      <b><?= $final_result ?></b>
+    </div>
+    <hr>
   <?php } ?>
 
   <?php if (count($listFiles)>0) { ?>

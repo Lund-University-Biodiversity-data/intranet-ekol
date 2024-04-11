@@ -16,7 +16,7 @@ foreach($arr_json_sites as $mongoSiteId => $dataCoord) {
     	'siteId' => $mongoSiteId
     ];
     $options =  ['$set' => [
-    	'transectParts' => ($dataCoord)
+    	'transectParts' => ($dataCoord["data"])
     ]];
 
     $updateOptions = ['multi' => false];
@@ -25,15 +25,15 @@ foreach($arr_json_sites as $mongoSiteId => $dataCoord) {
 
     $nbAdd++;
 
-    $arrSiteIdOk[]=$mongoSiteId;
+    $arrSiteIdOk[$dataCoord["siteInternal"]]=$mongoSiteId;
 }
 
 $consoleTxt.=consoleMessage("info", $nbUpdate." site(s) updated to collection ".$typeO);
 
 if ($server=="PROD") $link=$linkBioSite["PROD"];
 else $link=$linkBioSite["DEV"];
-foreach($arrSiteIdOk as $mongoSiteId) {
-	$final_result.='Site successfully imported => <a target="_blank" href="'.$link.$mongoSiteId.'">LINK TO BIOCOLLECT</a><br>';
+foreach($arrSiteIdOk as $siteInternal => $mongoSiteId) {
+	$final_result.='Site '.$siteInternal.' successfully imported => <a target="_blank" href="'.$link.$mongoSiteId.'">LINK TO BIOCOLLECT</a><br>';
 }
 
 
