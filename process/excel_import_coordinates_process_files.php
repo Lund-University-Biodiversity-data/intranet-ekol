@@ -30,60 +30,31 @@ foreach($listFilesOk as $file) {
 
 	$userId=$commonFields["userId"];
 
+	if (substr($file, strlen($file)-4, 4)==".xls") {
+        $filename=substr($file, 0, strlen($file)-4);
+    }
+    elseif (substr($file, strlen($file)-5, 5)==".xlsx") {
+        $filename=substr($file, 0, strlen($file)-5);
+    }
+
 	switch ($protocol) {
 
 		case "std":
 		case "natt":
 
-			if (substr($file, strlen($file)-4, 4)==".xls") {
-	            $filename=substr($file, 0, strlen($file)-4);
-	        }
-	        elseif (substr($file, strlen($file)-5, 5)==".xlsx") {
-	            $filename=substr($file, 0, strlen($file)-5);
-	        }
-
-			$explodeFilename=explode("-", $filename);
+			$explodeFilename=explode("_", $filename);
 			$siteKeyFilename=$explodeFilename[1];
 
-			
 			break;
-		case "sommar":
+		case "punkt":
+		    
+			$explodeFilename=explode("_", $filename);
 
-			if (substr($file, strlen($file)-4, 4)==".xls") {
-	            $filename=substr($file, 0, strlen($file)-4);
-	        }
-	        elseif (substr($file, strlen($file)-5, 5)==".xlsx") {
-	            $filename=substr($file, 0, strlen($file)-5);
-	        }
-			$explodeFilename=explode("-", $filename);
-			$siteIdFN1=$explodeFilename[1];//persnr
-			$siteIdFN2=$explodeFilename[2];//indice
-			$siteIdFN3=str_replace("#", "", $explodeFilename[3]);//rnr
-			$siteIdFN=$siteIdFN1."-".$siteIdFN2."-".$siteIdFN3;
+            $siteKeyFilename=(isset($explodeFilename[1]) ? str_replace("#", "", $explodeFilename[1]) :"");
 
-			$siteKeyFilename = $siteIdFN;
+			$siteIdFN=explode("-", $explodeFilename[1]);
 
-			$inventerareCheck=$siteIdFN1."-".$siteIdFN2;
-
-			break;
-		case "vinter":
-			
-		    if (substr($file, strlen($file)-4, 4)==".xls") {
-	            $filename=substr($file, 0, strlen($file)-4);
-	        }
-	        elseif (substr($file, strlen($file)-5, 5)==".xlsx") {
-	            $filename=substr($file, 0, strlen($file)-5);
-	        }
-			$explodeFilename=explode("-", $filename);
-			$siteIdFN1=$explodeFilename[1];//persnr
-			$siteIdFN2=$explodeFilename[2];//indice
-			$siteIdFN3=str_replace("#", "", $explodeFilename[3]);//rnr
-			$siteIdFN=$siteIdFN1."-".$siteIdFN2."-".$siteIdFN3;
-			$periodFN=str_replace("P", "", $explodeFilename[4]);
-
-			$siteKeyFilename = $siteIdFN;
-
-			$inventerareCheck=$siteIdFN1."-".$siteIdFN2;
+			$inventerareCheck=$siteIdFN[0]."-".$siteIdFN[1];
 
 			break;
 	}
@@ -123,215 +94,30 @@ foreach($listFilesOk as $file) {
 
 				$siteKey=$kartakod;	
 
-				break;
-
-
-			case "std":
-
-				$datumExpectedFormat="YYYYMMDD";
-
-				$kartakod=$worksheet->getCell('A9')->getValue();
-				$ruttname=$worksheet->getCell('D9')->getValue(); // not used
-				$datum=$worksheet->getCell('K9')->getValue();
-
-				$inventerare = $worksheet->getCell('C13')->getValue();
-
-				$recorder_name=$worksheet->getCell('B15')->getValue();
-				$adress=$worksheet->getCell('B16')->getValue(); // not used
-				$post=$worksheet->getCell('B17')->getValue(); // not used
-				$city=$worksheet->getCell('F17')->getValue(); // not used
-				$email=$worksheet->getCell('N15')->getValue(); // not used
-				$address1=$recorder_name; // not used
-				$address2=$worksheet->getCell('B16')->getValue(); // not used
-				$tel=$worksheet->getCell('N16')->getValue(); // not used
-				$mobile=$worksheet->getCell('N17')->getValue(); // not used
-
-				$eventRemarks=str_replace('"', "'", $worksheet->getCell('A32')->getValue());
-				$notes=str_replace('"', "'", $worksheet->getCell('A35')->getValue());
-				$comments=$notes;
-
-
-				$rowStartTime=23;
-
-				// get the start_time/finish_time + timeOfObservation
-
-				// find the start time and finish time
-				$start_time=2359;
-				$finish_time=0;
-				$timeOfObservation=array();
-
-				$iInd=1;
-				for ($iCol="B";$iCol<="I";$iCol++) {
-					$val=$worksheet->getCell($iCol.$rowStartTime)->getValue();
-
-					if ($val!="" && !is_numeric($val)) {
-						$consoleTxt.=consoleMessage("error", "TimeOfObservation: wrong format for cell ".$iCol.$rowStartTime);
-						$fileRefused=true;
-					}
-
-					$timeOfObservation["TidP".str_pad($iInd, 2, '0', STR_PAD_LEFT)]=strval($val);
-					
-					if ($val!="") {
-						$val=intval($val);
-
-						if ($val<0 || $val>2400) {
-							$consoleTxt.=consoleMessage("error", "ERROR time value ".$val." for P".$i);
-							$fileRefused=true;
-						}
-						if ($val<$start_time)
-							$start_time=$val;
-
-						// add 24 hours to the night tmes, to help comparing
-						if ($val<1200)
-							$val+=2400;
-
-						if ($val>$finish_time)
-							$finish_time=$val;
-
-						if ($val>2400) $val-=2400;
-					}
-
-					$iInd++;
-				}
-
-
-				if ($start_time>2400) $start_time-=2400;
-				if ($finish_time>2400) $finish_time-=2400;
-
-				$start_time_brut=$start_time;
-
-				// add extra minutes (std: 35)
-				$finish_time=addTimeToFinish($finish_time, 35);
-
-				$minutesSpentObserving=array();
-				$iInd=1;
-				for ($iCol="K";$iCol<="R";$iCol++) {
-					$val=$worksheet->getCell($iCol.$rowStartTime)->getValue();
-					if ($val!="" && !is_numeric($val)) {
-						$consoleTxt.=consoleMessage("error", "MinutesSpentObserving: wrong format for cell ".$iCol.$rowStartTime);
-						$fileRefused=true;
-					}
-					$minutesSpentObserving["TidL".str_pad($iInd, 2, '0', STR_PAD_LEFT)]=strval($val);
-					$iInd++;
-				}
-
-				$rowDistance=27;
-
-				$distanceCovered=array();
-				$iInd=1;
-				for ($iCol="B";$iCol<="I";$iCol++) {
-					$val=$worksheet->getCell($iCol.$rowDistance)->getValue();
-					if ($val!="" && !is_numeric($val)) {
-						$consoleTxt.=consoleMessage("error", "DistanceCovered: wrong format for cell ".$iCol.$rowDistance);
-						$fileRefused=true;
-					}
-					$distanceCovered["distanceOnL".str_pad($iInd, 2, '0', STR_PAD_LEFT)]=strval($val);
-					$iInd++;
-				}
-				
-
-				$iRowSpecies=39;
-				$colSpeciesCode="R";
-				$colTotObs="V";
-				
-				$arrJaGps=["X", "x", "ja", "Ja", "JA"];
-				$isGpsUsed=(in_array($worksheet->getCell('T31')->getValue(), $arrJaGps)  ? "ja" : "nej");
-
-				$siteKey=$kartakod;				
-				
-				$checkTotalData[0]["animals"]='birds';
-				$checkTotalData[0]["textNumberSpeciesFound"]="Antal fågelarter totalt";
-				$checkTotalData[0]["columnTextNumberSpeciesFound"]='A';
-				$checkTotalData[0]["columnValueNumberSpeciesFound"]='D';
-
-				$checkTotalData[1]["animals"]='mammals';
-				$checkTotalData[1]["textNumberSpeciesFound"]="Antal däggdjursarter totalt";
-				$checkTotalData[1]["columnTextNumberSpeciesFound"]='A';
-				$checkTotalData[1]["columnValueNumberSpeciesFound"]='E';
+				$colX="B";
+				$colY="C";
 
 				break;
 
-			case "sommar":
-			case "vinter":
+			case "punkt":
 
-				$datumExpectedFormat="YYMMDD";
+				$lineFirstPoint=10;
 
-				//$vinter=$worksheet->getCell('A1')->getValue();
-				$period=$worksheet->getCell('C1')->getValue();				
-
-				$inventerare=$worksheet->getCell('A9')->getValue();
-				$rnr=str_pad($worksheet->getCell('D9')->getValue(), 2, '0', STR_PAD_LEFT);
-				$datum=$worksheet->getCell('H9')->getValue();
-				$startTime=$worksheet->getCell('L9')->getValue();
-				$endTime=$worksheet->getCell('O9')->getValue();
-
-				$ruttname=$worksheet->getCell('A12')->getValue();
-				//$kartakod=$worksheet->getCell('G10')->getValue();
-				$distance=$worksheet->getCell('L12')->getValue();
-				$transport=$worksheet->getCell('O12')->getValue();
-
-				$recorder_name=$worksheet->getCell('B14')->getValue();
-				$adress=$worksheet->getCell('B15')->getValue();
-				$post=$worksheet->getCell('B16')->getValue();
-				$city=$worksheet->getCell('F16')->getValue();
-				$email=$worksheet->getCell('N14')->getValue();
-				$address1=$recorder_name;
-				$address2="";
-				$tel=$worksheet->getCell('N15')->getValue();
-				$mobile=$worksheet->getCell('N16')->getValue();
-
-				$notes="";
-				//str_replace('"', "'", $worksheet->getCell('A21')->getValue());
-
-				$newRoute=$worksheet->getCell('X9')->getValue();
-				$mapAttached=$worksheet->getCell('X10')->getValue();
-				$coordAttached=$worksheet->getCell('X11')->getValue();
-
-				$siteKey=$inventerare."-".$rnr;
-
-				$eventRemarks=str_replace('"', "'", $worksheet->getCell('A21')->getValue());
-				$notes="";
-				$comments=$notes;
-
-				if ($protocol=="vinter") 
-					$iRowSpecies=30;
-				elseif ($protocol=="sommar")  {
-					//$iRowSpecies=41;
-					$iRowSpecies=30;
-				}
-				
-				$colSpeciesCode="V";
-				$colTotObs="X";
+				$ruttrnr=$worksheet->getCell('C5')->getValue();
+				$ruttname=$worksheet->getCell('C6')->getValue();
+				$recorder_name=$worksheet->getCell('C3')->getValue();
+				$inventerare = $worksheet->getCell('C4')->getValue();
 
 				if ($inventerare!=$inventerareCheck) {
-					$consoleTxt.=consoleMessage("error", "Not the same Personummer in the filename and file content ! ".$inventerare." VS ".$inventerareCheck);
+					$consoleTxt.=consoleMessage("error", "Not the same personnr in the filename (".($inventerareCheck).") and in the file (".$inventerare." for file ".$filename);
 					$fileRefused=true;
 				}
 
-				if ($protocol=="vinter") {
+				$siteKey=$siteKeyFilename;	
 
-					$snow=$worksheet->getCell('R12')->getValue();
+				$colX="C";
+				$colY="B";				
 
-					if ($period!=$periodFN) {
-						$consoleTxt.=consoleMessage("error", "Not the same period in the filename and file content ! ".$period." VS ".$periodFN);
-						$fileRefused=true;
-					}
-					elseif ($period>5 || $period<0) {
-						$consoleTxt.=consoleMessage("error", "Period field must be a number between 1 and 5");
-						$fileRefused=true;
-					}
-				}
-
-				$checkTotalData[0]["animals"]='birds';
-				$checkTotalData[0]["textNumberSpeciesFound"]="Antal arter totalt";
-				$checkTotalData[0]["columnTextNumberSpeciesFound"]='A';
-				$checkTotalData[0]["columnValueNumberSpeciesFound"]='D';
-
-				break;
-				
-			
-			case "kust":
-				$nbPts=1;
 				break;
 		}
 
@@ -375,8 +161,8 @@ foreach($listFilesOk as $file) {
 
 				for ($iP=0; $iP<$nbPts ; $iP++) {
 
-					$dataCoordPts[$iP]["lat"]=$worksheet->getCell("B".($lineFirstPoint+$iP))->getValue();
-					$dataCoordPts[$iP]["lon"]=$worksheet->getCell("C".($lineFirstPoint+$iP))->getValue();
+					$dataCoordPts[$iP]["lat"]=$worksheet->getCell($colX.($lineFirstPoint+$iP))->getValue();
+					$dataCoordPts[$iP]["lon"]=$worksheet->getCell($colY.($lineFirstPoint+$iP))->getValue();
 					
 					if (trim($dataCoordPts[$iP]["lat"])=="" || trim($dataCoordPts[$iP]["lon"])=="") {
 						$consoleTxt.=consoleMessage("error", "One coordinate is missing at row ".($lineFirstPoint+$iP)." for ".$siteKey);
@@ -435,12 +221,12 @@ foreach($listFilesOk as $file) {
 						//print_r($wgsPos);
 					}
 
-					if ($worksheet->getCell("D".($lineFirstPoint+$iP))->getCalculatedValue()!=$inventerare) {
+					if ($protocol=="natt" && $worksheet->getCell("D".($lineFirstPoint+$iP))->getCalculatedValue()!=$inventerare) {
 						$consoleTxt.=consoleMessage("error", "Not the same personnummer in header and in line ".($lineFirstPoint+$iP))." for ".$siteKey;
 						$fileRefused=true;
 					}
 
-					if ($worksheet->getCell("E".($lineFirstPoint+$iP))->getCalculatedValue()!=$kartakod) {
+					if ($protocol=="natt" && $worksheet->getCell("E".($lineFirstPoint+$iP))->getCalculatedValue()!=$kartakod) {
 						$consoleTxt.=consoleMessage("error", "Not the same kartakod in header and in line ".($lineFirstPoint+$iP))." for ".$siteKey;
 						$fileRefused=true;
 					}
@@ -453,6 +239,7 @@ foreach($listFilesOk as $file) {
 			}
 			
 			if (!$fileRefused && count($dataCoordPts)!=0) {
+
 				$allPointsJson=array();
 				foreach ($dataCoordPts as $iP => $coord) {
 					$json=[
@@ -473,9 +260,11 @@ foreach($listFilesOk as $file) {
 				$arr_json_sites[$array_sites[$siteKey]["locationID"]]["data"]=$allPointsJson;
 				$arr_json_sites[$array_sites[$siteKey]["locationID"]]["siteInternal"]=$siteKey;
 			}
-			//echo "<pre>";
-			//print_r($arr_json_sites);
-			//echo "</pre>";
+			/*
+			echo "<pre>";
+			print_r($arr_json_sites);
+			echo "</pre>";
+			*/
 		}
 		else {
 			$consoleTxt.=consoleMessage("error", "Can't get site data from Mongo for site ".$siteKey);

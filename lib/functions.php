@@ -7,6 +7,7 @@ function getNpPtsForProtocol ($protocol) {
 		case "std":
 			$nbPts=8;
 			break;
+		case "punkt":
 		case "sommar":
 		case "vinter":
 			$nbPts=20;

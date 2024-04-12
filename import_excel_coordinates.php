@@ -60,7 +60,7 @@ if (isset($_POST["execFormListFiles"]) && $_POST["execFormListFiles"]=="OK") {
 	switch($protocol) {
 
 		case "punkt":
-			$templateFileName="SomYY-YYMMDD-X-#XX.xls";
+			$templateFileName="kartor_punktrutter_mall.xls";
 			if (file_exists(PATH_INPUT_EXCEL_COORDINATES.$database."/".$protocol."/"."Template/".$templateFileName)) {
 				$templateUrl=URL_WEBSITE_SURVEYS.$database."/".$protocol."/"."Template/".str_replace("#", "%23", $templateFileName);
 			}
@@ -68,7 +68,7 @@ if (isset($_POST["execFormListFiles"]) && $_POST["execFormListFiles"]=="OK") {
 
 		case "natt":
 		default:
-			$templateFileName="VinYY-YYMMDD-X-#XX-PX.xls";
+			$templateFileName="kartor_nattrutter_mall.xls";
 			if (file_exists(PATH_INPUT_EXCEL_COORDINATES.$database."/".$protocol."/"."Template/".$templateFileName)) {
 				$templateUrl=URL_WEBSITE_SURVEYS.$database."/".$protocol."/"."Template/".str_replace("#", "%23", $templateFileName);
 			}

@@ -25,7 +25,7 @@
         	<!--
           <option value="kust" <?= ($protocol=="kust" ? "selected" : "") ?>>Kustfågelrutterna</option>-->
           <option value="natt" <?= ($protocol=="natt" ? "selected" : "") ?>>Nattrutterna</option>
-          <option value="punkt" <?= ($protocol=="vinter" ? "selected" : "") ?>>Punktrutterna</option>
+          <option value="punkt" <?= ($protocol=="punkt" ? "selected" : "") ?>>Punktrutterna</option>
         </select>	
       </div>
     </div>

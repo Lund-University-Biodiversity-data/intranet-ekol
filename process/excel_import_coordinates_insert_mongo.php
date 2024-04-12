@@ -7,6 +7,8 @@ db.site.find({siteId:"b2668f4f-ca84-ac56-e2bb-015a9015effa"}).pretty()
 db.site.updateOne({siteId:"b2668f4f-ca84-ac56-e2bb-015a9015effa"},{$unset:{transectParts:1}})
 */
 
+//print_r($arr_json_sites);exit();
+
 $nbUpdate=0;
 $arrSiteIdOk=array();
 foreach($arr_json_sites as $mongoSiteId => $dataCoord) {
@@ -23,7 +25,7 @@ foreach($arr_json_sites as $mongoSiteId => $dataCoord) {
     $bulk->update($filter, $options, $updateOptions); 
     $result = $mng->executeBulkWrite('ecodata.site', $bulk);
 
-    $nbAdd++;
+    $nbUpdate++;
 
     $arrSiteIdOk[$dataCoord["siteInternal"]]=$mongoSiteId;
 }

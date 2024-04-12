@@ -20,34 +20,26 @@ foreach($filesSurveys as $file) {
 
         switch($protocol) {
             case "natt":
-                $explodeFilename=explode("-", $filename);
+                $explodeFilename=explode("_", $filename);
 
                 $prefixFN=$explodeFilename[0];
                 $kartaTx=(isset($explodeFilename[1]) ? $explodeFilename[1] :"");
 
                 $siteIdFN=$kartaTx;
 
-                // no prefix expected
-                $expectedFileName="koord";
+                $expectedPrefix="koord";
 
                 break;
 
             case "punkt":
 
-                $explodeFilename=explode("-", $filename);
+                $explodeFilename=explode("_", $filename);
+
                 $prefixFN=$explodeFilename[0];
-                $siteIdFN1=$explodeFilename[1];//persnr
-                $siteIdFN2=$explodeFilename[2];//indice
-                $siteIdFN3=str_replace("#", "", $explodeFilename[3]);//rnr
-                $siteIdFN=$siteIdFN1."-".$siteIdFN2."-".$siteIdFN3;
 
-                $templateFileName="Som";
-                $yearStudied=substr($prefixFN, strlen($templateFileName), 2);
-                $yearFull="20".$yearStudied;
+                $siteIdFN=(isset($explodeFilename[1]) ? str_replace("#", "", $explodeFilename[1]) :"");
 
-                $expectedFileName=$templateFileName.$yearStudied;
-
-                $checkPeriodInd=$yearFull;
+                $expectedPrefix="koord";
 
                 break;
         }
@@ -62,19 +54,19 @@ foreach($filesSurveys as $file) {
 
         $okTempFile=true;
         if($protocol=="punkt" && count($explodeFilename)!=2) {
-            $consoleTxt.=consoleMessage("error", $file. " can't be processed, filename with wrong format. Must be 'KARTA YEAR'");
-            $infoFile["status"]="NO => filename with wrong format. Must be 'KARTA YEAR'";
+            $consoleTxt.=consoleMessage("error", $file. " can't be processed, filename with wrong format. Must be 'koord_internalSiteId'");
+            $infoFile["status"]="NO => filename with wrong format. Must be 'koord_internalSiteId'";
             $okTempFile=false;
         }
         elseif($protocol=="natt" && (count($explodeFilename)!=2)) {
-            $consoleTxt.=consoleMessage("error", $file. " can't be processed, filename with wrong format. Must be 'koord-KARTATX'");
-            $infoFile["status"]="NO => filename with wrong format. Must be 'koord-KARTATX'";
+            $consoleTxt.=consoleMessage("error", $file. " can't be processed, filename with wrong format. Must be 'koord_KARTATX'");
+            $infoFile["status"]="NO => filename with wrong format. Must be 'koord_KARTATX'";
             $okTempFile=false;
         }
 
         if ($okTempFile) {
-            if ($prefixFN!=$expectedFileName) {
-                $consoleTxt.=consoleMessage("error", $file. " can't be processed, wrong prefix. Must start with '".$expectedFileName. "'. '".$prefixFN."' instead");
+            if ($prefixFN!=$expectedPrefix) {
+                $consoleTxt.=consoleMessage("error", $file. " can't be processed, wrong prefix. Must start with '".$expectedPrefix. "'. '".$prefixFN."' instead");
                 $infoFile["status"]="NO => wrong filename, does not start with correct template.";
             }
             elseif(isset($array_sites[$siteIdFN])) {   
