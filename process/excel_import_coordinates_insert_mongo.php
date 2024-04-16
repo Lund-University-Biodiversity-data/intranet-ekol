@@ -18,7 +18,12 @@ foreach($arr_json_sites as $mongoSiteId => $dataCoord) {
     	'siteId' => $mongoSiteId
     ];
     $options =  ['$set' => [
-    	'transectParts' => ($dataCoord["data"])
+    	'transectParts' => ($dataCoord["data"]),
+    	'geoIndex.coordinates' => [$dataCoord["centroidLon"], $dataCoord["centroidLat"]],
+    	'extent.geometry.coordinates' => [$dataCoord["centroidLon"], $dataCoord["centroidLat"]],
+    	'extent.geometry.centre' => [number_format($dataCoord["centroidLon"], 5), number_format($dataCoord["centroidLat"], 5)],
+    	'extent.geometry.decimalLatitude' => $dataCoord["centroidLat"],
+    	'extent.geometry.decimalLongitude' => $dataCoord["centroidLon"]
     ]];
 
     $updateOptions = ['multi' => false];

@@ -57,7 +57,8 @@ else {
 		
 	}
 
-	if ($modeDisplay!="coord") {
+	if (isset($modeDisplay) && $modeDisplay!="coord") {}
+	else {
 		$consoleTxt.=consoleMessage("info", $nb0." site(s) with 0 point coordinate (".number_format(($nb0*100)/count($arrSitesDetails), 2)."%)");
 		$consoleTxt.=consoleMessage("info", $nb20." site(s) with 20 point coordinates (".number_format(($nb20*100)/count($arrSitesDetails), 2)."%)");
 		$consoleTxt.=consoleMessage("info", $nbelse." site(s) with another number of point coordinates (".number_format(($nbelse*100)/count($arrSitesDetails), 2)."%)");

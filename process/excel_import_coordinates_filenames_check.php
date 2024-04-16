@@ -49,9 +49,6 @@ foreach($filesSurveys as $file) {
         $infoFile["internalSiteId"]=$siteIdFN;
         $infoFile["period"]="-";
 
-        if ($protocol=="vinter" || $protocol=="natt")
-            $infoFile["period"]=$periodFN;
-
         $okTempFile=true;
         if($protocol=="punkt" && count($explodeFilename)!=2) {
             $consoleTxt.=consoleMessage("error", $file. " can't be processed, filename with wrong format. Must be 'koord_internalSiteId'");
@@ -77,13 +74,11 @@ foreach($filesSurveys as $file) {
                     else $link=$linkBioSite["DEV"];
     
                     $consoleTxt.=consoleMessage("error", $file. " can't be processed, Transect data already exists for site ".$siteIdFN."");
-    
-                        //" '.$periodFN. "' already existing for site '".$siteIdFN."' and year ".$yearFull.' => activityId : '.$tabSitesPeriod[$siteIdFN][$checkPeriodInd]);
-                    $infoFile["status"]='NO => <a href="'.$link.$array_sites[$siteIdFN]["locationID"].'" target="_blank" >transectParts already exists in MongoDb</a>';
+                        $infoFile["status"]='NO => <a href="'.$link.$array_sites[$siteIdFN]["locationID"].'" target="_blank" >transectParts already exists in MongoDb</a>';
     
                 }
                 else {
-                    $consoleTxt.=consoleMessage("info", $file. " OK to be processed for period '".$periodFN. "' and site '".$siteIdFN."'");
+                    $consoleTxt.=consoleMessage("info", $file. " OK to be processed for site '".$siteIdFN."'");
                     $infoFile["status"]="OK";
                     
                     $listHiddenOkFiles.=$file.FILENAME_SEPARATOR;

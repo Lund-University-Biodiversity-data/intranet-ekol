@@ -240,6 +240,10 @@ foreach($listFilesOk as $file) {
 			
 			if (!$fileRefused && count($dataCoordPts)!=0) {
 
+				// calcul centroid
+				$totLat=0;
+				$totLong=0;
+
 				$allPointsJson=array();
 				foreach ($dataCoordPts as $iP => $coord) {
 					$json=[
@@ -256,9 +260,20 @@ foreach($listFilesOk as $file) {
 						$json["otherCRS"]["coords_3021"] = [$coord["RT90_lat"], $coord["RT90_lon"]] ;
 					}
 					$allPointsJson[]=$json;
+
+					$totLong+=$coord["lon"];
+					$totLat+=$coord["lat"];
 				}
 				$arr_json_sites[$array_sites[$siteKey]["locationID"]]["data"]=$allPointsJson;
 				$arr_json_sites[$array_sites[$siteKey]["locationID"]]["siteInternal"]=$siteKey;
+
+				$centroidLat=$totLat/count($dataCoordPts);
+				$centroidLon=$totLong/count($dataCoordPts);
+				$arr_json_sites[$array_sites[$siteKey]["locationID"]]["centroidLat"]=$centroidLat;
+				$arr_json_sites[$array_sites[$siteKey]["locationID"]]["centroidLon"]=$centroidLon;
+
+				$consoleTxt.=consoleMessage("info", "new WGS84 centroid calculated coordinates (".$centroidLat."/".$centroidLon.")  for ".$siteKey);
+
 			}
 			/*
 			echo "<pre>";
