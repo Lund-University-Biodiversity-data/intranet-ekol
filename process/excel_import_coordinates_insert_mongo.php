@@ -11,6 +11,9 @@ db.site.updateOne({siteId:"b2668f4f-ca84-ac56-e2bb-015a9015effa"},{$unset:{trans
 
 $nbUpdate=0;
 $arrSiteIdOk=array();
+
+$nowISODate = new MongoDB\BSON\UTCDateTime($stampedDate);
+
 foreach($arr_json_sites as $mongoSiteId => $dataCoord) {
 
 	$bulk = new MongoDB\Driver\BulkWrite;
@@ -23,7 +26,8 @@ foreach($arr_json_sites as $mongoSiteId => $dataCoord) {
     	'extent.geometry.coordinates' => [$dataCoord["centroidLon"], $dataCoord["centroidLat"]],
     	'extent.geometry.centre' => [number_format($dataCoord["centroidLon"], 5), number_format($dataCoord["centroidLat"], 5)],
     	'extent.geometry.decimalLatitude' => $dataCoord["centroidLat"],
-    	'extent.geometry.decimalLongitude' => $dataCoord["centroidLon"]
+    	'extent.geometry.decimalLongitude' => $dataCoord["centroidLon"],
+    	'lastUpdated' => $nowISODate
     ]];
 
     $updateOptions = ['multi' => false];
