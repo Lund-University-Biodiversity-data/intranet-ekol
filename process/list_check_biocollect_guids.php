@@ -98,6 +98,7 @@ if ($okCon) {
   $tabRecap=array();
   //foreach ($response[0]->result as $document) {
   $oldGuid="";
+  $oldSN="";
   foreach ($response as $document) {
 
     $idItem = $document->_id;
@@ -108,7 +109,8 @@ if ($okCon) {
 
     if (!isset($tabRecap[$guidItem])) {
       $tabRecap[$guidItem]["items"]=array();
-      $tabRecap[$guidItem]["duplicate"]="no";
+      $tabRecap[$guidItem]["guidDupl"]="no";
+      $tabRecap[$guidItem]["guidDiff"]="no";
     }
 
     $tabRecap[$guidItem]["items"][$swedishnameItem]["nbItems"]=$nbItem;
@@ -119,17 +121,25 @@ if ($okCon) {
 
       $tabRecap[$guidItem]["items"][$swedishnameItem]["art"]="MISSING";
       $tabRecap[$guidItem]["items"][$swedishnameItem]["scientificName"]="MISSING";
+      $tabRecap[$guidItem]["items"][$swedishnameItem]["swedishName-lists"]="MISSING";
     }
     else {
       $tabRecap[$guidItem]["items"][$swedishnameItem]["art"]=$oneList[$guidItem]["art"];
-      $tabRecap[$guidItem]["items"][$swedishnameItem]["scientificName"]=$oneList[$guidItem]["speciesName"];
+      $tabRecap[$guidItem]["items"][$swedishnameItem]["scientificName"]=$oneList[$guidItem]["name"];
+      $tabRecap[$guidItem]["items"][$swedishnameItem]["swedishName-lists"]=$oneList[$guidItem]["nameSWE"];
     }
 
     if ($guidItem==$oldGuid) {
       $nbDuplicates++;
-      $tabRecap[$guidItem]["duplicate"]="yes";
+      $tabRecap[$guidItem]["guidDupl"]="GUID-dupl";
+    }
+
+    if ($guidItem!=$oldGuid && $oldSN==$tabRecap[$guidItem]["items"][$swedishnameItem]["scientificName"]) {
+      $nbDiff++;
+      $tabRecap[$guidItem]["guidDiff"]="GUID-diff";
     }
 
     $oldGuid=$guidItem;
+    $oldSN=$tabRecap[$guidItem]["items"][$swedishnameItem]["scientificName"];
   }
 }

@@ -57,12 +57,14 @@
         data-show-export="true">
         <thead>
           <tr>
-            <th>guid in lists</th>
-            <th>swedishName</th>
-            <th>art</th>
-            <th>scientificName</th>
+            <th>guid [BC]</th>
+            <th>swedishName [BC]</th>
+            <th>swedishName [<?= $listIdToCheck ?>]</th>
+            <th>scientificName [<?= $listIdToCheck ?>]</th>
+            <th>art [<?= $listIdToCheck ?>]</th>
             <th>nb Elts</th>
             <th>guid dupl.</th>
+            <th>guid diff.</th>
           </tr>
         </thead>
         <tbody>
@@ -71,10 +73,12 @@
               <tr>
                 <td scope="row"><?= $guid ?></td>
                 <td scope="row"><?= $swedishName ?></td>
-                <td scope="row"><?= $rowItem["art"] ?></td>
+                <td scope="row"><?= $rowItem["swedishName-lists"] ?></td>
                 <td scope="row"><?= $rowItem["scientificName"] ?></td>
+                <td scope="row"><?= $rowItem["art"] ?></td>
                 <td scope="row"><?= $rowItem["nbItems"] ?></td>
-                <td scope="row"><?= $rowContent["duplicate"] ?></td>
+                <td scope="row"><?= $rowContent["guidDupl"] ?></td>
+                <td scope="row"><?= $rowContent["guidDiff"] ?></td>
               </tr>
             <?php } ?>
           <?php } ?>
