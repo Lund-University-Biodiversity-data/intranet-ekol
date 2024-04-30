@@ -16,7 +16,7 @@ $consoleTxt="";
 $server=DEFAULT_SERVER;
 
 // get the lists avalable from the module
-require "process/list_get_available_lists.php";
+//require "process/list_get_available_lists.php";
 
 $mng = new MongoDB\Driver\Manager($mongoConnection[$server]);
 if ($mng) $consoleTxt.=consoleMessage("info", "Connection to mongoDb ok");
@@ -25,6 +25,19 @@ else $consoleTxt.=consoleMessage("error", "No connection to mongoDb");
 $listIdToCheck="dr627";
 require "process/list_check_biocollect_guids.php";
 
+$consoleTxt.=consoleMessage("info", "End check");
+
+$final_result="";
+
+if (isset($_POST["formFixDuplicates"]) && $_POST["formFixDuplicates"]=="OK" && $nbDuplicates>0) {
+	
+	$consoleTxt.=consoleMessage("info", "Fix duplicates");
+
+	require "process/list_check_biocollect_guids_fix_duplicates.php";
+
+	$consoleTxt.=consoleMessage("info", "End script");
+
+}
 /*
 if (isset($_POST["formCompareLists"]) && $_POST["formCompareLists"]=="OK") {
 

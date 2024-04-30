@@ -18,27 +18,15 @@
   	Getting the list <?= $listIdToCheck ?>  data from <a href="https://lists.biodiversitydata.se" target="_blank">lists.biodiversitydata.se</a> and checking in BioCollect the different guids linked to the species.
   </p>
   <form role="form" method="post">
-  	<input type="hidden" value="OK" id="form" name="formCompareLists"/>
-
-    <!--
-    <div class="form-group row">
-      <label for="inputServer" class="col-sm-2 col-form-label">Available lists</label>
-      <div class="col-sm-10">
-        <select class="form-control" name="listIdToCheck" placeholder="listIdToCheck" size=<?= count($listAvailable); ?>>
-          <?php foreach ($listAvailable as $listId => $listName) { 
-            echo '<option value="'.$listId.'">'.$listId." - ".$listName.'</option>';
-          } ?>
-        </select> 
-      </div>
-    </div>
-    -->
+  	<input type="hidden" value="OK" id="formFixDuplicates" name="formFixDuplicates"/>
 
     <div class="form-group row">
       <div class="offset-sm-2 col-sm-10">
-        <input type="submit" value="Compare" name="submit" class="btn btn-primary"/>
+        <input type="submit" value="Fix duplicates" name="submit" class="btn btn-primary"/>
       </div>
     </div>
   </form>
+
 
   <?php if (isset($final_result) &&  $final_result!="") { ?>
   <p class="lead">
@@ -46,7 +34,8 @@
   </p>
   <?php } ?>
 
-  <?php if (count($tabRecap)>0) { ?>
+  <?php if (isset($_POST["formFixDuplicates"]) && $_POST["formFixDuplicates"]=="OK" ) {} 
+    elseif (count($tabRecap)>0 ) { ?>
 
     <div class="form-group row">
       

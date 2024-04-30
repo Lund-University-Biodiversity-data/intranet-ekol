@@ -87,6 +87,7 @@ catch(Exception $e){
 
 $nbErrors=0;
 $nbDuplicates=0;
+$nbDiff=0;
 
 if ($okCon) {
 
@@ -143,3 +144,14 @@ if ($okCon) {
     $oldSN=$tabRecap[$guidItem]["items"][$swedishnameItem]["scientificName"];
   }
 }
+
+
+$consoleTxt.=consoleMessage("info", $nbDuplicates." duplicate(s) found to be fixed. Can be fixed with the \"Fix duplicates\" button");
+$consoleTxt.=consoleMessage("info", $nbDiff." row(s) with same sientificName but different GUID found. Can only be fixed manually");
+$consoleTxt.=consoleMessage("error", $nbErrors." error(s) found with items that don't exist in the species list");
+
+$final_result.="<p>";
+$final_result.=$nbDuplicates." duplicate(s) found to be fixed. Can be fixed with the \"Fix duplicates\" button.<br>";
+$final_result.=$nbDiff." row(s) with same sientificName but different GUID found. Can only be fixed manually.<br>";
+$final_result.=$nbErrors." error(s) found with items that don't exist in the species list.<br>";
+$final_result.="</p>";
