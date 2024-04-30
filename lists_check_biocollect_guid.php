@@ -22,12 +22,12 @@ $mng = new MongoDB\Driver\Manager($mongoConnection[$server]);
 if ($mng) $consoleTxt.=consoleMessage("info", "Connection to mongoDb ok");
 else $consoleTxt.=consoleMessage("error", "No connection to mongoDb");
 
+$final_result="";
+
 $listIdToCheck="dr627";
 require "process/list_check_biocollect_guids.php";
 
 $consoleTxt.=consoleMessage("info", "End check");
-
-$final_result="";
 
 if (isset($_POST["formFixDuplicates"]) && $_POST["formFixDuplicates"]=="OK" && $nbDuplicates>0) {
 	
