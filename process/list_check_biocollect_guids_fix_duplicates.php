@@ -20,6 +20,7 @@ foreach ($tabRecap as $guid => $rowContent) {
 		foreach ($rowContent["items"] as $swedishName => $rowItem) {
 			if ($rowItem["nbItems"]>$maxRt) {
 				$okSwedishName=$rowItem["swedishName-lists"];
+				$okScientifcName=$rowItem["scientificName"];
 			}
 		}
 
@@ -33,6 +34,7 @@ foreach ($tabRecap as $guid => $rowContent) {
 		    ];
 		    $options =  ['$set' => [
 		    	'data.observations.$.species.name' => $okSwedishName,
+		    	'data.observations.$.species.scientificName' => $okScientifcName,
 		    	'data.observations.$.species.commonName' => $okSwedishName,
 		    	'lastUpdated' => $nowISODate
 		    ]];
@@ -43,7 +45,7 @@ foreach ($tabRecap as $guid => $rowContent) {
 		    //$result = $mng->executeBulkWrite('ecodata.output', $bulk);
 
 
-		    $consoleTxt.=consoleMessage("info", "Fix guid ".$guid. " to ".$okSwedishName." => ".$result->getMatchedCount()." matched result(s), and ".$result->getModifiedCount()." modified");
+		    $consoleTxt.=consoleMessage("info", "Fix guid ".$guid. " to ".$okSwedishName." / ".$okScientifcName." => ".$result->getMatchedCount()." matched result(s), and ".$result->getModifiedCount()." modified");
 
 		    $nbUpdate++;
 		}
