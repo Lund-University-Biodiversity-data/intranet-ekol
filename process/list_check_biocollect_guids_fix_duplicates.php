@@ -20,7 +20,10 @@ foreach ($tabRecap as $guid => $rowContent) {
 		foreach ($rowContent["items"] as $swedishName => $rowItem) {
 			if ($rowItem["nbItems"]>$maxRt) {
 				$okSwedishName=$rowItem["swedishName-lists"];
-				$okScientifcName=$rowItem["scientificName"];
+				$okScientificName=$rowItem["scientificName"];
+			}
+			else {
+
 			}
 		}
 
@@ -34,7 +37,7 @@ foreach ($tabRecap as $guid => $rowContent) {
 		    ];
 		    $options =  ['$set' => [
 		    	'data.observations.$.species.name' => $okSwedishName,
-		    	'data.observations.$.species.scientificName' => $okScientifcName,
+		    	'data.observations.$.species.scientificName' => $okScientificName,
 		    	'data.observations.$.species.commonName' => $okSwedishName,
 		    	'lastUpdated' => $nowISODate
 		    ]];
@@ -42,12 +45,36 @@ foreach ($tabRecap as $guid => $rowContent) {
 
 		    $updateOptions = ['multi' => true];
 		    $bulk->update($filter, $options, $updateOptions); 
-		    //$result = $mng->executeBulkWrite('ecodata.output', $bulk);
+		    $result = $mng->executeBulkWrite('ecodata.output', $bulk);
 
 
-		    $consoleTxt.=consoleMessage("info", "Fix guid ".$guid. " to ".$okSwedishName." / ".$okScientifcName." => ".$result->getMatchedCount()." matched result(s), and ".$result->getModifiedCount()." modified");
+		    $consoleTxt.=consoleMessage("info", "Fix guid/name/SN in OUTPUT ".$guid. " to ".$okSwedishName." / ".$okScientificName." => ".$result->getMatchedCount()." matched result(s), and ".$result->getModifiedCount()." modified");
+
+
+		    // update the records as well
+			$bulk = new MongoDB\Driver\BulkWrite;
+			$filter = [
+		    	'guid' => (string)$guid,
+		    	'name' => [
+		    		'$ne' => $okSwedishName
+		    	]
+		    ];
+		    $options =  ['$set' => [
+		    	'name' => $okSwedishName,
+		    	'scientificName' => $okScientificName,
+		    	'lastUpdated' => $nowISODate
+		    ]];
+
+
+		    $updateOptions = ['multi' => true];
+		    $bulk->update($filter, $options, $updateOptions); 
+		    $result = $mng->executeBulkWrite('ecodata.record', $bulk);
+
 
 		    $nbUpdate++;
+
+		    $consoleTxt.=consoleMessage("info", "Fix guid/name/SN in RECORD ".$guid. " to ".$okSwedishName." / ".$okScientificName." => ".$result->getMatchedCount()." matched result(s), and ".$result->getModifiedCount()." modified");
+
 		}
 	}
 }
