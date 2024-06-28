@@ -33,13 +33,14 @@ foreach ($tabRecap as $guid => $rowContent) {
 		    ];
 		    $options =  ['$set' => [
 		    	'data.observations.$.species.name' => $okSwedishName,
+		    	'data.observations.$.species.commonName' => $okSwedishName,
 		    	'lastUpdated' => $nowISODate
 		    ]];
 
 
 		    $updateOptions = ['multi' => true];
 		    $bulk->update($filter, $options, $updateOptions); 
-		    $result = $mng->executeBulkWrite('ecodata.output', $bulk);
+		    //$result = $mng->executeBulkWrite('ecodata.output', $bulk);
 
 
 		    $consoleTxt.=consoleMessage("info", "Fix guid ".$guid. " to ".$okSwedishName." => ".$result->getMatchedCount()." matched result(s), and ".$result->getModifiedCount()." modified");
