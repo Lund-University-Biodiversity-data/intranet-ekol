@@ -20,13 +20,13 @@
   <form role="form" method="post">
   	<input type="hidden" value="OK" id="formFixDuplicates" name="formFixDuplicates"/>
 
-    <!--
+    
     <div class="form-group row">
       <div class="offset-sm-2 col-sm-10">
         <input type="submit" value="Fix duplicates" name="submit" class="btn btn-primary"/>
       </div>
     </div>
-  -->
+  
   </form>
 
 
