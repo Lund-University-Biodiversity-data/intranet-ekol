@@ -38,6 +38,7 @@
             <th data-sortable="true" scope="col">Internal Site Id</th>
             <th data-sortable="true" scope="col">kartaTx</th>
             <?php  if ($modeDisplay=="coord") { ?>
+            <th data-sortable="true" scope="col">P#</th>
             <th data-sortable="true" scope="col">Name</th>
             <th data-sortable="true" scope="col">Latitude</th>
             <th data-sortable="true" scope="col">Longitude</th>
@@ -54,6 +55,7 @@
               <td><?= $coordSite["internalSiteID"] ?></td>
               <td><?= $coordSite["kartaTx"] ?></td>
               <?php  if ($modeDisplay=="coord") { ?>
+              <td><?= $coordSite["indexPoint"] ?></td>
               <td><?= $coordSite["name"] ?></td>
               <td><?= $coordSite["latitude"] ?></td>
               <td><?= $coordSite["longitude"] ?></td>

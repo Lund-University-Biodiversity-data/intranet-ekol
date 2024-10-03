@@ -27,7 +27,7 @@ else {
 			if (count($dataSite["transectParts"])>0) {
 				foreach($dataSite["transectParts"] as $tp) {
 					$lineSite=array();
-
+					$lineSite["indexPoint"]=$tp["index"];
 					$lineSite["internalSiteID"]=$indexSite;
 					$lineSite["locationID"]=$dataSite["locationID"];
 					$lineSite["kartaTx"]=$dataSite["kartaTx"];
