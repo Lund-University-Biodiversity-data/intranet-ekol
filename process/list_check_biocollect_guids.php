@@ -44,6 +44,29 @@ db.output.aggregate([
 */
 $okCon=true;
 
+switch ($animalsSelected) {
+  case "amphibians":
+    $observationsField="amphibianObservations";
+    $speciesField="speciesAmphibians";
+    break;
+  case "owls":
+    $observationsField="youngOwlObservations";
+    $speciesField="speciesYoungOwl";
+    break;
+  case "mammals":
+    $observationsField="mammalObservationsOnRoad";
+    $speciesField="speciesMammalsOnRoad";
+    break;
+  case "mammalsOnRoad":
+    $observationsField="mammalObservations";
+    $speciesField="speciesMammals";
+    break;
+  case "birds":
+  default:
+    $observationsField="observations";
+    $speciesField="species";
+    break;
+}
 
 // get all the output for a dedicated scheme 
 $commands = [ 
@@ -60,10 +83,10 @@ $commands = [
           'actID.status' => [ '$ne' => 'deleted' ],
           'actID.verificationStatus' => [ '$nin' => [ 'draft', 'not approved' ] ]
         ]],
-        ['$unwind'=> '$data.observations'],
-        ['$unwind'=> '$data.observations.species'],
+        ['$unwind'=> '$data.'.$observationsField],
+        ['$unwind'=> '$data.'.$observationsField.'.'.$speciesField],
         ['$group'=>[
-          "_id" => ['$data.observations.species.name', '$data.observations.species.guid'],
+          "_id" => ['$data.'.$observationsField.'.'.$speciesField.'.name', '$data.'.$observationsField.'.'.$speciesField.'.guid', '$data.'.$observationsField.'.'.$speciesField.'.scientificName'],
           "count" => [ '$sum' => 1 ]
         ]],
         ['$sort' => [
@@ -107,6 +130,7 @@ if ($okCon) {
 
     $swedishnameItem=$idItem[0];
     $guidItem=$idItem[1];
+    $SNItem=$idItem[2];
 
     if (!isset($tabRecap[$guidItem])) {
       $tabRecap[$guidItem]["items"]=array();
@@ -114,20 +138,20 @@ if ($okCon) {
       $tabRecap[$guidItem]["guidDiff"]="no";
     }
 
-    $tabRecap[$guidItem]["items"][$swedishnameItem]["nbItems"]=$nbItem;
-
+    $tabRecap[$guidItem]["items"][$swedishnameItem][$SNItem]["nbItems"]=$nbItem;
+echo $guidItem."/".$swedishnameItem."/".$SNItem.":".$nbItem."<br>";
     if (!isset($oneList[$guidItem])) {
       $consoleTxt.=consoleMessage("error", "The guid ".$guidItem." is not in the LA-list module");
       $nbErrors++;
 
-      $tabRecap[$guidItem]["items"][$swedishnameItem]["art"]="MISSING";
-      $tabRecap[$guidItem]["items"][$swedishnameItem]["scientificName"]="MISSING";
-      $tabRecap[$guidItem]["items"][$swedishnameItem]["swedishName-lists"]="MISSING";
+      $tabRecap[$guidItem]["items"][$swedishnameItem][$SNItem]["art"]="MISSING";
+      $tabRecap[$guidItem]["items"][$swedishnameItem][$SNItem]["scientificName"]="MISSING";
+      $tabRecap[$guidItem]["items"][$swedishnameItem][$SNItem]["swedishName-lists"]="MISSING";
     }
     else {
-      $tabRecap[$guidItem]["items"][$swedishnameItem]["art"]=$oneList[$guidItem]["art"];
-      $tabRecap[$guidItem]["items"][$swedishnameItem]["scientificName"]=$oneList[$guidItem]["name"];
-      $tabRecap[$guidItem]["items"][$swedishnameItem]["swedishName-lists"]=$oneList[$guidItem]["nameSWE"];
+      $tabRecap[$guidItem]["items"][$swedishnameItem][$SNItem]["art"]=$oneList[$guidItem]["art"];
+      $tabRecap[$guidItem]["items"][$swedishnameItem][$SNItem]["scientificName-lists"]=$oneList[$guidItem]["name"];
+      $tabRecap[$guidItem]["items"][$swedishnameItem][$SNItem]["swedishName-lists"]=$oneList[$guidItem]["nameSWE"];
     }
 
     if ($guidItem==$oldGuid) {
@@ -135,13 +159,14 @@ if ($okCon) {
       $tabRecap[$guidItem]["guidDupl"]="GUID-dupl";
     }
 
-    if ($guidItem!=$oldGuid && $oldSN==$tabRecap[$guidItem]["items"][$swedishnameItem]["scientificName"]) {
+    if ($guidItem!=$oldGuid && $oldSN==$SNItem) {
       $nbDiff++;
       $tabRecap[$guidItem]["guidDiff"]="GUID-diff";
     }
 
     $oldGuid=$guidItem;
-    $oldSN=$tabRecap[$guidItem]["items"][$swedishnameItem]["scientificName"];
+    //$oldSN=$tabRecap[$guidItem]["items"][$swedishnameItem]["scientificName"];
+    $oldSN=$SNItem;
   }
 }
 

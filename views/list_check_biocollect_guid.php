@@ -18,6 +18,29 @@
   	Getting the list <?= $listIdToCheck ?>  data from <a href="https://lists.biodiversitydata.se" target="_blank">lists.biodiversitydata.se</a> and checking in BioCollect the different guids linked to the species.
   </p>
   <form role="form" method="post">
+    <input type="hidden" value="OK" id="formSelectAnimals" name="formSelectAnimals"/>
+
+    <div class="form-group row">
+      <label for="inputSpeciesList" class="col-sm-2 col-form-label">Species list</label>
+      <div class="col-sm-10">
+        <select class="form-control" id="inputSpeciesList" name="inputSpeciesList" placeholder="animalsSelected">
+          <option value="birds" <?= ($animalsSelected=="birds" ? "selected" : "") ?>>Birds</option>
+          <option value="mammals" <?= ($animalsSelected=="mammals" ? "selected" : "") ?>>Mammals</option>
+          <option value="mammalsOnRoad" <?= ($animalsSelected=="mammalsOnRoad" ? "selected" : "") ?>>Mammals (on road)</option>
+          <option value="owls" <?= ($animalsSelected=="owls" ? "selected" : "") ?>>Owls</option>
+          <option value="amphibians" <?= ($animalsSelected=="amphibians" ? "selected" : "") ?>>Amphibians</option>
+        </select> 
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <div class="offset-sm-2 col-sm-10">
+        <input type="submit" value="Check these species" name="submit" class="btn btn-primary"/>
+      </div>
+    </div>
+  </form>
+
+  <form role="form" method="post">
   	<input type="hidden" value="OK" id="formFixDuplicates" name="formFixDuplicates"/>
 
     
@@ -51,6 +74,7 @@
             <th>guid [BC]</th>
             <th>swedishName [BC]</th>
             <th>swedishName [<?= $listIdToCheck ?>]</th>
+            <th>scientificName [BC]</th>
             <th>scientificName [<?= $listIdToCheck ?>]</th>
             <th>art [<?= $listIdToCheck ?>]</th>
             <th>nb Elts</th>
@@ -60,17 +84,20 @@
         </thead>
         <tbody>
           <?php foreach ($tabRecap as $guid => $rowContent) { ?>
-            <?php foreach ($rowContent["items"] as $swedishName => $rowItem) { ?>
-              <tr>
-                <td scope="row"><?= $guid ?></td>
-                <td scope="row"><?= $swedishName ?></td>
-                <td scope="row"><?= $rowItem["swedishName-lists"] ?></td>
-                <td scope="row"><?= $rowItem["scientificName"] ?></td>
-                <td scope="row"><?= $rowItem["art"] ?></td>
-                <td scope="row"><?= $rowItem["nbItems"] ?></td>
-                <td scope="row"><?= $rowContent["guidDupl"] ?></td>
-                <td scope="row"><?= $rowContent["guidDiff"] ?></td>
-              </tr>
+            <?php foreach ($rowContent["items"] as $swedishName => $rowSwNa) { ?>
+              <?php foreach ($rowSwNa as $SNItem => $rowItem) { ?>
+                <tr>
+                  <td scope="row"><?= $guid ?></td>
+                  <td scope="row"><?= $swedishName ?></td>
+                  <td scope="row"><?= $rowItem["swedishName-lists"] ?></td>
+                  <td scope="row"><?= $SNItem ?></td>
+                  <td scope="row"><?= $rowItem["scientificName-lists"] ?></td>
+                  <td scope="row"><?= $rowItem["art"] ?></td>
+                  <td scope="row"><?= $rowItem["nbItems"] ?></td>
+                  <td scope="row"><?= $rowContent["guidDupl"] ?></td>
+                  <td scope="row"><?= $rowContent["guidDiff"] ?></td>
+                </tr>
+              <?php } ?>
             <?php } ?>
           <?php } ?>
         </tbody>

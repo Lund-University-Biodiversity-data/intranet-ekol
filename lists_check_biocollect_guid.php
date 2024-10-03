@@ -25,11 +25,24 @@ else $consoleTxt.=consoleMessage("error", "No connection to mongoDb");
 $final_result="";
 
 $listIdToCheck="dr627";
-require "process/list_check_biocollect_guids.php";
+$animalsSelected="";
 
-$consoleTxt.=consoleMessage("info", "End check");
+if (isset($_POST["formSelectAnimals"]) && $_POST["formSelectAnimals"]=="OK") {
 
-if (isset($_POST["formFixDuplicates"]) && $_POST["formFixDuplicates"]=="OK" && $nbDuplicates>0) {
+	if (isset($_POST["inputSpeciesList"]) && $_POST["inputSpeciesList"]!="") {
+
+		$animalsSelected=$_POST["inputSpeciesList"];
+		require "process/list_check_biocollect_guids.php";
+
+		$consoleTxt.=consoleMessage("info", "End check");
+
+	}
+	else {
+		$consoleTxt.=consoleMessage("error", "No animals selected");
+	}
+
+}
+elseif (isset($_POST["formFixDuplicates"]) && $_POST["formFixDuplicates"]=="OK" && $nbDuplicates>0) {
 	
 	$consoleTxt.=consoleMessage("info", "Fix duplicates");
 
