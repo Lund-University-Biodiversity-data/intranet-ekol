@@ -56,7 +56,7 @@ if (isset($_POST["execFormImportDataIWC"]) && $_POST["execFormImportDataIWC"]=="
 
 			$consoleTxt.=consoleMessage("info", "2) Check lists animals");
 
-			include "process/excel_import_list_animals.php";
+			include "process/excel_import_surveys_list_animals.php";
 
 			if ($okList) {
 
