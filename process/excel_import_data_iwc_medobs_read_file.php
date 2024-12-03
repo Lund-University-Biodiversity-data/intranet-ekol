@@ -66,7 +66,7 @@ if (!$fileRefused) {
 		$validPeriod=array("Januari", "September");
 		if (!in_array($period, $validPeriod)) {
 			$fileRefused=true;
-			$consoleTxt.=consoleMessage("error", "unknown period, row #".$iRow." : ".$period);			
+			$consoleTxt.=consoleMessage("error", "unknown period, row #".$iRow." : ".$period."#");			
 		}
 
 

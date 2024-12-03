@@ -67,12 +67,12 @@ if (isset($_POST["execFormExtract"]) && $_POST["execFormExtract"]=="OK") {
 
 				$consoleTxt.=consoleMessage("info", "1) Get centroid_topokartan objects");
 
-				include "process/extract_excel_std_centroidtopokartan.php";
+				include "process/extract_excel_centroidtopokartan.php";
 
 				if (count($arrTopo)>0){
 					$consoleTxt.=consoleMessage("info", "2) Create csv");
 					
-					include "process/extract_excel_std_centroidtopokartan_csv.php";
+					include "process/extract_excel_centroidtopokartan_csv.php";
 
 					$consoleTxt.=consoleMessage("info", "file created : ".$file_download);
 				}

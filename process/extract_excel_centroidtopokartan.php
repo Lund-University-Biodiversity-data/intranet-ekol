@@ -26,6 +26,7 @@ foreach ($rows as $row){
     $topo["wgs84_lon"]=$row->wgs84_lon;
     $topo["sweref99_n"]=$row->sweref99_n;
     $topo["sweref99_o"]=$row->sweref99_o;
+    $topo["county"]=$row->county;
 
     $arrTopo[]=$topo;
 

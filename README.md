@@ -20,6 +20,7 @@ composer require phpoffice/phpspreadsheet
 
 ** for reading XLSX file
 sudo apt-get install php7.4-xml
+sudo apt-get install php8.2-xml
 
 ** enable mongo to php **
 
