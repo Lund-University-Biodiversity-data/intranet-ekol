@@ -92,6 +92,20 @@ if (isset($_POST["execFormExtract"]) && $_POST["execFormExtract"]=="OK") {
 					$consoleTxt.=consoleMessage("info", "file created : ".$file_download);
 				}
 				break;
+			case "puntkInternalStd20pts":
+
+				$consoleTxt.=consoleMessage("info", "1) Get internal_std_punkt_20pts objects");
+
+				include "process/extract_excel_std_punkt_20pts.php";
+
+				if (count($arrPoint)>0){
+					$consoleTxt.=consoleMessage("info", "2) Create csv");
+					
+					include "process/extract_excel_std_punkt_20pts_csv.php";
+
+					$consoleTxt.=consoleMessage("info", "file created : ".$file_download);
+				}
+				break;
 		}
 
 		if (file_exists($file_download)) {

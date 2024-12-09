@@ -20,6 +20,7 @@
           <option value="iwcSurveyorsHelpersSitesYears" <?= ($queryExtract=="iwcSurveyorsHelpersSitesYears" ? "selected" : "") ?>>MongoDB version of IWC medobs (internalPersonId / internalSiteId / year / month / period / method)</option>
           <option value="sftCentroidTopokartan" <?= ($queryExtract=="sftCentroidTopokartan" ? "selected" : "") ?>>MongoDB version of koordinater_mittpunkt_topokartan</option>
           <option value="sftCentroidStdCoord" <?= ($queryExtract=="sftCentroidStdCoord" ? "selected" : "") ?>>MongoDB version of standardrutter_koordinater</option>
+          <option value="puntkInternalStd20pts" <?= ($queryExtract=="puntkInternalStd20pts" ? "selected" : "") ?>>MongoDB version of Punktrutternas 20pts</option>
         </select> 
       </div>
     </div>
