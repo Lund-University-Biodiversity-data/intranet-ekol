@@ -49,6 +49,7 @@ foreach($listFilesOk as $file) {
 	            $filename=substr($file, 0, strlen($file)-5);
 	        }
 			$explodeFilename=explode("-", $filename);
+			$protYear=$explodeFilename[0];//somYY
 			$siteIdFN1=$explodeFilename[1];//persnr
 			$siteIdFN2=$explodeFilename[2];//indice
 			$siteIdFN3=str_replace("#", "", $explodeFilename[3]);//rnr
@@ -68,6 +69,7 @@ foreach($listFilesOk as $file) {
 	            $filename=substr($file, 0, strlen($file)-5);
 	        }
 			$explodeFilename=explode("-", $filename);
+			$protYear=$explodeFilename[0];//somYY
 			$siteIdFN1=$explodeFilename[1];//persnr
 			$siteIdFN2=$explodeFilename[2];//indice
 			$siteIdFN3=str_replace("#", "", $explodeFilename[3]);//rnr
@@ -465,8 +467,13 @@ foreach($listFilesOk as $file) {
 				
 				$colSpeciesCode="V";
 				$colTotObs="X";
+ 
+				if (substr($protYear, -2) != date("y", strtotime("20".$datum))) {
+					$consoleTxt.=consoleMessage("error", "Not the same year in the filename and in the datum field ! ".substr($protYear, -2)." VS ".$datum);
+					$fileRefused=true;
+				}
 
-				if ($inventerare!=$inventerareCheck) {
+ 				if ($inventerare!=$inventerareCheck) {
 					$consoleTxt.=consoleMessage("error", "Not the same Personummer in the filename and file content ! ".$inventerare." VS ".$inventerareCheck);
 					$fileRefused=true;
 				}
