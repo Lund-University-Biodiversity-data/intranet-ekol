@@ -468,7 +468,12 @@ foreach($listFilesOk as $file) {
 				$colSpeciesCode="V";
 				$colTotObs="X";
  
-				if (substr($protYear, -2) != date("y", strtotime("20".$datum))) {
+				if ($protocol=="sommar" && substr($protYear, -2) != date("y", strtotime("20".$datum))) {
+					$consoleTxt.=consoleMessage("error", "Not the same year in the filename and in the datum field ! ".substr($protYear, -2)." VS ".$datum);
+					$fileRefused=true;
+				}
+				// for winter, we have to allow Y+1 as well
+				elseif ($protocol=="vinter" && substr($protYear, -2) != date("y", strtotime("20".$datum)) && intval(substr($protYear, -2)+1) != date("y", strtotime("20".$datum))) {
 					$consoleTxt.=consoleMessage("error", "Not the same year in the filename and in the datum field ! ".substr($protYear, -2)." VS ".$datum);
 					$fileRefused=true;
 				}
