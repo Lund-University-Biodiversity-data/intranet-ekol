@@ -34,7 +34,13 @@ foreach($listFilesOk as $file) {
 			// get period from filename
 			$explodeFilename=explode(" ", $file);
 			$kartaPeriod=$explodeFilename[0];
-			//$yearFull=$explodeFilename[1];
+			$protYear=$explodeFilename[1];
+			if (substr($file, strlen($file)-4, 4)==".xls") {
+	            $protYear=substr($protYear, 0, strlen($protYear)-4);
+	        }
+	        elseif (substr($file, strlen($file)-5, 5)==".xlsx") {
+	            $protYear=substr($protYear, 0, strlen($protYear)-5);
+	        }
 			$explodeKP=explode("-", $kartaPeriod);
 			//$kartaTx=$explodeKP[0];
 			$periodFN=$explodeKP[1];
@@ -394,6 +400,11 @@ foreach($listFilesOk as $file) {
 				}
 				
 
+				if ($protYear != date("Y", strtotime($datum))) {
+					$consoleTxt.=consoleMessage("error", "Not the same year in the filename and in the datum field ! ".$protYear." VS ".$datum);
+					$fileRefused=true;
+				}
+
 				$iRowSpecies=39;
 				$colSpeciesCode="R";
 				$colTotObs="V";
@@ -467,7 +478,7 @@ foreach($listFilesOk as $file) {
 				
 				$colSpeciesCode="V";
 				$colTotObs="X";
- 
+
 				if ($protocol=="sommar" && substr($protYear, -2) != date("y", strtotime("20".$datum))) {
 					$consoleTxt.=consoleMessage("error", "Not the same year in the filename and in the datum field ! ".substr($protYear, -2)." VS ".$datum);
 					$fileRefused=true;
