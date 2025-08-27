@@ -8,36 +8,14 @@
 <script src="https://unpkg.com/bootstrap-table@1.18.3/dist/extensions/export/bootstrap-table-export.min.js"></script>
 
 
-<script>
-$(document).ready(function (){
-  //alert("ready");
-
-  $("#inputProtocol" ).change(function () {
-
-      if ($( this ).val()=="std") {
-
-
-      }
-
-      else  {
-
-      }
-
-  });
-
-
-
-
-  $("#inputProtocol" ).change();
-
-});
-
-</script>
-
 <div class="container">
   <div class="float-right">Hi <?= $current_user->display_name ?> ! <a href="<?= URL_LOGOUT ?>">logout</a></div><br>
   
   <h2>Stats geographic areas per programs per years</h2>
+
+  <p class="lead">
+    Counting the amount of surveys per year for each specific program. Only based on the year of the surveyDate (so far).
+  </p>
 
   <form role="form" method="post">
   	<input type="hidden" value="OK" id="formStatsLanPrograms" name="formStatsLanPrograms"/>
@@ -108,6 +86,13 @@ $(document).ready(function (){
               <td><?= $matrixLanYear[$areageo]["total"] ?></td>
             </tr>
           <?php } ?>
+          <tr>
+            <td><b>TOTAL</b></td>
+              <?php foreach ($listYear as $year) { ?>
+                <td><b><?= (isset($totalYears[$year]) ? $totalYears[$year] : "&nbsp;")  ?></b></td>
+              <?php } ?>
+            <td><b><?= $totalYears["total"] ?></b></td>
+          </tr>
         </tbody>
       </table>
 

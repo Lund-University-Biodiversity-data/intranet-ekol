@@ -82,13 +82,20 @@ if ($okCon) {
     $matrixLanYear=array();
     $listArea=array();
     $listYear=array();
+    $totalYears=array();
+    $totalYears["total"]=0;
     //foreach ($response[0]->result as $document) {
     foreach ($response as $document) {
         if (!isset($matrixLanYear[$document->_id->geoarea]))
             $matrixLanYear[$document->_id->geoarea]["total"]=0;
+        if (!isset($totalYears[$document->_id->year])) 
+            $totalYears[$document->_id->year]=0;
+
 
         $matrixLanYear[$document->_id->geoarea][$document->_id->year]=$document->count;
         $matrixLanYear[$document->_id->geoarea]["total"]+=$document->count;
+        $totalYears[$document->_id->year]+=$document->count;
+        $totalYears["total"]+=$document->count;
 
         if (!in_array($document->_id->geoarea, $listArea))
             $listArea[]=$document->_id->geoarea;
@@ -96,7 +103,7 @@ if ($okCon) {
             $listYear[]=$document->_id->year;
     }
 
-
+//print_r($totalYears);
 //print_r($matrixLanYear);
     $consoleTxt.=consoleMessage("info", count($matrixLanYear)." different years for scheme ".$protocol);
     $consoleTxt.=consoleMessage("info", count($listArea)." different ".$inputGeoObject." for scheme ".$protocol);
