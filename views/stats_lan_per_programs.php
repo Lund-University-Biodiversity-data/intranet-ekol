@@ -14,7 +14,7 @@
   <h2>Stats geographic areas per programs per years</h2>
 
   <p class="lead">
-    Counting the amount of surveys per year for each specific program. Only based on the year of the surveyDate (so far).
+    Counting the amount of validated surveys per year for each specific program. Only based on the year of the surveyDate (so far).
   </p>
 
   <form role="form" method="post">

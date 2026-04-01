@@ -19,6 +19,7 @@ $commands = [
         ['$match'=>[
         	'actID.projectActivityId'=> $commonFields[$protocol]["projectActivityId"],
             'actID.status' => [ '$ne' => 'deleted' ],
+            'status' => [ '$ne' => 'deleted' ],
             'actID.verificationStatus' => [ '$nin' => [ 'draft', 'not approved' ] ],
             'data.surveyDate' => [ '$gte' => $dateFrom ]
         ]],
