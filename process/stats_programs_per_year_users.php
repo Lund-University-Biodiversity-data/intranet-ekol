@@ -4,89 +4,68 @@
 $okCon=true;
 
 $dateFrom = $inputYearStart."-01-01";
-echo $dateFrom;
 /*
-db.output.aggregate([
-  {
-    $lookup: {
-      from: "activity",
-      localField: "activityId",
-      foreignField: "activityId",
-      as: "actID"
-    }
-  },
-  {
-    $unwind: "$actID"
-  },
+db.activity.aggregate([
   {
     $match: {
-      "actID.status": { $ne: "deleted" },
-      "status": { $ne: "deleted" },
-      "actID.verificationStatus": "approved"
-    }
-  },
-  {
-    $addFields: {
-      surveyYear: {
-        $year: {
-          $toDate: "$data.surveyDate"
-        }
+      status : { $ne : "deleted" },
+      verificationStatus : "approved",
+      $expr: {
+        $gt: [
+          { $year: "$dateCreated" }, 2021
+        ]
       }
     }
   },
-  {
-    $group: {
-      _id: {
-        dataOrigin: "$dataOrigin",
-        year: "$surveyYear"
-      },
-      count: { $sum: 1 }
+{
+$group: {
+_id: {
+year: { $year: "$dateCreated" }
+},
+users: { $addToSet: "$userId" }
+}
+},
+{
+    $project: {
+        _id: 0,
+        year: "$_id.year",
+        distinctUserCount: { $size: "$users" }
     }
-  },
-  {
-    $sort: {
-      "_id.dataOrigin": 1,
-      "_id.year": 1
-    }
-  }
+},
+{
+    $sort: { year: 1 }
+}
 ])
+
 */
 
 
 // get all the outputs counted group by year and scriptOrigin 
 $commands = [ 
-    'aggregate' => "output", 
+    'aggregate' => "activity", 
     'pipeline' =>[
-        ['$lookup'=>[
-            'from'=>'activity',
-            'localField'=>'activityId',
-            'foreignField'=>'activityId',
-            'as'=>'actID'
-        ]],
-        ['$unwind'=> '$activityId'],
         ['$match'=>[
-            'actID.status' => [ '$ne' => 'deleted' ],
             "status" => [ '$ne' => 'deleted' ],
-            'actID.verificationStatus' => "approved",
-            'data.surveyDate' => [ '$gte' => $dateFrom ]            
-        ]],
-        ['$addFields'=>[
-            "surveyYear" => [
-                '$year' => [
-                    '$toDate' => '$data.surveyDate'
+            'verificationStatus' => "approved",
+            '$expr' => [
+                '$gt' => [
+                  [ '$year' => '$dateCreated' ], (int)$inputYearStart                  
                 ]
-            ]
+            ]  
         ]],
         ['$group'=>[
             "_id" => [
-                "dataOrigin" => '$dataOrigin', 
-                "year" => '$surveyYear'
+                "year" => [ '$year' => '$dateCreated' ]
             ],
-            "count" => [ '$sum' => 1 ]
+            'users' => [ '$addToSet' => '$userId' ]
+        ]],
+        ['$project'=>[
+            "_id" => 0,
+            'year' => '$_id.year',
+            'distinctUserCount' => [ '$size' => '$users' ] 
         ]],
         ['$sort' => [
-          "_id.year"=> 1, 
-          "_id.dataOrigin"=> 1
+          "year"=> 1, 
         ]],
         /*['$limit'=> 20],*/
     ],
@@ -113,36 +92,18 @@ if ($okCon) {
     //$consoleTxt.=consoleMessage("info", count($response[0]->result)." surveys in the database for scheme ".$protocol);
     $consoleTxt.=consoleMessage("info", count($response)." lines year/scriptOrigin");
 
-    $matrixYearOrigin=array();
-    $listOrigin=array();
-    $listYear=array();
-    $totalOrigin=array();
+    $matrixYearUser=array();
+
+    foreach($listYear as $year) {
+        $matrixYearUser[$year]=0;
+    }
     $totalOrigin["total"]=0;
-    //foreach ($response[0]->result as $document) {
+
     foreach ($response as $document) {
-        if (trim($document->_id->dataOrigin)=="") $origin="BioCollect";
-        else $origin=$document->_id->dataOrigin;
-
-        if (!isset($matrixYearOrigin[$document->_id->year]))
-            $matrixYearOrigin[$document->_id->year]["total"]=0;
-        if (!isset($totalOrigin[$origin])) 
-            $totalOrigin[$origin]=0;
-
-
-        $matrixYearOrigin[$document->_id->year][$origin]=$document->count;
-        $matrixYearOrigin[$document->_id->year]["total"]+=$document->count;
-        $totalOrigin[$origin]+=$document->count;
-        $totalOrigin["total"]+=$document->count;
-
-        if (!in_array($origin, $listOrigin))
-            $listOrigin[]=$origin;
-        if (!in_array($document->_id->year, $listYear))
-            $listYear[]=$document->_id->year;
+        $matrixYearUser[$document->year]=$document->distinctUserCount;
     }
 
-    asort($listOrigin);
-    $consoleTxt.=consoleMessage("info", count($matrixYearOrigin)." different years");
-    $consoleTxt.=consoleMessage("info", count($listOrigin)." different dataorigin");
+    $consoleTxt.=consoleMessage("info", count($matrixYearUser)." different yearsorigin");
 
 }
 

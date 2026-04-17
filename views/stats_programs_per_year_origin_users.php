@@ -11,10 +11,10 @@
 <div class="container">
   <div class="float-right">Hi <?= $current_user->display_name ?> ! <a href="<?= URL_LOGOUT ?>">logout</a></div><br>
   
-  <h2>Stats programs per years and per origin</h2>
+  <h2>Stats programs/users per years and per origin</h2>
 
   <p class="lead">
-    Counting the amount of validated surveys per year for each origin (BioCollect, Excel, etc). The year is the year of the survey, without corection, even for vinterrutterna.
+    Counting the amount of validated surveys per year for each origin (BioCollect, Excel, etc). The year is the year of the survey, without corection, even for vinterrutterna. Last column is the number of distinct users reporting this year.
   </p>
 
 
@@ -52,6 +52,7 @@
             <?php } ?>
             <th data-sortable="true" scope="col">Total</th>
             <th data-sortable="true" scope="col">%age BC</th>
+            <th data-sortable="true" scope="col">Nb BC users</th>
           </tr>
         </thead>
         <tbody>
@@ -63,15 +64,9 @@
               <?php } ?>
               <td><?= $matrixYearOrigin[$year]["total"] ?></td>
               <td><i><?= number_format(100*$matrixYearOrigin[$year]["BioCollect"]/$matrixYearOrigin[$year]["total"], 2) ?></i></td>
+              <td><?= (isset($matrixYearUser[$year]) ? $matrixYearUser[$year] : "" ) ?></td>
             </tr>
           <?php } ?>
-          <tr>
-            <td><b>TOTAL</b></td>
-              <?php foreach ($listOrigin as $origin) { ?>
-                <td><b><?= (isset($listOrigin[$year]) ? $listOrigin[$year] : "&nbsp;")  ?></b></td>
-              <?php } ?>
-            <td><b><?= $totalYears["total"] ?></b></td>
-          </tr>
         </tbody>
       </table>
 

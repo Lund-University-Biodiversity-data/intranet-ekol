@@ -30,6 +30,7 @@ if (isset($_POST["formStatsProgramOrigin"]) && $_POST["formStatsProgramOrigin"]=
 	else $consoleTxt.=consoleMessage("error", "No connection to mongoDb");
 
 
+	require "process/stats_programs_per_year_origin.php";
 	require "process/stats_programs_per_year_users.php";
 	
 
@@ -40,7 +41,7 @@ if (isset($_POST["formStatsProgramOrigin"]) && $_POST["formStatsProgramOrigin"]=
 
 include ("views/header.html");
 
-include ("views/stats_programs_per_year_users.php");
+include ("views/stats_programs_per_year_origin_users.php");
 
 ?>
 
